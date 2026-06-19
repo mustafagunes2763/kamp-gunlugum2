@@ -854,6 +854,35 @@
     const m = Math.round((decimalHrs - h) * 60);
     return `${h}sa ${m}dk`;
   }
+  // Kaydetme
+const saveBtn = document.getElementById("saveBtn");
+saveBtn.addEventListener("click", async () => {
+saveBtn.innerText = "⏳ Şifreli Kasaya Yazılıyor...";
+saveBtn.disabled = true;
+
+const dateStr = logDateInput.value;
+const payload = {
+date: dateStr,
+weight: document.getElementById("weightValue").value,
+bodyFat: document.getElementById("bodyFatValue").value,
+steps: document.getElementById("stepsValue").value,
+sleep: document.getElementById("sleepHours").value,
+calIn: document.getElementById("caloriesIn").value,
+calOut: document.getElementById("caloriesOut").value,
+note: document.getElementById("dayNote").value,
+driveLink: document.getElementById("pdfLinkInput").value // Drive Linki Burada Kaydedilir
+};
+
+try {
+await setDoc(doc(db, "kamp_logs", dateStr), payload);
+saveBtn.innerText = "✅ VIP KAYIT BAŞARILI";
+loadDayData(dateStr);
+setTimeout(() => { saveBtn.innerText = "⛺ VIP KASAYA KAYDET"; saveBtn.disabled = false; }, 2000);
+} catch (e) {
+saveBtn.innerText = "❌ Hata Oluştu";
+setTimeout(() => { saveBtn.innerText = "⛺ VIP KASAYA KAYDET"; saveBtn.disabled = false; }, 3000);
+}
+});
 </script>
 </body>
 </html>
