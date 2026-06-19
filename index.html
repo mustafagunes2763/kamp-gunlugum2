@@ -14,6 +14,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  /* VIP GİRİŞ STİLLERİ */
+  #authScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; z-index: 1000; position: relative; }
+  .auth-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 20px; width: 100%; max-width: 360px; backdrop-filter: blur(18px); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+  .auth-card h1 { font-family: var(--font-display); font-size: 24px; margin-bottom: 5px; background: var(--grad-brand); -webkit-background-clip: text; color: transparent; }
+  .auth-input { width: 100%; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 14px; color: var(--ink); font-family: var(--font-mono); font-size: 15px; margin-bottom: 12px; outline: none; }
+  .btn-auth { width: 100%; background: var(--grad-brand); border: none; border-radius: 14px; color: #0A0C14; font-family: var(--font-display); font-weight: 700; font-size: 16px; padding: 15px; cursor: pointer; margin-top: 10px; }
+  #authError { color: var(--coral); font-size: 12px; margin-top: 15px; display: none; }
+  #mainApp { display: none; } /* Uygulamayı girişe kadar gizle */
+  .btn-logout { background: transparent; border: 1px solid var(--coral); color: var(--coral); padding: 5px 12px; border-radius: 8px; font-size: 10px; cursor: pointer; margin-left: auto; font-family: var(--font-mono);}
+
 <style>
   :root{
     --bg:        #0A0C14;
@@ -196,6 +206,16 @@
 </style>
 </head>
 <body>
+<div id="authScreen">
+  <div class="auth-card">
+    <h1>KAMP GÜNLÜĞÜM</h1>
+    <p style="font-size: 11px; color: var(--ink-faint); margin-bottom: 25px;">VIP Çoklu Erişim Sistemi</p>
+    <input type="email" id="emailInput" class="auth-input" placeholder="E-posta Adresi">
+    <input type="password" id="passwordInput" class="auth-input" placeholder="Şifre">
+    <button id="loginBtn" class="btn-auth">KASAYI AÇ</button>
+    <div id="authError">Giriş başarısız. Bilgileri kontrol et.</div>
+  </div>
+</div>
 
 <div class="hazard-strip"></div>
 
@@ -318,9 +338,11 @@
 </section>
 
 <div class="app" id="mainApp">
-  <div class="header-top">
+    <div class="header-top">
     <button class="menu-btn" id="menuBtn" type="button"><span></span><span></span><span></span></button>
+    <button id="logoutBtn" class="btn-logout">🔒 Çıkış</button>
   </div>
+
 
   <header class="camp-header">
     <div class="camp-id">
@@ -458,8 +480,9 @@
 <!-- FIREBASE BAĞLANTISI (MODÜL OLARAK) -->
 <script type="module">
   // Npm yerine CDN kullanıyoruz
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDocs, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDocs, collection, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   // SENİN ANAHTARLARIN
   const firebaseConfig = {
@@ -475,6 +498,37 @@
   // Motorları çalıştır
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
+    const authScreen = document.getElementById("authScreen");
+  const mainApp = document.getElementById("mainApp");
+  const authError = document.getElementById("authError");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      authScreen.style.display = "none";
+      mainApp.style.display = "block";
+      if(!window.chartsLoaded) { loadDashboardData(); window.chartsLoaded = true; }
+    } else {
+      authScreen.style.display = "flex";
+      mainApp.style.display = "none";
+    }
+  });
+
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    document.getElementById("loginBtn").innerText = "Bekle...";
+    signInWithEmailAndPassword(auth, document.getElementById("emailInput").value, document.getElementById("passwordInput").value)
+      .then(() => { authError.style.display = "none"; document.getElementById("loginBtn").innerText = "KASAYI AÇ"; })
+      .catch(() => { authError.style.display = "block"; document.getElementById("loginBtn").innerText = "KASAYI AÇ"; });
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    signOut(auth).then(() => {
+      document.getElementById("emailInput").value = "";
+      document.getElementById("passwordInput").value = "";
+    });
+  });
+
+
 
   // GÜVENLİK VE LİMİT FONKSİYONLARI (Global olması için window objesine ekledik)
   window.limitInput = function(el, maxVal) {
@@ -656,7 +710,9 @@
 
     try {
       // "kamp_logs" adında bir koleksiyona, o günün tarihiyle kaydediyoruz!
-      await setDoc(doc(db, "kamp_logs", payload.date), payload);
+            if(!auth.currentUser) return;
+      await setDoc(doc(db, "users", auth.currentUser.uid, "logs", payload.date), payload);
+
       
       saveBtn.innerText = "✅ Efsane Kaydedildi";
       window.chartsLoaded = false; 
@@ -684,7 +740,9 @@
 
     try {
       // Verileri Firebase'den tarih sırasına göre çekiyoruz
-      const q = query(collection(db, "kamp_logs"), orderBy("date", "asc"));
+            if(!auth.currentUser) return;
+      const q = query(collection(db, "users", auth.currentUser.uid, "logs"), orderBy("date", "asc"));
+
       const querySnapshot = await getDocs(q);
       
       let rows = [];
