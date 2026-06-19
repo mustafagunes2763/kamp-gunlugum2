@@ -193,9 +193,222 @@
   .stat-chip .chip-value{ font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--ink); }
   .stat-chip .chip-value.up{ color: var(--mint); }
   .stat-chip .chip-value.down{ color: var(--coral); }
+
+  /* ============================================
+     LOGIN SCREEN — Mail & Şifre ile giriş
+     ============================================ */
+  .login-screen{
+    position:fixed;
+    inset:0;
+    z-index: 200;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% -8%, rgba(140,124,255,0.22), transparent 42%),
+      radial-gradient(circle at 105% 25%, rgba(91,141,255,0.16), transparent 38%),
+      radial-gradient(circle at 50% 100%, rgba(61,220,151,0.07), transparent 45%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+    overflow-y:auto;
+  }
+  .login-screen.is-hidden{ display:none; }
+
+  .login-card{
+    width:100%;
+    max-width: 380px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    padding: 32px 26px 28px;
+  }
+
+  .login-brand{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 10px;
+    margin-bottom: 26px;
+    text-align:center;
+  }
+
+  .login-brand .login-badge{
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--grad-brand);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 26px;
+    box-shadow: 0 10px 26px rgba(124,108,255,0.32);
+  }
+
+  .login-brand .login-title{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .login-brand .login-sub{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .login-form{
+    display:flex;
+    flex-direction:column;
+    gap: 14px;
+  }
+
+  .login-field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+  }
+  .login-field label{
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .login-error{
+    display:none;
+    align-items:center;
+    gap: 8px;
+    background: rgba(255,122,156,0.10);
+    border: 1px solid rgba(255,122,156,0.3);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--coral);
+    line-height: 1.4;
+  }
+  .login-error.is-active{ display:flex; }
+
+  .btn-login{
+    width:100%;
+    appearance:none;
+    border:none;
+    border-radius: 16px;
+    background: var(--grad-brand);
+    color: #0A0C14;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 9px;
+    cursor:pointer;
+    box-shadow: 0 12px 30px rgba(124,108,255,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+    margin-top: 4px;
+    transition: opacity .15s ease;
+  }
+  .btn-login:active{ transform: translateY(1px); }
+  .btn-login:disabled{ opacity: 0.55; cursor: default; }
+
+  .btn-login .spinner{
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(10,12,20,0.3);
+    border-top-color: #0A0C14;
+    display:none;
+    animation: spin 0.7s linear infinite;
+  }
+  .btn-login.is-loading .spinner{ display:inline-block; }
+  .btn-login.is-loading .btn-login-text{ opacity: 0.7; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .login-foot{
+    margin-top: 18px;
+    text-align:center;
+  }
+  .login-link{
+    appearance:none;
+    background:none;
+    border:none;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--violet-2);
+    letter-spacing: 0.02em;
+    cursor:pointer;
+    padding: 6px;
+  }
+
+  .login-stamp{
+    text-align:center;
+    margin-top: 20px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* Giriş yapılmadan ana uygulama gizli kalır.
+     Gemini, başarılı login sonrası bu class'ı kaldırır:
+     document.getElementById('mainApp').classList.remove('is-hidden');
+     ve loginScreen'e 'is-hidden' ekler. */
+  #mainApp.is-hidden{ display:none; }
 </style>
 </head>
 <body>
+
+<!-- ============================================
+     LOGIN EKRANI — Mail & Şifre
+     Gemini: Firebase Auth (signInWithEmailAndPassword,
+     onAuthStateChanged) bu id'lere bağlanacak.
+     ============================================ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-badge">⛺</div>
+      <span class="login-title">Kamp Defteri</span>
+      <span class="login-sub">Operasyon Günlüğüne Giriş</span>
+    </div>
+
+    <form class="login-form" id="loginForm">
+      <div class="login-field">
+        <label for="loginEmail">E-Posta</label>
+        <div class="input-shell accent-blue">
+          <input type="email" id="loginEmail" placeholder="ornek@mail.com" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label for="loginPassword">Şifre</label>
+        <div class="input-shell accent-fire">
+          <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+      </div>
+
+      <div class="login-error" id="loginError">
+        <span>⚠️</span>
+        <span id="loginErrorText">E-posta veya şifre hatalı.</span>
+      </div>
+
+      <button class="btn-login" id="loginSubmitBtn" type="submit">
+        <span class="spinner"></span>
+        <span class="btn-login-text">Giriş Yap</span>
+      </button>
+    </form>
+
+    <div class="login-foot">
+      <button class="login-link" id="forgotPasswordBtn" type="button">Şifremi unuttum</button>
+    </div>
+
+    <div class="login-stamp">Kamp Defteri · Güvenli Giriş</div>
+  </div>
+</div>
 
 <div class="hazard-strip"></div>
 
@@ -317,7 +530,7 @@
   </div>
 </section>
 
-<div class="app" id="mainApp">
+<div class="app is-hidden" id="mainApp">
   <div class="header-top">
     <button class="menu-btn" id="menuBtn" type="button"><span></span><span></span><span></span></button>
   </div>
@@ -836,6 +1049,63 @@
     const m = Math.round((decimalHrs - h) * 60);
     return `${h}sa ${m}dk`;
   }
+
+  // ============================================
+  // LOGIN EKRANI — sadece UI davranışı (spinner, hata mesajı).
+  // Gerçek kimlik doğrulama (signInWithEmailAndPassword,
+  // onAuthStateChanged, sendPasswordResetEmail) burada
+  // Firebase Auth ile bağlanmalı — bu kısım Gemini'ye ait.
+  // ============================================
+  const loginScreen   = document.getElementById('loginScreen');
+  const loginForm     = document.getElementById('loginForm');
+  const loginSubmitBtn= document.getElementById('loginSubmitBtn');
+  const loginError    = document.getElementById('loginError');
+  const loginErrorText= document.getElementById('loginErrorText');
+  const forgotBtn     = document.getElementById('forgotPasswordBtn');
+  const mainAppEl     = document.getElementById('mainApp');
+
+  function showLoginError(message){
+    loginErrorText.innerText = message || "E-posta veya şifre hatalı.";
+    loginError.classList.add('is-active');
+  }
+  function hideLoginError(){
+    loginError.classList.remove('is-active');
+  }
+  function setLoginLoading(isLoading){
+    loginSubmitBtn.classList.toggle('is-loading', isLoading);
+    loginSubmitBtn.disabled = isLoading;
+  }
+
+  // Bu fonksiyonu Gemini, gerçek Firebase Auth çağrısıyla doldurmalı:
+  //
+  // import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }
+  //   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  // const auth = getAuth(app);
+  //
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) { loginScreen.classList.add('is-hidden'); mainAppEl.classList.remove('is-hidden'); }
+  //   else { loginScreen.classList.remove('is-hidden'); mainAppEl.classList.add('is-hidden'); }
+  // });
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    hideLoginError();
+    setLoginLoading(true);
+
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // --- GEMINI BURAYA FIREBASE signInWithEmailAndPassword ÇAĞRISINI EKLEYECEK ---
+    // signInWithEmailAndPassword(auth, email, password)
+    //   .then(() => { setLoginLoading(false); })
+    //   .catch((err) => { setLoginLoading(false); showLoginError("E-posta veya şifre hatalı."); });
+
+    // Şimdilik sadece UI iskeleti — gerçek çağrı bağlanana kadar burada durur.
+    setLoginLoading(false);
+  });
+
+  forgotBtn.addEventListener('click', function(){
+    // Gemini: sendPasswordResetEmail(auth, email) burada çağrılabilir.
+  });
 </script>
 </body>
 </html>
