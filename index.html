@@ -7,26 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>KAMP / Günlük Rapor V6</title>
-  {
-  "name": "Kamp Günlüğüm",
-  "short_name": "Kamp V6",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#0A0C14",
-  "theme_color": "#0A0C14",
-  "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
+  <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -854,35 +836,6 @@
     const m = Math.round((decimalHrs - h) * 60);
     return `${h}sa ${m}dk`;
   }
-  // Kaydetme
-const saveBtn = document.getElementById("saveBtn");
-saveBtn.addEventListener("click", async () => {
-saveBtn.innerText = "⏳ Şifreli Kasaya Yazılıyor...";
-saveBtn.disabled = true;
-
-const dateStr = logDateInput.value;
-const payload = {
-date: dateStr,
-weight: document.getElementById("weightValue").value,
-bodyFat: document.getElementById("bodyFatValue").value,
-steps: document.getElementById("stepsValue").value,
-sleep: document.getElementById("sleepHours").value,
-calIn: document.getElementById("caloriesIn").value,
-calOut: document.getElementById("caloriesOut").value,
-note: document.getElementById("dayNote").value,
-driveLink: document.getElementById("pdfLinkInput").value // Drive Linki Burada Kaydedilir
-};
-
-try {
-await setDoc(doc(db, "kamp_logs", dateStr), payload);
-saveBtn.innerText = "✅ VIP KAYIT BAŞARILI";
-loadDayData(dateStr);
-setTimeout(() => { saveBtn.innerText = "⛺ VIP KASAYA KAYDET"; saveBtn.disabled = false; }, 2000);
-} catch (e) {
-saveBtn.innerText = "❌ Hata Oluştu";
-setTimeout(() => { saveBtn.innerText = "⛺ VIP KASAYA KAYDET"; saveBtn.disabled = false; }, 3000);
-}
-});
 </script>
 </body>
 </html>
