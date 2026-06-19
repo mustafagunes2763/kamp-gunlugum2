@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0A0C14">
+<meta name="theme-color" content="#0A0B0D">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>KAMP / VIP Sürüm V8</title>
+<title>KAMP / VIP Ultimate V9</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,11 +18,12 @@
   :root{
     --bg:        #0A0C14; --bg-2:      #0E1120; --panel:     rgba(255,255,255,0.045); --panel-2:   rgba(255,255,255,0.03); --panel-solid: #141828;
     --line:      rgba(255,255,255,0.09); --line-soft: rgba(255,255,255,0.06); --ink:       #F3F4FA; --ink-dim:   #9499B3; --ink-faint: #5C6180;
-    --violet:    #8C7CFF; --violet-2:  #5B8DFF; --mint:      #3DDC97; --coral:     #FF7A9C;
+    --violet:    #8C7CFF; --violet-2:  #5B8DFF; --mint:      #3DDC97; --mint-dim:  #1F6B4C; --coral:     #FF7A9C;
     --grad-brand: linear-gradient(135deg, #8C7CFF 0%, #5B8DFF 100%); --grad-mint:  linear-gradient(135deg, #3DDC97 0%, #29B7D8 100%);
     --radius:    22px; --radius-sm: 14px; --font-display: 'Sora', sans-serif; --font-mono:    'JetBrains Mono', monospace;
     --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
+
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
   html, body{ background: var(--bg); color: var(--ink); font-family: var(--font-mono); overscroll-behavior-y: none; }
   body{ min-height: 100vh; background-image: radial-gradient(circle at 12% -8%, rgba(140,124,255,0.22), transparent 42%), radial-gradient(circle at 105% 18%, rgba(91,141,255,0.16), transparent 38%), radial-gradient(circle at 50% 100%, rgba(61,220,151,0.07), transparent 45%); background-attachment: fixed; }
@@ -36,15 +38,15 @@
   .btn-auth { width: 100%; background: var(--grad-brand); border: none; border-radius: 14px; color: #0A0C14; font-family: var(--font-display); font-weight: 700; font-size: 16px; padding: 15px; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 20px rgba(124,108,255,0.3); }
   #authError { color: var(--coral); font-size: 12px; margin-top: 15px; display: none; }
 
-  /* ANA UYGULAMA STİLLERİ */
+  /* ANA UYGULAMA */
   #mainApp { display: none; max-width: 480px; margin: 0 auto; padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 28px); }
   .hazard-strip{ height: 3px; width: 100%; background: var(--grad-brand); opacity: 0.85; position: fixed; top: 0; left: 0; z-index: 50; }
   
   .top-bar { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; }
   .menu-btn{ appearance:none; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(18px); border-radius: 12px; width: 42px; height: 42px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 4px; cursor:pointer; }
-  .menu-btn span{ display:block; width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .22s ease, opacity .22s ease; }
+  .menu-btn span{ display:block; width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .22s ease; }
   .btn-logout { background: rgba(255,122,156,0.1); border: 1px solid rgba(255,122,156,0.3); color: var(--coral); padding: 8px 14px; border-radius: 10px; font-size: 11px; font-family: var(--font-mono); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-  
+
   header.camp-header{ padding: 26px 4px 20px; display:flex; align-items:flex-start; justify-content:space-between; gap: 16px; }
   .camp-id{ display:flex; flex-direction:column; gap: 7px; }
   .camp-id .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; }
@@ -52,16 +54,17 @@
   .date-nav-btn { background: transparent; border: none; color: var(--violet); font-size: 20px; cursor: pointer; padding: 0 6px; }
   .camp-id .date-value{ font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--ink); min-width: 110px; text-align: center; }
   
-  .day-plate{ flex-shrink:0; background: var(--panel-solid); border: 1px solid var(--line); border-radius: 18px; padding: 10px 18px 12px; text-align:center; position:relative; min-width: 104px; }
+  .day-plate{ flex-shrink:0; background: var(--panel-solid); border: 1px solid var(--line); border-radius: 18px; padding: 10px 18px 12px; text-align:center; position:relative; min-width: 104px; box-shadow: 0 12px 30px rgba(91,80,220,0.18); }
   .day-plate::before{ content:""; position:absolute; inset:-1px; border-radius: 18px; padding: 1px; background: var(--grad-brand); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55; pointer-events:none; }
   .day-plate .plate-label{ font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: var(--violet); text-transform: uppercase; }
   .day-plate .plate-number{ font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1.15; background: var(--grad-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .day-plate .plate-number span.zero{ opacity: 0.3; color: var(--ink-faint); -webkit-text-fill-color: var(--ink-faint); } 
 
   .stack{ display:flex; flex-direction:column; gap: 14px; }
-  section.card{ background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow:hidden; backdrop-filter: blur(18px); }
+  section.card{ background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow:hidden; backdrop-filter: blur(18px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
   .card-head{ display:flex; align-items:center; justify-content:space-between; padding: 16px 18px 0; }
   .card-head .tag{ display:flex; align-items:center; gap: 9px; }
-  .card-head .tag .dot{ width:7px; height:7px; border-radius:50%; background: var(--grad-brand); }
+  .card-head .tag .dot{ width:7px; height:7px; border-radius:50%; background: var(--grad-brand); box-shadow: 0 0 10px rgba(140,124,255,0.7); }
   .card-head h2{ font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--ink); }
   .card-head .hint{ font-size: 10px; color: var(--ink-faint); letter-spacing: 0.06em; text-transform: uppercase; }
   .card-body{ padding: 14px 18px 20px; }
@@ -71,15 +74,35 @@
   .field label{ font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); display:flex; justify-content:space-between; }
   .field label .unit{ color: var(--ink-faint); font-size: 9px; }
 
-  .input-shell{ position:relative; display:flex; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); }
+  .input-shell{ position:relative; display:flex; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); transition: border-color .18s ease; }
+  .input-shell:focus-within{ border-color: rgba(140,124,255,0.55); background: rgba(140,124,255,0.06); }
   .input-shell input, .input-shell select, .note-shell textarea{ appearance:none; -webkit-appearance:none; width:100%; background: transparent; border:none; outline:none; color: var(--ink); font-family: var(--font-mono); font-weight: 600; font-size: 16px; padding: 13px 14px; }
   .input-shell input::placeholder, .note-shell textarea::placeholder{ color: var(--ink-faint); font-weight: 400; }
   .input-shell.accent-fire{ border-left: 3px solid var(--coral); }
   .input-shell.accent-acid{ border-left: 3px solid var(--mint); }
   .input-shell.accent-blue{ border-left: 3px solid var(--violet-2); }
-  
-  .weight-row, .calorie-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .input-shell.accent-violet{ border-left: 3px solid var(--violet); }
+
+  .weight-row{ display:grid; grid-template-columns: 1.3fr 1fr; gap: 10px; }
+  .calorie-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .calorie-balance{ margin-top: 14px; display:flex; align-items:center; justify-content:space-between; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 12px 14px; }
+  .calorie-balance .cb-label{ font-size: 10px; letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase;}
+  .calorie-balance .cb-value{ font-family: var(--font-mono); font-weight: 700; font-size: 16px; color: var(--ink-dim); }
+
   .macro-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .macro-field .input-shell{ border-left: 3px solid var(--macro-color, var(--ink-faint)); }
+  .macro-field[data-macro="protein"]{ --macro-color: var(--mint); }
+  .macro-field[data-macro="carb"]{ --macro-color: var(--violet-2); }
+  .macro-field[data-macro="fat"]{ --macro-color: var(--coral); }
+  .macro-field label{ justify-content:flex-start; gap:5px; }
+  .macro-field label .swatch{ width:6px; height:6px; border-radius:50%; background: var(--macro-color); }
+
+  .supp-list{ display:flex; flex-direction:column; gap: 8px; }
+  .supp-chip{ display:flex; align-items:center; gap: 12px; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 13px 15px; cursor:pointer; }
+  .supp-chip input[type="checkbox"]{ width: 22px; height: 22px; }
+
+  .select-shell{ position:relative; background: var(--panel-2); border: 1px solid var(--line-soft); border-left: 3px solid var(--violet); border-radius: var(--radius-sm); }
+  .select-shell select option{ background: var(--panel-solid); color: var(--ink); }
   .note-shell{ background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); overflow:hidden; }
   .note-shell textarea{ min-height: 96px; resize: vertical; line-height: 1.6; }
 
@@ -89,7 +112,7 @@
   .save-zone{ margin-top: 20px; padding-bottom: 4px; }
   .btn-save{ width:100%; border:none; border-radius: 18px; background: var(--grad-brand); color: #0A0C14; font-family: var(--font-display); font-weight: 700; font-size: 16px; padding: 17px; box-shadow: 0 14px 34px rgba(124,108,255,0.32); cursor:pointer;}
   
-  /* MENÜ VE GRAFİK EKRANI */
+  /* MENÜ VE GRAFİK EKRANI (TAM V6 UYUMLU) */
   .menu-overlay{ position:fixed; inset:0; background: rgba(5,6,12,0.55); backdrop-filter: blur(2px); opacity:0; pointer-events:none; transition: opacity .25s ease; z-index: 40; }
   .menu-overlay.is-active{ opacity:1; pointer-events:auto; }
   .drawer{ position:fixed; top:0; left:0; height:100%; width: min(78vw, 300px); background: var(--bg-2); border-right: 1px solid var(--line); transform: translateX(-100%); transition: transform .3s ease; z-index: 50; padding: calc(var(--safe-top) + 22px) 18px 22px; display:flex; flex-direction:column; }
@@ -103,17 +126,38 @@
   .link-icon{ width: 34px; height: 34px; border-radius: 10px; background: var(--panel-2); display:flex; align-items:center; justify-content:center; font-size: 16px; }
   .drawer-link.is-current .link-icon{ background: var(--grad-brand); }
   
-  .stats-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; background: var(--bg); z-index: 100; transform: translateY(100%); transition: transform .35s ease; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 28px); }
+  .stats-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; background: var(--bg); background-image: radial-gradient(circle at 90% -8%, rgba(140,124,255,0.18), transparent 42%), radial-gradient(circle at 0% 22%, rgba(91,141,255,0.12), transparent 38%); z-index: 100; transform: translateY(100%); transition: transform .35s ease; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 28px); }
   .stats-panel.is-active{ transform: translateY(0); }
   .stats-head{ display:flex; justify-content:space-between; margin-bottom: 22px; }
+  .stats-title-group{ display:flex; flex-direction:column; gap: 4px; }
+  .stats-head .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; }
   .stats-title{ font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+  
+  .range-toggle{ display:flex; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 14px; padding: 4px; margin-bottom: 18px; position: relative; }
+  .range-toggle .toggle-option{ flex: 1; text-align:center; padding: 10px 0; font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--ink-faint); border-radius: 10px; cursor:pointer; position: relative; z-index: 2; transition: color .25s ease; user-select:none; }
+  .range-toggle .toggle-option.is-active{ color: var(--bg); }
+  .range-toggle .toggle-pill{ position:absolute; top:4px; left:4px; width: calc(50% - 4px); height: calc(100% - 8px); background: var(--grad-brand); border-radius: 10px; z-index: 1; transition: transform .28s ease; box-shadow: 0 6px 18px rgba(124,108,255,0.35); }
+  .range-toggle[data-range="monthly"] .toggle-pill{ transform: translateX(100%); }
+
+  .chart-legend{ display:flex; gap: 14px; padding: 0 18px 2px; flex-wrap: wrap; }
+  .chart-legend .legend-item{ display:flex; align-items:center; gap: 6px; font-size: 10px; color: var(--ink-dim); }
+  .chart-legend .legend-dot{ width: 7px; height: 7px; border-radius: 50%; }
+  .legend-dot.dot-mint{ background: var(--mint); }
+  .legend-dot.dot-violet{ background: var(--violet); }
+  .legend-dot.dot-coral{ background: var(--coral); }
+  .legend-dot.dot-blue{ background: var(--violet-2); }
+  
   .chart-wrap{ position: relative; width: 100%; height: 200px; margin-top: 12px; }
   .chart-wrap canvas{ width: 100% !important; height: 100% !important; }
+  
+  .stat-chips{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+  .stat-chip{ background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 10px 8px; text-align:center; }
+  .stat-chip .chip-label{ font-size: 9px; color: var(--ink-faint); display:block; margin-bottom: 4px; }
+  .stat-chip .chip-value{ font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--ink); }
 </style>
 </head>
 <body>
 
-<!-- GİRİŞ EKRANI (VIP KAPI) -->
 <div id="authScreen">
   <div class="auth-card">
     <h1>KAMP GÜNLÜĞÜM</h1>
@@ -125,11 +169,9 @@
   </div>
 </div>
 
-<!-- ANA UYGULAMA (GİRİŞ YAPILINCA AÇILIR) -->
 <div id="mainApp">
   <div class="hazard-strip"></div>
   
-  <!-- ÜST BAR (Menü ve Çıkış) -->
   <div class="top-bar">
     <button class="menu-btn" id="menuBtn" type="button"><span></span><span></span><span></span></button>
     <button id="logoutBtn" class="btn-logout">🔒 Kilit Katpat (Çıkış)</button>
@@ -142,30 +184,87 @@
       <button class="drawer-close" id="drawerCloseBtn" type="button">✕</button>
     </div>
     <div class="drawer-nav">
-      <a href="#" class="drawer-link is-current" id="homeLink"><span class="link-icon">📝</span><span class="link-title">Günlük Giriş</span></a>
-      <a href="#" class="drawer-link" id="statsLink"><span class="link-icon">📊</span><span class="link-title">Özel İstatistiklerim</span></a>
+      <a href="#" class="drawer-link is-current" id="homeLink"><span class="link-icon">📝</span><span class="link-text"><span class="link-title">Günlük Giriş</span></span></a>
+      <a href="#" class="drawer-link" id="statsLink"><span class="link-icon">📊</span><span class="link-text"><span class="link-title">Grafikler & İstatistikler</span></span></a>
     </div>
   </nav>
 
-  <!-- GRAFİKLER PANELİ -->
   <section class="stats-panel" id="statsPanel">
     <div class="stats-head">
-      <div class="stats-title-group"><span class="stats-title">İstatistiklerim</span></div>
+      <div class="stats-title-group"><span class="eyebrow">Sistem Analizi</span><span class="stats-title">Özel İstatistiklerim</span></div>
       <button class="drawer-close" id="statsCloseBtn" type="button">✕</button>
     </div>
+
+    <div class="range-toggle" id="rangeToggle" data-range="weekly">
+      <div class="toggle-pill"></div>
+      <div class="toggle-option is-active" data-value="weekly">Haftalık</div>
+      <div class="toggle-option" data-value="monthly">Aylık</div>
+    </div>
+
     <div class="stack">
       <section class="card">
         <div class="card-head"><div class="tag"><span class="dot" style="background: var(--mint);"></span><h2>Adım Trendi</h2></div><span class="hint live" id="loadingStatus">Yükleniyor...</span></div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="stepsChart"></canvas></div></div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="stepsChart"></canvas></div>
+          <div class="stat-chips">
+            <div class="stat-chip"><span class="chip-label">Ortalama</span><span class="chip-value" id="stepsAvg">—</span></div>
+            <div class="stat-chip"><span class="chip-label">Maksimum</span><span class="chip-value" id="stepsMax">—</span></div>
+            <div class="stat-chip"><span class="chip-label">Toplam</span><span class="chip-value" id="stepsTotal">—</span></div>
+          </div>
+        </div>
       </section>
+
       <section class="card">
-        <div class="card-head"><div class="tag"><span class="dot"></span><h2>Kilo Trendi</h2></div></div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="weightChart"></canvas></div></div>
+        <div class="card-head"><div class="tag"><span class="dot"></span><h2>Uyku Trendi</h2></div></div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot dot-violet"></span>Derin</span>
+          <span class="legend-item"><span class="legend-dot dot-coral"></span>REM</span>
+          <span class="legend-item"><span class="legend-dot dot-blue"></span>Hafif</span>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="sleepChart"></canvas></div>
+          <div class="stat-chips">
+            <div class="stat-chip"><span class="chip-label">Ortalama</span><span class="chip-value" id="sleepAvg">—</span></div>
+            <div class="stat-chip"><span class="chip-label">En Uzun</span><span class="chip-value" id="sleepMax">—</span></div>
+            <div class="stat-chip"><span class="chip-label">En Kısa</span><span class="chip-value" id="sleepMin">—</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="tag"><span class="dot"></span><h2>Kilo ve Yağ Oranı</h2></div></div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot dot-mint"></span>Kilo (KG)</span>
+          <span class="legend-item"><span class="legend-dot dot-coral"></span>Yağ Oranı (%)</span>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+          <div class="stat-chips">
+            <div class="stat-chip"><span class="chip-label">Güncel KG</span><span class="chip-value" id="weightCurrent">—</span></div>
+            <div class="stat-chip"><span class="chip-label">Değişim</span><span class="chip-value" id="weightDelta">—</span></div>
+            <div class="stat-chip"><span class="chip-label">Yağ %</span><span class="chip-value" id="bodyFatCurrent">—</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="tag"><span class="dot"></span><h2>Kalori Dengesi</h2></div></div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot dot-mint"></span>Alınan</span>
+          <span class="legend-item"><span class="legend-dot dot-coral"></span>Yakılan</span>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="calorieChart"></canvas></div>
+          <div class="stat-chips">
+            <div class="stat-chip"><span class="chip-label">Ort. Alınan</span><span class="chip-value" id="calorieAvgIn">—</span></div>
+            <div class="stat-chip"><span class="chip-label">Ort. Yakılan</span><span class="chip-value" id="calorieAvgOut">—</span></div>
+            <div class="stat-chip"><span class="chip-label">Net Ort.</span><span class="chip-value" id="calorieAvgNet">—</span></div>
+          </div>
+        </div>
       </section>
     </div>
   </section>
 
-  <!-- GÜNLÜK KAYIT ALANI -->
   <header class="camp-header">
     <div class="camp-id">
       <span class="eyebrow" id="userBadge">Operasyon Günlüğü</span>
@@ -183,7 +282,6 @@
   </header>
 
   <div class="stack">
-    <!-- DRIVE LİNK KARTI -->
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot" style="background: var(--coral);"></span><h2>Dosya / PDF Linki</h2></div><span class="hint">Drive Kasan</span></div>
       <div class="card-body">
@@ -196,7 +294,6 @@
       </div>
     </section>
 
-    <!-- TARTI -->
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot"></span><h2>Sabah Tartısı</h2></div></div>
       <div class="card-body">
@@ -207,19 +304,90 @@
       </div>
     </section>
 
-    <!-- AKTİVİTE -->
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet-2);"></span><h2>Aktivite & Uyku</h2></div></div>
       <div class="card-body">
         <div class="field-grid">
           <div class="field" style="grid-column: span 2;"><label>Adım <span class="unit">SAYI</span></label><div class="input-shell accent-acid"><input type="number" id="stepsValue"></div></div>
-          <div class="field"><label>Uyku Süresi <span class="unit">SA</span></label><div class="input-shell accent-blue"><input type="number" id="sleepHours"></div></div>
-          <div class="field"><label>Uyku Puanı <span class="unit">MAX 100</span></label><div class="input-shell accent-blue"><input type="number" id="sleepScore"></div></div>
+          <div class="field">
+            <label>Uyku Süresi</label>
+            <div class="input-shell accent-blue" style="display:flex; padding-right:12px;">
+              <input type="number" id="sleepHours" placeholder="7" oninput="window.limitInput(this, 24); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
+              <span style="color:var(--ink-dim); font-size:12px;">sa</span>
+              <input type="number" id="sleepMins" placeholder="30" oninput="window.limitInput(this, 59); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
+              <span style="color:var(--ink-dim); font-size:12px;">dk</span>
+            </div>
+          </div>
+          <div class="field"><label>Uyku Puanı</label><div class="input-shell accent-blue"><input type="number" id="sleepScore" oninput="window.limitInput(this, 100)"></div></div>
+          <div class="field">
+            <label>Derin Uyku</label>
+            <div class="input-shell accent-violet" style="display:flex; padding-right:12px;">
+              <input type="number" id="deepSleepHours" placeholder="1" oninput="window.limitInput(this, 24); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
+              <span style="color:var(--ink-dim); font-size:12px;">sa</span>
+              <input type="number" id="deepSleepMins" placeholder="30" oninput="window.limitInput(this, 59); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
+              <span style="color:var(--ink-dim); font-size:12px;">dk</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>REM Uykusu</label>
+            <div class="input-shell accent-coral" style="display:flex; padding-right:12px;">
+              <input type="number" id="remSleepHours" placeholder="2" oninput="window.limitInput(this, 24); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
+              <span style="color:var(--ink-dim); font-size:12px;">sa</span>
+              <input type="number" id="remSleepMins" placeholder="11" oninput="window.limitInput(this, 59); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
+              <span style="color:var(--ink-dim); font-size:12px;">dk</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- NOT -->
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Kalori Dengesi</h2></div></div>
+      <div class="card-body">
+        <div class="calorie-row">
+          <div class="field"><label>Alınan <span class="unit">KCAL</span></label><div class="input-shell accent-acid"><input type="number" id="caloriesIn"></div></div>
+          <div class="field"><label>Yakılan <span class="unit">KCAL</span></label><div class="input-shell accent-fire"><input type="number" id="caloriesOut"></div></div>
+        </div>
+        <div class="calorie-balance"><span class="cb-label">Net Denge</span><span class="cb-value" id="calorieBalance">— kcal</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Makrolar</h2></div></div>
+      <div class="card-body">
+        <div class="macro-grid">
+          <div class="field macro-field" data-macro="protein"><label><span class="swatch"></span>Protein</label><div class="input-shell"><input type="number" id="macroProtein"></div></div>
+          <div class="field macro-field" data-macro="carb"><label><span class="swatch"></span>Karb</label><div class="input-shell"><input type="number" id="macroCarb"></div></div>
+          <div class="field macro-field" data-macro="fat"><label><span class="swatch"></span>Yağ</label><div class="input-shell"><input type="number" id="macroFat"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Takviyeler</h2></div></div>
+      <div class="card-body">
+        <div class="supp-list">
+          <label class="supp-chip"><input type="checkbox" id="suppBoneBroth"><span class="supp-info"><span class="supp-name">Kemik Suyu</span></span></label>
+          <label class="supp-chip"><input type="checkbox" id="suppOmega3"><span class="supp-info"><span class="supp-name">Omega 3</span></span></label>
+          <label class="supp-chip"><input type="checkbox" id="suppCreatine"><span class="supp-info"><span class="supp-name">Kreatin</span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Antrenman</h2></div></div>
+      <div class="card-body">
+        <div class="select-shell">
+          <select id="trainingType">
+            <option value="" disabled selected>— Seçim Yap —</option>
+            <option value="upper">Üst Vücut</option><option value="lower">Alt Vücut</option><option value="push">Push</option>
+            <option value="pull">Pull</option><option value="legs">Bacak</option><option value="fullbody">Full Body</option>
+            <option value="cardio">Kardiyo</option><option value="rest">Dinlenme Günü</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot"></span><h2>Günün Notu</h2></div></div>
       <div class="card-body">
@@ -231,7 +399,6 @@
   <div class="save-zone"><button class="btn-save" id="saveBtn" type="button">⛺ KİŞİSEL KASAMA KAYDET</button></div>
 </div>
 
-<!-- FIREBASE MOTORLARI -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -250,6 +417,37 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
+
+  // --- HESAPLAMALAR VE LİMİTLER ---
+  window.limitInput = function(el, maxVal) {
+    if (el.value !== "" && parseInt(el.value) > maxVal) el.value = maxVal;
+    if (el.value !== "" && parseInt(el.value) < 0) el.value = 0;
+  };
+
+  window.checkSleepLimits = function() {
+    const tMins = (parseInt(document.getElementById('sleepHours').value)||0)*60 + (parseInt(document.getElementById('sleepMins').value)||0);
+    const dMins = (parseInt(document.getElementById('deepSleepHours').value)||0)*60 + (parseInt(document.getElementById('deepSleepMins').value)||0);
+    const rMins = (parseInt(document.getElementById('remSleepHours').value)||0)*60 + (parseInt(document.getElementById('remSleepMins').value)||0);
+
+    const warnEls = [ document.getElementById('deepSleepHours'), document.getElementById('deepSleepMins'), document.getElementById('remSleepHours'), document.getElementById('remSleepMins') ];
+    if (tMins > 0 && (dMins + rMins > tMins)) { warnEls.forEach(el => el.style.color = 'var(--coral)'); } 
+    else { warnEls.forEach(el => el.style.color = ''); }
+  };
+
+  const calInInput = document.getElementById("caloriesIn");
+  const calOutInput = document.getElementById("caloriesOut");
+  const calBalanceDisplay = document.getElementById("calorieBalance");
+
+  function updateCalorieBalance() {
+    const inVal = parseInt(calInInput.value) || 0;
+    const outVal = parseInt(calOutInput.value) || 0;
+    const balance = inVal - outVal;
+    if (balance > 0) { calBalanceDisplay.innerText = "+" + balance + " kcal"; calBalanceDisplay.style.color = "var(--mint)"; } 
+    else if (balance < 0) { calBalanceDisplay.innerText = balance + " kcal"; calBalanceDisplay.style.color = "var(--coral)"; } 
+    else { calBalanceDisplay.innerText = "0 kcal"; calBalanceDisplay.style.color = "var(--ink-dim)"; }
+  }
+  calInInput.addEventListener("input", updateCalorieBalance);
+  calOutInput.addEventListener("input", updateCalorieBalance);
 
   // --- GİRİŞ KONTROL SİSTEMİ ---
   const authScreen = document.getElementById("authScreen");
@@ -281,41 +479,43 @@
   });
 
   logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => {
-      document.getElementById("emailInput").value = "";
-      document.getElementById("passwordInput").value = "";
-    });
+    signOut(auth).then(() => { document.getElementById("emailInput").value = ""; document.getElementById("passwordInput").value = ""; });
   });
 
-  // --- MENÜ VE GRAFİK EKRANI KONTROLLERİ ---
+  // --- MENÜ VE GRAFİK EKRANI ---
   const menuBtn = document.getElementById('menuBtn');
   const drawer = document.getElementById('drawer');
   const overlay = document.getElementById('menuOverlay');
-  const closeBtn = document.getElementById('drawerCloseBtn');
   const statsLink = document.getElementById('statsLink');
-  const homeLink = document.getElementById('homeLink');
   const statsPanel = document.getElementById('statsPanel');
-  const statsClose = document.getElementById('statsCloseBtn');
 
-  function toggleMenu(){
-    drawer.classList.toggle('is-active');
-    overlay.classList.toggle('is-active');
-  }
+  function toggleMenu(){ drawer.classList.toggle('is-active'); overlay.classList.toggle('is-active'); }
   menuBtn.addEventListener('click', toggleMenu);
-  closeBtn.addEventListener('click', toggleMenu);
+  document.getElementById('drawerCloseBtn').addEventListener('click', toggleMenu);
   overlay.addEventListener('click', toggleMenu);
-  homeLink.addEventListener('click', (e) => { e.preventDefault(); toggleMenu(); });
+  document.getElementById('homeLink').addEventListener('click', (e) => { e.preventDefault(); toggleMenu(); });
 
   statsLink.addEventListener('click', (e) => {
     e.preventDefault(); toggleMenu();
     statsPanel.classList.add('is-active');
     document.body.style.overflow = 'hidden'; 
-    loadDashboardData(); // Çizimleri başlat
+    loadDashboardData(); 
   });
   
-  statsClose.addEventListener('click', () => {
+  document.getElementById('statsCloseBtn').addEventListener('click', () => {
     statsPanel.classList.remove('is-active');
     document.body.style.overflow = '';
+  });
+
+  window.currentChartRange = 7; 
+  document.getElementById('rangeToggle').addEventListener('click', function(e){
+    const opt = e.target.closest('.toggle-option');
+    if(!opt) return;
+    const value = opt.dataset.value;
+    this.setAttribute('data-range', value);
+    this.querySelectorAll('.toggle-option').forEach(o => o.classList.toggle('is-active', o === opt));
+    window.currentChartRange = (value === 'monthly') ? 30 : 7;
+    loadDashboardData();
   });
 
   // --- ANA UYGULAMA MOTORU (ÇOKLU KULLANICI UYUMLU) ---
@@ -325,7 +525,10 @@
 
   function clearFields() {
     document.querySelectorAll("#mainApp input[type='number'], #mainApp input[type='url'], #mainApp textarea").forEach(el => el.value = "");
+    document.querySelectorAll("#mainApp input[type='checkbox']").forEach(el => el.checked = false);
+    document.getElementById("trainingType").value = "";
     document.getElementById("viewPdfBtn").style.display = "none";
+    updateCalorieBalance();
   }
 
   async function loadDayData(dateStr) {
@@ -342,7 +545,6 @@
     campDayNumber.innerHTML = diffDays > 0 ? (diffDays < 10 ? '<span class="zero">00</span>'+diffDays : diffDays) : "00";
 
     try {
-      // DİKKAT: Veriyi çekerken artık giren kullanıcının özel ID'sini (auth.currentUser.uid) kullanıyoruz
       const userRef = doc(db, "users", auth.currentUser.uid, "logs", dateStr);
       const docSnap = await getDoc(userRef);
       if (docSnap.exists()) {
@@ -350,16 +552,35 @@
         document.getElementById("weightValue").value = data.weight || "";
         document.getElementById("bodyFatValue").value = data.bodyFat || "";
         document.getElementById("stepsValue").value = data.steps || "";
-        document.getElementById("sleepHours").value = data.sleep || "";
+        document.getElementById("sleepHours").value = data.sleepH || "";
+        document.getElementById("sleepMins").value = data.sleepM || "";
         document.getElementById("sleepScore").value = data.sleepScore || "";
+        document.getElementById("deepSleepHours").value = data.deepH || "";
+        document.getElementById("deepSleepMins").value = data.deepM || "";
+        document.getElementById("remSleepHours").value = data.remH || "";
+        document.getElementById("remSleepMins").value = data.remM || "";
+        document.getElementById("caloriesIn").value = data.calIn || "";
+        document.getElementById("caloriesOut").value = data.calOut || "";
+        document.getElementById("macroProtein").value = data.protein || "";
+        document.getElementById("macroCarb").value = data.carb || "";
+        document.getElementById("macroFat").value = data.fat || "";
         document.getElementById("dayNote").value = data.note || "";
         document.getElementById("pdfLinkInput").value = data.driveLink || "";
+        if(data.training) document.getElementById("trainingType").value = data.training;
+        
+        if(data.supps) {
+          if(data.supps.includes("Kemik Suyu")) document.getElementById("suppBoneBroth").checked = true;
+          if(data.supps.includes("Omega 3")) document.getElementById("suppOmega3").checked = true;
+          if(data.supps.includes("Kreatin")) document.getElementById("suppCreatine").checked = true;
+        }
         
         if (data.driveLink) {
           const viewBtn = document.getElementById("viewPdfBtn");
           viewBtn.href = data.driveLink;
           viewBtn.style.display = "block";
         }
+        updateCalorieBalance();
+        window.checkSleepLimits();
       }
     } catch(e) { console.error("Okuma hatası", e); }
   }
@@ -382,8 +603,20 @@
   const saveBtn = document.getElementById("saveBtn");
   saveBtn.addEventListener("click", async () => {
     if(!auth.currentUser) return;
+    
+    const tMins = (parseInt(document.getElementById('sleepHours').value)||0)*60 + (parseInt(document.getElementById('sleepMins').value)||0);
+    const dMins = (parseInt(document.getElementById('deepSleepHours').value)||0)*60 + (parseInt(document.getElementById('deepSleepMins').value)||0);
+    const rMins = (parseInt(document.getElementById('remSleepHours').value)||0)*60 + (parseInt(document.getElementById('remSleepMins').value)||0);
+    
+    if (tMins > 0 && (dMins + rMins > tMins)) { alert("Kanka, Derin Uyku ve REM'in toplamı Toplam Uykuyu geçemez!"); return; }
+
     saveBtn.innerText = "⏳ Kasana Yazılıyor...";
     saveBtn.disabled = true;
+
+    let supps = [];
+    if(document.getElementById("suppBoneBroth").checked) supps.push("Kemik Suyu");
+    if(document.getElementById("suppOmega3").checked) supps.push("Omega 3");
+    if(document.getElementById("suppCreatine").checked) supps.push("Kreatin");
 
     const dateStr = logDateInput.value;
     const payload = {
@@ -391,16 +624,27 @@
       weight: document.getElementById("weightValue").value,
       bodyFat: document.getElementById("bodyFatValue").value,
       steps: document.getElementById("stepsValue").value,
-      sleep: document.getElementById("sleepHours").value,
+      sleepH: document.getElementById("sleepHours").value,
+      sleepM: document.getElementById("sleepMins").value,
       sleepScore: document.getElementById("sleepScore").value,
+      deepH: document.getElementById("deepSleepHours").value,
+      deepM: document.getElementById("deepSleepMins").value,
+      remH: document.getElementById("remSleepHours").value,
+      remM: document.getElementById("remSleepMins").value,
+      calIn: document.getElementById("caloriesIn").value,
+      calOut: document.getElementById("caloriesOut").value,
+      protein: document.getElementById("macroProtein").value,
+      carb: document.getElementById("macroCarb").value,
+      fat: document.getElementById("macroFat").value,
+      training: document.getElementById("trainingType").value,
+      supps: supps.join(", "),
       note: document.getElementById("dayNote").value,
       driveLink: document.getElementById("pdfLinkInput").value 
     };
 
     try {
-      // DİKKAT: Veriyi kaydederken doğrudan kişisel ID altındaki klasöre kaydediyoruz
       await setDoc(doc(db, "users", auth.currentUser.uid, "logs", dateStr), payload);
-      saveBtn.innerText = "✅ KAYIT BAŞARILI";
+      saveBtn.innerText = "✅ VIP KAYIT BAŞARILI";
       loadDayData(dateStr); 
       setTimeout(() => { saveBtn.innerText = "⛺ KİŞİSEL KASAMA KAYDET"; saveBtn.disabled = false; }, 2000);
     } catch (e) {
@@ -409,35 +653,104 @@
     }
   });
 
-  // --- GRAFİK MOTORU (Sadece kullanıcının verilerini çizer) ---
+  // --- GRAFİK MOTORU (V6'NIN 4 GRAFİĞİ + KİŞİSEL VERİ) ---
+  const parseSleepObj = (h, m) => { return (parseInt(h)||0) + ((parseInt(m)||0) / 60); };
+  
+  function formatHrs(decimalHrs) {
+    if(isNaN(decimalHrs) || decimalHrs===0) return "—";
+    const h = Math.floor(decimalHrs);
+    const m = Math.round((decimalHrs - h) * 60);
+    return `${h}sa ${m}dk`;
+  }
+
   async function loadDashboardData() {
     if(!auth.currentUser) return;
     const statusText = document.getElementById('loadingStatus');
     statusText.innerText = "Verilerin Çekiliyor...";
 
     try {
-      // KİŞİYE ÖZEL VERİ SORGUSU
       const q = query(collection(db, "users", auth.currentUser.uid, "logs"), orderBy("date", "asc"));
       const querySnapshot = await getDocs(q);
       
-      const labels = [];
-      const stepsData = [], weightData = [];
+      let rows = [];
+      querySnapshot.forEach((doc) => rows.push(doc.data()));
+      if (rows.length > window.currentChartRange) rows = rows.slice(-window.currentChartRange);
 
-      querySnapshot.forEach((doc) => {
-        const row = doc.data();
+      const labels = [];
+      const stepsData = [], weightData = [], fatData = [], calInData = [], calOutData = [];
+      const sDeep = [], sRem = [], sLight = [];
+      let totalSleep = 0, maxSleep = 0, minSleep = 999;
+      let totalSteps = 0, maxSteps = 0, totalCalIn = 0, totalCalOut = 0;
+
+      rows.forEach(row => {
         if(!row.date) return;
         const dateObj = new Date(row.date);
         labels.push(dateObj.toLocaleDateString('tr-TR', {day: 'numeric', month: 'short'}));
-        stepsData.push(parseInt(row.steps) || 0);
+
+        let stp = parseInt(row.steps) || 0;
+        stepsData.push(stp);
+        if(stp > 0) { totalSteps += stp; if(stp > maxSteps) maxSteps = stp; }
+
+        let totalHrs = parseSleepObj(row.sleepH, row.sleepM);
+        let deepHrs = parseSleepObj(row.deepH, row.deepM);
+        let remHrs = parseSleepObj(row.remH, row.remM);
+        let lightHrs = totalHrs - deepHrs - remHrs;
+        if(lightHrs < 0) lightHrs = 0; 
+
+        sDeep.push(deepHrs); sRem.push(remHrs); sLight.push(lightHrs);
+        if(totalHrs > 0) {
+          totalSleep += totalHrs;
+          if(totalHrs > maxSleep) maxSleep = totalHrs;
+          if(totalHrs < minSleep) minSleep = totalHrs;
+        }
+
         weightData.push(parseFloat(row.weight) || null);
+        fatData.push(parseFloat(row.bodyFat) || null);
+        
+        const cin = parseInt(row.calIn) || 0;
+        const cout = parseInt(row.calOut) || 0;
+        calInData.push(cin); calOutData.push(cout);
+        totalCalIn += cin; totalCalOut += cout;
       });
 
+      // İSTATİSTİKLER (CHIPS)
+      const validSteps = stepsData.filter(x => x > 0).length || 1;
+      document.getElementById('stepsAvg').innerText = Math.round(totalSteps / validSteps).toLocaleString('tr-TR');
+      document.getElementById('stepsMax').innerText = maxSteps.toLocaleString('tr-TR');
+      document.getElementById('stepsTotal').innerText = totalSteps.toLocaleString('tr-TR');
+
+      const validDays = sDeep.filter((_, i) => (sDeep[i]+sRem[i]+sLight[i]) > 0).length || 1;
+      document.getElementById('sleepAvg').innerText = formatHrs(totalSleep / validDays);
+      document.getElementById('sleepMax').innerText = formatHrs(maxSleep === 0 ? 0 : maxSleep);
+      document.getElementById('sleepMin').innerText = formatHrs(minSleep === 999 ? 0 : minSleep);
+
+      const validWeights = weightData.filter(x => x !== null);
+      const currentWeight = validWeights.length > 0 ? validWeights[validWeights.length - 1] : 0;
+      const firstWeight = validWeights.length > 0 ? validWeights[0] : 0;
+      const weightDelta = currentWeight - firstWeight;
+      document.getElementById('weightCurrent').innerText = currentWeight ? currentWeight + " kg" : "—";
+      const deltaEl = document.getElementById('weightDelta');
+      deltaEl.innerText = (weightDelta > 0 ? "+" : "") + weightDelta.toFixed(1) + " kg";
+      deltaEl.className = "chip-value " + (weightDelta <= 0 ? "up" : "down");
+      const validFats = fatData.filter(x => x !== null);
+      document.getElementById('bodyFatCurrent').innerText = validFats.length > 0 ? "%" + validFats[validFats.length - 1] : "—";
+
+      const calDays = calInData.filter(x => x > 0).length || 1;
+      const avgIn = Math.round(totalCalIn / calDays);
+      const avgOut = Math.round(totalCalOut / calDays);
+      document.getElementById('calorieAvgIn').innerText = avgIn + " kcal";
+      document.getElementById('calorieAvgOut').innerText = avgOut + " kcal";
+      document.getElementById('calorieAvgNet').innerText = (avgIn - avgOut) + " kcal";
+
+      // ÇİZİMLER
       Chart.defaults.color = '#9499B3';
       Chart.defaults.font.family = "'JetBrains Mono', monospace";
       const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } };
 
       if(window.stepChart) window.stepChart.destroy();
+      if(window.sChart) window.sChart.destroy();
       if(window.wChart) window.wChart.destroy();
+      if(window.cChart) window.cChart.destroy();
 
       window.stepChart = new Chart(document.getElementById('stepsChart'), {
         type: 'bar',
@@ -445,16 +758,26 @@
         options: commonOptions
       });
 
+      window.sChart = new Chart(document.getElementById('sleepChart'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [ { label: 'Derin', data: sDeep, backgroundColor: '#8C7CFF' }, { label: 'REM', data: sRem, backgroundColor: '#FF7A9C' }, { label: 'Hafif', data: sLight, backgroundColor: '#5B8DFF', borderRadius: { topLeft: 6, topRight: 6 } } ] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+      });
+
       window.wChart = new Chart(document.getElementById('weightChart'), {
         type: 'line',
-        data: { labels: labels, datasets: [ { label: 'Kilo', data: weightData, borderColor: '#5B8DFF', tension: 0.4 } ] },
+        data: { labels: labels, datasets: [ { label: 'Kilo', data: weightData, borderColor: '#3DDC97', tension: 0.4, yAxisID: 'y' }, { label: 'Yağ %', data: fatData, borderColor: '#FF7A9C', tension: 0.4, yAxisID: 'y1' } ] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { type: 'linear', position: 'left', grid: { color: 'rgba(255,255,255,0.05)' } }, y1: { type: 'linear', position: 'right', grid: { display: false } }, x: { grid: { display: false } } } }
+      });
+
+      window.cChart = new Chart(document.getElementById('calorieChart'), {
+        type: 'line',
+        data: { labels: labels, datasets: [ { label: 'Alınan', data: calInData, borderColor: '#3DDC97', backgroundColor: 'rgba(61,220,151,0.1)', fill: true, tension: 0.4 }, { label: 'Yakılan', data: calOutData, borderColor: '#FF7A9C', borderDash: [5, 5], tension: 0.4 } ] },
         options: commonOptions
       });
 
       statusText.innerText = "Güncel";
-    } catch (e) {
-      statusText.innerText = "Hata Oluştu";
-    }
+    } catch (e) { statusText.innerText = "Hata Oluştu"; }
   }
 </script>
 </body>
