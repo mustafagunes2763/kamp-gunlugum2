@@ -3,323 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0A0B0D">
+<meta name="theme-color" content="#0A0C14">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>KAMP / Günlük Rapor V6</title>
-  <link rel="manifest" href="manifest.json">
+<title>KAMP / VIP Sürüm V7.0</title>
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
-    --bg:        #0A0C14;
-    --bg-2:      #0E1120;
-    --panel:     rgba(255,255,255,0.045);
-    --panel-2:   rgba(255,255,255,0.03);
-    --panel-solid: #141828;
-    --line:      rgba(255,255,255,0.09);
-    --line-soft: rgba(255,255,255,0.06);
-    --ink:       #F3F4FA;
-    --ink-dim:   #9499B3;
-    --ink-faint: #5C6180;
-    --violet:    #8C7CFF;
-    --violet-2:  #5B8DFF;
-    --mint:      #3DDC97;
-    --mint-dim:  #1F6B4C;
-    --coral:     #FF7A9C;
+    --bg:        #0A0C14; --bg-2:      #0E1120; --panel:     rgba(255,255,255,0.045); --panel-2:   rgba(255,255,255,0.03); --panel-solid: #141828;
+    --line:      rgba(255,255,255,0.09); --line-soft: rgba(255,255,255,0.06); --ink:       #F3F4FA; --ink-dim:   #9499B3; --ink-faint: #5C6180;
+    --violet:    #8C7CFF; --violet-2:  #5B8DFF; --mint:      #3DDC97; --coral:     #FF7A9C;
     --grad-brand: linear-gradient(135deg, #8C7CFF 0%, #5B8DFF 100%);
-    --grad-mint:  linear-gradient(135deg, #3DDC97 0%, #29B7D8 100%);
-    --radius:    22px;
-    --radius-sm: 14px;
-    --font-display: 'Sora', sans-serif;
-    --font-mono:    'JetBrains Mono', monospace;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --radius:    22px; --radius-sm: 14px; --font-display: 'Sora', sans-serif; --font-mono:    'JetBrains Mono', monospace;
+    --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
-
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
   html, body{ background: var(--bg); color: var(--ink); font-family: var(--font-mono); overscroll-behavior-y: none; }
-  body{ min-height: 100vh; padding-top: var(--safe-top); padding-bottom: calc(var(--safe-bottom) + 28px); background-image: radial-gradient(circle at 12% -8%, rgba(140,124,255,0.22), transparent 42%), radial-gradient(circle at 105% 18%, rgba(91,141,255,0.16), transparent 38%), radial-gradient(circle at 50% 100%, rgba(61,220,151,0.07), transparent 45%); background-attachment: fixed; }
-  .hazard-strip{ height: 3px; width: 100%; background: var(--grad-brand); opacity: 0.85; }
-  .app{ max-width: 480px; margin: 0 auto; padding: 0 16px; transition: filter 0.3s ease; }
+  body{ min-height: 100vh; background-image: radial-gradient(circle at 12% -8%, rgba(140,124,255,0.22), transparent 42%), radial-gradient(circle at 105% 18%, rgba(91,141,255,0.16), transparent 38%), radial-gradient(circle at 50% 100%, rgba(61,220,151,0.07), transparent 45%); background-attachment: fixed; }
+  
+  /* GİRİŞ EKRANI (VIP) */
+  #authScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; z-index: 1000; position: relative; }
+  .auth-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 20px; width: 100%; max-width: 360px; backdrop-filter: blur(18px); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+  .auth-card h1 { font-family: var(--font-display); font-size: 24px; margin-bottom: 5px; background: var(--grad-brand); -webkit-background-clip: text; color: transparent; }
+  .auth-card p { font-size: 11px; color: var(--ink-faint); margin-bottom: 25px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .auth-input { width: 100%; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 14px; color: var(--ink); font-family: var(--font-mono); font-size: 15px; margin-bottom: 12px; outline: none; }
+  .auth-input:focus { border-color: var(--violet); }
+  .btn-auth { width: 100%; background: var(--grad-brand); border: none; border-radius: 14px; color: #0A0C14; font-family: var(--font-display); font-weight: 700; font-size: 16px; padding: 15px; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 20px rgba(124,108,255,0.3); }
+  #authError { color: var(--coral); font-size: 12px; margin-top: 15px; display: none; }
 
+  /* ANA UYGULAMA STİLLERİ */
+  #mainApp { display: none; max-width: 480px; margin: 0 auto; padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 28px); }
+  .hazard-strip{ height: 3px; width: 100%; background: var(--grad-brand); opacity: 0.85; position: fixed; top: 0; left: 0; z-index: 50; }
+  
   header.camp-header{ padding: 26px 4px 20px; display:flex; align-items:flex-start; justify-content:space-between; gap: 16px; }
   .camp-id{ display:flex; flex-direction:column; gap: 7px; }
   .camp-id .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; }
   .camp-id .date-row{ display:flex; align-items:center; gap: 8px; }
-  .date-nav-btn { background: transparent; border: none; color: var(--violet); font-size: 20px; cursor: pointer; padding: 0 6px; display: flex; align-items: center; justify-content: center; }
-  .date-nav-btn:active { opacity: 0.5; }
-  .camp-id .date-value{ font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); min-width: 110px; text-align: center; }
+  .date-nav-btn { background: transparent; border: none; color: var(--violet); font-size: 20px; cursor: pointer; padding: 0 6px; }
+  .camp-id .date-value{ font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--ink); min-width: 110px; text-align: center; }
   
-  .day-plate{ flex-shrink:0; background: var(--panel-solid); border: 1px solid var(--line); border-radius: 18px; padding: 10px 18px 12px; text-align:center; position:relative; min-width: 104px; backdrop-filter: blur(20px); box-shadow: 0 12px 30px rgba(91,80,220,0.18); }
+  .day-plate{ flex-shrink:0; background: var(--panel-solid); border: 1px solid var(--line); border-radius: 18px; padding: 10px 18px 12px; text-align:center; position:relative; min-width: 104px; }
   .day-plate::before{ content:""; position:absolute; inset:-1px; border-radius: 18px; padding: 1px; background: var(--grad-brand); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55; pointer-events:none; }
   .day-plate .plate-label{ font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: var(--violet); text-transform: uppercase; }
-  .day-plate .plate-number{ font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1.15; background: var(--grad-brand); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .day-plate .plate-number{ font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1.15; background: var(--grad-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .day-plate .plate-number span.zero{ opacity: 0.3; color: var(--ink-faint); -webkit-text-fill-color: var(--ink-faint); } 
 
   .stack{ display:flex; flex-direction:column; gap: 14px; }
-  section.card{ background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow:hidden; backdrop-filter: blur(18px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+  section.card{ background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow:hidden; backdrop-filter: blur(18px); }
   .card-head{ display:flex; align-items:center; justify-content:space-between; padding: 16px 18px 0; }
   .card-head .tag{ display:flex; align-items:center; gap: 9px; }
-  .card-head .tag .dot{ width:7px; height:7px; border-radius:50%; background: var(--grad-brand); box-shadow: 0 0 10px rgba(140,124,255,0.7); }
-  .card-head h2{ font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: 0.01em; color: var(--ink); }
+  .card-head .tag .dot{ width:7px; height:7px; border-radius:50%; background: var(--grad-brand); }
+  .card-head h2{ font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--ink); }
   .card-head .hint{ font-size: 10px; color: var(--ink-faint); letter-spacing: 0.06em; text-transform: uppercase; }
   .card-body{ padding: 14px 18px 20px; }
 
   .field-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .field{ display:flex; flex-direction:column; gap:7px; }
-  .field label{ font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); display:flex; align-items:center; justify-content:space-between; }
-  .field label .unit{ color: var(--ink-faint); font-size: 9px; letter-spacing: 0.04em; }
+  .field label{ font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); display:flex; justify-content:space-between; }
+  .field label .unit{ color: var(--ink-faint); font-size: 9px; }
 
-  .input-shell{ position:relative; display:flex; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }
-  .input-shell:focus-within{ border-color: rgba(140,124,255,0.55); background: rgba(140,124,255,0.06); box-shadow: 0 0 0 4px rgba(140,124,255,0.12); }
-  .input-shell input[type="number"], .input-shell input[type="text"], .input-shell input[type="date"]{ appearance:none; -webkit-appearance:none; width:100%; background: transparent; border:none; outline:none; color: var(--ink); font-family: var(--font-mono); font-weight: 600; font-size: 17px; padding: 13px 14px; font-variant-numeric: tabular-nums; transition: color 0.2s; }
-  .input-shell input::placeholder{ color: var(--ink-faint); font-weight: 400; }
+  .input-shell{ position:relative; display:flex; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); }
+  .input-shell input, .input-shell select, .note-shell textarea{ appearance:none; -webkit-appearance:none; width:100%; background: transparent; border:none; outline:none; color: var(--ink); font-family: var(--font-mono); font-weight: 600; font-size: 16px; padding: 13px 14px; }
+  .input-shell input::placeholder, .note-shell textarea::placeholder{ color: var(--ink-faint); font-weight: 400; }
   .input-shell.accent-fire{ border-left: 3px solid var(--coral); }
   .input-shell.accent-acid{ border-left: 3px solid var(--mint); }
   .input-shell.accent-blue{ border-left: 3px solid var(--violet-2); }
-  .input-shell.accent-violet{ border-left: 3px solid var(--violet); }
-
-  .weight-row{ display:grid; grid-template-columns: 1.3fr 1fr; gap: 10px; }
-  .weight-row .input-shell input{ font-size: 23px; font-weight: 700; }
-
-  .calorie-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; position:relative; }
-  .calorie-row .field label .arrow-in{ color: var(--mint); }
-  .calorie-row .field label .arrow-out{ color: var(--coral); }
-  .calorie-balance{ margin-top: 14px; display:flex; align-items:center; justify-content:space-between; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 12px 14px; }
-  .calorie-balance .cb-label{ font-size: 10px; letter-spacing: 0.1em; text-transform:uppercase; color: var(--ink-faint); }
-  .calorie-balance .cb-value{ font-family: var(--font-mono); font-weight: 700; font-size: 16px; color: var(--ink-dim); }
-
+  
+  .weight-row, .calorie-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .macro-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .macro-field .input-shell{ border-left: 3px solid var(--macro-color, var(--ink-faint)); }
-  .macro-field[data-macro="protein"]{ --macro-color: var(--mint); }
-  .macro-field[data-macro="carb"]{ --macro-color: var(--violet-2); }
-  .macro-field[data-macro="fat"]{ --macro-color: var(--coral); }
-  .macro-field label{ justify-content:flex-start; gap:5px; }
-  .macro-field label .swatch{ width:6px; height:6px; border-radius:50%; background: var(--macro-color); }
-
-  .supp-list{ display:flex; flex-direction:column; gap: 8px; }
-  .supp-chip{ display:flex; align-items:center; gap: 12px; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 13px 15px; cursor:pointer; transition: border-color .18s ease, background .18s ease; }
-  .supp-chip input[type="checkbox"]{ appearance:none; -webkit-appearance:none; width: 22px; height: 22px; flex-shrink:0; border: 1.5px solid var(--ink-faint); border-radius: 7px; background: rgba(255,255,255,0.02); position:relative; cursor:pointer; transition: all .18s ease; }
-  .supp-chip input[type="checkbox"]:checked{ background: var(--grad-mint); border-color: transparent; }
-  .supp-chip input[type="checkbox"]:checked::after{ content:""; position:absolute; left: 6px; top: 2px; width: 6px; height: 11px; border: solid #07261B; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  .supp-chip:has(input:checked){ border-color: rgba(61,220,151,0.35); background: linear-gradient(135deg, rgba(61,220,151,0.10), rgba(41,183,216,0.04)); }
-  .supp-chip .supp-info{ display:flex; flex-direction:column; gap: 2px; flex:1; }
-  .supp-chip .supp-name{ font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: 0; color: var(--ink); }
-  .supp-chip .supp-sub{ font-size: 10px; color: var(--ink-faint); letter-spacing: 0.02em; }
-  .supp-chip .supp-icon{ font-size: 19px; width: 30px; height: 30px; display:flex; align-items:center; justify-content:center; border-radius: 10px; background: rgba(255,255,255,0.04); flex-shrink:0; }
-
-  .select-shell{ position:relative; background: var(--panel-2); border: 1px solid var(--line-soft); border-left: 3px solid var(--violet); border-radius: var(--radius-sm); }
-  .select-shell select{ appearance:none; -webkit-appearance:none; width:100%; background: transparent; border:none; outline:none; color: var(--ink); font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 0; padding: 14px 38px 14px 14px; }
-  .select-shell select option{ background: var(--panel-solid); color: var(--ink); }
-  .select-shell::after{ content:"▾"; position:absolute; right: 15px; top:50%; transform: translateY(-50%); color: var(--violet); font-size: 12px; pointer-events:none; }
-
   .note-shell{ background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); overflow:hidden; }
-  .note-shell textarea{ width:100%; min-height: 96px; background: transparent; border:none; outline:none; resize: vertical; color: var(--ink); font-family: var(--font-mono); font-size: 14px; line-height: 1.6; padding: 13px 14px; }
-  .note-shell textarea::placeholder{ color: var(--ink-faint); }
+  .note-shell textarea{ min-height: 96px; resize: vertical; line-height: 1.6; }
+
+  .pdf-container{ display:flex; flex-direction:column; gap: 10px; }
+  .btn-view-pdf{ display:none; background: rgba(61,220,151,0.1); border: 1px solid var(--mint); color: var(--mint); font-family: var(--font-display); font-weight: 600; text-align:center; text-decoration:none; padding: 12px; border-radius: 12px; font-size: 14px; }
 
   .save-zone{ margin-top: 20px; padding-bottom: 4px; }
-  .btn-save{ width:100%; appearance:none; border:none; border-radius: 18px; background: var(--grad-brand); color: #0A0C14; font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: 0.01em; padding: 17px; display:flex; align-items:center; justify-content:center; gap: 10px; box-shadow: 0 14px 34px rgba(124,108,255,0.32), inset 0 1px 0 rgba(255,255,255,0.3); cursor:pointer;}
-  .btn-save:active{ transform: translateY(1px) scale(0.99); box-shadow: 0 8px 22px rgba(124,108,255,0.28), inset 0 1px 0 rgba(255,255,255,0.25); }
-  .save-sub{ text-align:center; margin-top: 12px; font-size: 10px; letter-spacing: 0.06em; color: var(--ink-faint); text-transform: uppercase; }
-
-  footer.camp-footer{ margin-top: 24px; padding: 18px 4px 6px; text-align:center; border-top: 1px solid var(--line-soft); }
-  footer.camp-footer .stamp{ font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: var(--ink-faint); text-transform: uppercase; }
-
-  /* DRAWER MENU STYLES */
-  .menu-btn{ appearance:none; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(18px); border-radius: 12px; width: 42px; height: 42px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 4px; cursor:pointer; transition: border-color .18s ease, background .18s ease; }
-  .menu-btn:hover{ border-color: rgba(140,124,255,0.45); background: rgba(140,124,255,0.08); }
-  .menu-btn span{ display:block; width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .22s ease, opacity .22s ease; }
-  .menu-btn.is-open span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
-  .menu-btn.is-open span:nth-child(2){ opacity: 0; }
-  .menu-btn.is-open span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
-
-  .header-top{ display:flex; align-items:center; gap: 12px; padding: 4px 4px 0; }
-  .menu-overlay{ position:fixed; inset:0; background: rgba(5,6,12,0.55); backdrop-filter: blur(2px); opacity:0; pointer-events:none; transition: opacity .25s ease; z-index: 40; }
-  .menu-overlay.is-active{ opacity:1; pointer-events:auto; }
-
-  .drawer{ position:fixed; top:0; left:0; height:100%; width: min(78vw, 300px); background: var(--bg-2); border-right: 1px solid var(--line); box-shadow: 24px 0 60px rgba(0,0,0,0.4); transform: translateX(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 50; padding: calc(var(--safe-top) + 22px) 18px 22px; display:flex; flex-direction:column; }
-  .drawer.is-active{ transform: translateX(0); }
-  .drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 26px; padding: 0 4px; }
-  .drawer-head .drawer-title{ font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--ink); }
-  .drawer-close{ appearance:none; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink-dim); width: 32px; height: 32px; border-radius: 10px; font-size: 16px; line-height: 1; cursor:pointer; }
-  .drawer-nav{ display:flex; flex-direction:column; gap: 6px; }
-  .drawer-link{ display:flex; align-items:center; gap: 13px; padding: 13px 12px; border-radius: var(--radius-sm); text-decoration:none; color: var(--ink-dim); border: 1px solid transparent; transition: background .18s ease, border-color .18s ease, color .18s ease; }
-  .drawer-link:hover{ background: var(--panel-2); }
-  .drawer-link.is-current{ background: linear-gradient(135deg, rgba(140,124,255,0.14), rgba(91,141,255,0.06)); border-color: rgba(140,124,255,0.3); color: var(--ink); }
-  .drawer-link .link-icon{ width: 34px; height: 34px; border-radius: 10px; background: var(--panel-2); display:flex; align-items:center; justify-content:center; font-size: 16px; flex-shrink:0; }
-  .drawer-link.is-current .link-icon{ background: var(--grad-brand); }
-  .drawer-link .link-text{ display:flex; flex-direction:column; gap: 1px; }
-  .drawer-link .link-text .link-title{ font-family: var(--font-display); font-weight: 600; font-size: 14px; }
-  .drawer-link .link-text .link-sub{ font-size: 10px; color: var(--ink-faint); letter-spacing: 0.02em; }
-  .drawer-foot{ margin-top: auto; padding: 14px 8px 4px; border-top: 1px solid var(--line-soft); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); text-align:center; }
-
-  /* TAM SAYFA STATS PANELİ */
-  .stats-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; max-width: 100%; background: var(--bg); background-image: radial-gradient(circle at 90% -8%, rgba(140,124,255,0.18), transparent 42%), radial-gradient(circle at 0% 22%, rgba(91,141,255,0.12), transparent 38%); z-index: 100; transform: translateY(100%); transition: transform .35s cubic-bezier(.4,0,.2,1); overflow-y: auto; -webkit-overflow-scrolling: touch; }
-  .stats-panel.is-active{ transform: translateY(0); }
-  .stats-inner{ max-width: 480px; margin: 0 auto; padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 28px); }
-  .stats-head{ display:flex; align-items:center; justify-content:space-between; padding: 4px 4px 22px; }
-  .stats-head .stats-title-group{ display:flex; flex-direction:column; gap: 4px; }
-  .stats-head .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; }
-  .stats-head .stats-title{ font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--ink); letter-spacing: -0.01em; }
-  .stats-close{ appearance:none; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink-dim); width: 32px; height: 32px; border-radius: 10px; font-size: 16px; line-height: 1; cursor:pointer; }
+  .btn-save{ width:100%; border:none; border-radius: 18px; background: var(--grad-brand); color: #0A0C14; font-family: var(--font-display); font-weight: 700; font-size: 16px; padding: 17px; box-shadow: 0 14px 34px rgba(124,108,255,0.32); cursor:pointer;}
   
-  .range-toggle{ display:flex; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 14px; padding: 4px; margin-bottom: 18px; position: relative; }
-  .range-toggle .toggle-option{ flex: 1; text-align:center; padding: 10px 0; font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--ink-faint); border-radius: 10px; cursor:pointer; position: relative; z-index: 2; transition: color .25s ease; user-select:none; }
-  .range-toggle .toggle-option.is-active{ color: var(--bg); }
-  .range-toggle .toggle-pill{ position:absolute; top:4px; left:4px; width: calc(50% - 4px); height: calc(100% - 8px); background: var(--grad-brand); border-radius: 10px; z-index: 1; transition: transform .28s cubic-bezier(.4,0,.2,1); box-shadow: 0 6px 18px rgba(124,108,255,0.35); }
-  .range-toggle[data-range="monthly"] .toggle-pill{ transform: translateX(100%); }
-
-  .stats-stack{ display:flex; flex-direction:column; gap: 14px; }
-  .stats-stack .card-head .hint.live{ display:flex; align-items:center; gap: 5px; }
-  .stats-stack .card-head .hint.live::before{ content:""; width: 5px; height: 5px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 6px rgba(61,220,151,0.8); }
-  .chart-legend{ display:flex; gap: 14px; padding: 0 18px 2px; flex-wrap: wrap; }
-  .chart-legend .legend-item{ display:flex; align-items:center; gap: 6px; font-size: 10px; letter-spacing: 0.04em; color: var(--ink-dim); }
-  .chart-legend .legend-dot{ width: 7px; height: 7px; border-radius: 50%; flex-shrink:0; }
-  .legend-dot.dot-mint{ background: var(--mint); }
-  .legend-dot.dot-violet{ background: var(--violet); }
-  .legend-dot.dot-coral{ background: var(--coral); }
-  .legend-dot.dot-blue{ background: var(--violet-2); }
-  .legend-dot.dot-dim{ background: var(--ink-faint); }
-  .chart-wrap{ position: relative; width: 100%; height: 200px; margin-top: 12px; }
-  .chart-wrap canvas{ width: 100% !important; height: 100% !important; }
-  .stat-chips{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
-  .stat-chip{ background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); padding: 10px 8px; text-align:center; }
-  .stat-chip .chip-label{ font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); display:block; margin-bottom: 4px; }
-  .stat-chip .chip-value{ font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--ink); }
-  .stat-chip .chip-value.up{ color: var(--mint); }
-  .stat-chip .chip-value.down{ color: var(--coral); }
+  .top-bar { display: flex; justify-content: flex-end; padding-top: 10px; }
+  .btn-logout { background: transparent; border: 1px solid var(--coral); color: var(--coral); padding: 5px 12px; border-radius: 8px; font-size: 10px; font-family: var(--font-mono); cursor: pointer; }
 </style>
 </head>
 <body>
 
-<div class="hazard-strip"></div>
-
-<div class="menu-overlay" id="menuOverlay"></div>
-<nav class="drawer" id="drawer" aria-label="Ana menü">
-  <div class="drawer-head">
-    <span class="drawer-title">Menü</span>
-    <button class="drawer-close" id="drawerCloseBtn" type="button">✕</button>
+<!-- GİRİŞ EKRANI (VIP KAPI) -->
+<div id="authScreen">
+  <div class="auth-card">
+    <h1>KAMP GÜNLÜĞÜM</h1>
+    <p>VIP Erişim Ekranı</p>
+    <input type="email" id="emailInput" class="auth-input" placeholder="E-posta Adresi">
+    <input type="password" id="passwordInput" class="auth-input" placeholder="Şifre">
+    <button id="loginBtn" class="btn-auth">KASAYI AÇ</button>
+    <div id="authError">Giriş başarısız. Bilgileri kontrol et.</div>
   </div>
-  <div class="drawer-nav">
-    <a href="#" class="drawer-link is-current" id="homeLink">
-      <span class="link-icon">📝</span>
-      <span class="link-text"><span class="link-title">Günlük Giriş</span><span class="link-sub">Bugünün kaydı</span></span>
-    </a>
-    <a href="#" class="drawer-link" id="statsLink">
-      <span class="link-icon">📊</span>
-      <span class="link-text"><span class="link-title">Grafikler &amp; İstatistikler</span><span class="link-sub">Sistem verilerin</span></span>
-    </a>
-  </div>
-  <div class="drawer-foot">Kamp Defteri · Sürüm 6.0 (Firebase)</div>
-</nav>
+</div>
 
-<!-- TAM SAYFA GRAFİK PANELİ -->
-<section class="stats-panel" id="statsPanel" aria-label="Grafikler ve İstatistikler">
-  <div class="stats-inner">
-    <div class="stats-head">
-      <div class="stats-title-group">
-        <span class="eyebrow">Sistem Analizi</span>
-        <span class="stats-title">Grafikler &amp; İstatistikler</span>
-      </div>
-      <button class="stats-close" id="statsCloseBtn" type="button">✕</button>
-    </div>
-
-    <!-- HAFTALIK / AYLIK BUTONLARI -->
-    <div class="range-toggle" id="rangeToggle" data-range="weekly">
-      <div class="toggle-pill"></div>
-      <div class="toggle-option is-active" data-value="weekly">Haftalık</div>
-      <div class="toggle-option" data-value="monthly">Aylık</div>
-    </div>
-
-    <div class="stats-stack">
-      <!-- ADIM TRENDİ -->
-      <section class="card">
-        <div class="card-head">
-          <div class="tag"><span class="dot" style="background: var(--mint); box-shadow: 0 0 10px rgba(61,220,151,0.7);"></span><h2>Adım Trendi</h2></div>
-          <span class="hint live" id="loadingStatus">Yükleniyor...</span>
-        </div>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot dot-mint"></span>Adım Sayısı</span>
-        </div>
-        <div class="card-body">
-          <div class="chart-wrap"><canvas id="stepsChart"></canvas></div>
-          <div class="stat-chips">
-            <div class="stat-chip"><span class="chip-label">Ortalama</span><span class="chip-value" id="stepsAvg">—</span></div>
-            <div class="stat-chip"><span class="chip-label">Maksimum</span><span class="chip-value" id="stepsMax">—</span></div>
-            <div class="stat-chip"><span class="chip-label">Toplam</span><span class="chip-value" id="stepsTotal">—</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- UYKU TRENDİ -->
-      <section class="card">
-        <div class="card-head">
-          <div class="tag"><span class="dot"></span><h2>Uyku Trendi</h2></div>
-        </div>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot dot-violet"></span>Derin</span>
-          <span class="legend-item"><span class="legend-dot dot-coral"></span>REM</span>
-          <span class="legend-item"><span class="legend-dot dot-blue"></span>Hafif</span>
-        </div>
-        <div class="card-body">
-          <div class="chart-wrap"><canvas id="sleepChart"></canvas></div>
-          <div class="stat-chips">
-            <div class="stat-chip"><span class="chip-label">Ortalama</span><span class="chip-value" id="sleepAvg">—</span></div>
-            <div class="stat-chip"><span class="chip-label">En Uzun</span><span class="chip-value" id="sleepMax">—</span></div>
-            <div class="stat-chip"><span class="chip-label">En Kısa</span><span class="chip-value" id="sleepMin">—</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- KİLO VE YAĞ -->
-      <section class="card">
-        <div class="card-head">
-          <div class="tag"><span class="dot"></span><h2>Kilo ve Yağ Oranı</h2></div>
-        </div>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot dot-mint"></span>Kilo (KG)</span>
-          <span class="legend-item"><span class="legend-dot dot-coral"></span>Yağ Oranı (%)</span>
-        </div>
-        <div class="card-body">
-          <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
-          <div class="stat-chips">
-            <div class="stat-chip"><span class="chip-label">Güncel KG</span><span class="chip-value" id="weightCurrent">—</span></div>
-            <div class="stat-chip"><span class="chip-label">Değişim</span><span class="chip-value" id="weightDelta">—</span></div>
-            <div class="stat-chip"><span class="chip-label">Yağ %</span><span class="chip-value" id="bodyFatCurrent">—</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- KALORİ DENGESİ -->
-      <section class="card">
-        <div class="card-head">
-          <div class="tag"><span class="dot"></span><h2>Kalori Dengesi</h2></div>
-        </div>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot dot-mint"></span>Alınan</span>
-          <span class="legend-item"><span class="legend-dot dot-coral"></span>Yakılan</span>
-        </div>
-        <div class="card-body">
-          <div class="chart-wrap"><canvas id="calorieChart"></canvas></div>
-          <div class="stat-chips">
-            <div class="stat-chip"><span class="chip-label">Ort. Alınan</span><span class="chip-value" id="calorieAvgIn">—</span></div>
-            <div class="stat-chip"><span class="chip-label">Ort. Yakılan</span><span class="chip-value" id="calorieAvgOut">—</span></div>
-            <div class="stat-chip"><span class="chip-label">Net Ort.</span><span class="chip-value" id="calorieAvgNet">—</span></div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-</section>
-
-<div class="app" id="mainApp">
-  <div class="header-top">
-    <button class="menu-btn" id="menuBtn" type="button"><span></span><span></span><span></span></button>
+<!-- ANA UYGULAMA (GİRİŞ YAPILINCA AÇILIR) -->
+<div id="mainApp">
+  <div class="hazard-strip"></div>
+  
+  <div class="top-bar">
+    <button id="logoutBtn" class="btn-logout">Çıkış Yap Kilit Kapat</button>
   </div>
 
   <header class="camp-header">
@@ -339,9 +128,22 @@
   </header>
 
   <div class="stack">
+    <!-- DRIVE LİNK KARTI (GÜNCELLENDİ) -->
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot" style="background: var(--coral);"></span><h2>Dosya / PDF Linki</h2></div><span class="hint">Google Drive</span></div>
+      <div class="card-body">
+        <div class="pdf-container">
+          <div class="input-shell accent-fire">
+            <input type="url" id="pdfLinkInput" placeholder="Drive belge linkini buraya yapıştır...">
+          </div>
+          <a href="#" id="viewPdfBtn" class="btn-view-pdf" target="_blank">📄 Kayıtlı Belgeyi Aç</a>
+        </div>
+      </div>
+    </section>
+
     <!-- SABAH TARTISI -->
     <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Sabah Tartısı</h2></div><span class="hint">Mi Scale</span></div>
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Sabah Tartısı</h2></div></div>
       <div class="card-body">
         <div class="weight-row">
           <div class="field"><label>Kilo <span class="unit">KG</span></label><div class="input-shell accent-acid"><input type="number" step="0.1" id="weightValue"></div></div>
@@ -350,493 +152,187 @@
       </div>
     </section>
 
-    <!-- AKTİVİTE & TOPARLANMA -->
+    <!-- AKTİVİTE -->
     <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet-2); box-shadow: 0 0 10px rgba(91,141,255,0.7);"></span><h2>Aktivite & Toparlanma</h2></div><span class="hint">Huawei Health</span></div>
+      <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet-2);"></span><h2>Aktivite & Uyku</h2></div></div>
       <div class="card-body">
         <div class="field-grid">
-          <div class="field" style="grid-column: span 2;"><label>Adım <span class="unit">SAYI</span></label><div class="input-shell accent-acid"><input type="number" id="stepsValue" min="0"></div></div>
-          <div class="field">
-            <label>Uyku Süresi <span class="unit">SA/DK</span></label>
-            <div class="input-shell accent-blue" style="display:flex; padding-right:12px;">
-              <input type="number" placeholder="7" id="sleepHours" min="0" max="24" oninput="window.limitInput(this, 24); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
-              <span style="color:var(--ink-dim); font-size:12px; font-weight:600;">sa</span>
-              <input type="number" placeholder="30" id="sleepMins" min="0" max="59" oninput="window.limitInput(this, 59); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
-              <span style="color:var(--ink-dim); font-size:12px; font-weight:600;">dk</span>
-            </div>
-          </div>
-          <div class="field"><label>Uyku Puanı <span class="unit">MAX 100</span></label><div class="input-shell accent-blue"><input type="number" placeholder="71" id="sleepScore" min="0" max="100" oninput="window.limitInput(this, 100)"></div></div>
-          <div class="field">
-            <label>Derin Uyku <span class="unit">SA/DK</span></label>
-            <div class="input-shell accent-violet" style="display:flex; padding-right:12px;">
-              <input type="number" placeholder="1" id="deepSleepHours" min="0" max="24" oninput="window.limitInput(this, 24); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
-              <span style="color:var(--ink-dim); font-size:12px; font-weight:600;">sa</span>
-              <input type="number" placeholder="30" id="deepSleepMins" min="0" max="59" oninput="window.limitInput(this, 59); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
-              <span style="color:var(--ink-dim); font-size:12px; font-weight:600;">dk</span>
-            </div>
-          </div>
-          <div class="field">
-            <label>REM Uykusu <span class="unit">SA/DK</span></label>
-            <div class="input-shell accent-coral" style="display:flex; padding-right:12px;">
-              <input type="number" placeholder="2" id="remSleepHours" min="0" max="24" oninput="window.limitInput(this, 24); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
-              <span style="color:var(--ink-dim); font-size:12px; font-weight:600;">sa</span>
-              <input type="number" placeholder="11" id="remSleepMins" min="0" max="59" oninput="window.limitInput(this, 59); window.checkSleepLimits();" style="text-align:center; padding:13px 4px;">
-              <span style="color:var(--ink-dim); font-size:12px; font-weight:600;">dk</span>
-            </div>
-          </div>
+          <div class="field" style="grid-column: span 2;"><label>Adım <span class="unit">SAYI</span></label><div class="input-shell accent-acid"><input type="number" id="stepsValue"></div></div>
+          <div class="field"><label>Uyku Süresi <span class="unit">SA</span></label><div class="input-shell accent-blue"><input type="number" id="sleepHours"></div></div>
+          <div class="field"><label>Uyku Puanı <span class="unit">MAX 100</span></label><div class="input-shell accent-blue"><input type="number" id="sleepScore"></div></div>
         </div>
       </div>
     </section>
 
-    <!-- KALORİ -->
+    <!-- BESLENME VE NOTLAR -->
     <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Kalori</h2></div><span class="hint">KCAL</span></div>
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Beslenme (KCAL)</h2></div></div>
       <div class="card-body">
         <div class="calorie-row">
-          <div class="field"><label><span class="arrow-in">▲</span> Alınan <span class="unit">KCAL</span></label><div class="input-shell accent-acid"><input type="number" id="caloriesIn"></div></div>
-          <div class="field"><label><span class="arrow-out">▼</span> Yakılan <span class="unit">KCAL</span></label><div class="input-shell accent-fire"><input type="number" id="caloriesOut"></div></div>
+          <div class="field"><label>Alınan <span class="unit">KCAL</span></label><div class="input-shell accent-acid"><input type="number" id="caloriesIn"></div></div>
+          <div class="field"><label>Yakılan <span class="unit">KCAL</span></label><div class="input-shell accent-fire"><input type="number" id="caloriesOut"></div></div>
         </div>
-        <div class="calorie-balance"><span class="cb-label">Net Denge</span><span class="cb-value" id="calorieBalance">— kcal</span></div>
       </div>
     </section>
-
-    <!-- MAKROLAR -->
+    
     <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Makrolar</h2></div><span class="hint">GRAM</span></div>
+      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Günün Notu</h2></div></div>
       <div class="card-body">
-        <div class="macro-grid">
-          <div class="field macro-field" data-macro="protein"><label><span class="swatch"></span>Protein</label><div class="input-shell"><input type="number" id="macroProtein"></div></div>
-          <div class="field macro-field" data-macro="carb"><label><span class="swatch"></span>Karb</label><div class="input-shell"><input type="number" id="macroCarb"></div></div>
-          <div class="field macro-field" data-macro="fat"><label><span class="swatch"></span>Yağ</label><div class="input-shell"><input type="number" id="macroFat"></div></div>
-        </div>
+        <div class="note-shell"><textarea id="dayNote" placeholder="Tahlil sonuçları veya günün özeti..."></textarea></div>
       </div>
-    </section>
-
-    <!-- SUPPLEMENTLER -->
-    <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Takviyeler</h2></div><span class="hint">Bugün</span></div>
-      <div class="card-body">
-        <div class="supp-list">
-          <label class="supp-chip"><input type="checkbox" id="suppBoneBroth"><span class="supp-icon">🦴</span><span class="supp-info"><span class="supp-name">Kemik Suyu</span><span class="supp-sub">Eklem & bağ dokusu</span></span></label>
-          <label class="supp-chip"><input type="checkbox" id="suppOmega3"><span class="supp-icon">🐟</span><span class="supp-info"><span class="supp-name">Omega 3</span><span class="supp-sub">Toparlanma & iltihap kontrolü</span></span></label>
-          <label class="supp-chip"><input type="checkbox" id="suppCreatine"><span class="supp-icon">⚡</span><span class="supp-info"><span class="supp-name">Kreatin</span><span class="supp-sub">Güç & performans</span></span></label>
-        </div>
-      </div>
-    </section>
-
-    <!-- ANTRENMAN -->
-    <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Antrenman</h2></div><span class="hint">Tip</span></div>
-      <div class="card-body">
-        <div class="select-shell">
-          <select id="trainingType">
-            <option value="" disabled selected>— Seçim Yap —</option>
-            <option value="upper">Üst Vücut</option>
-            <option value="lower">Alt Vücut</option>
-            <option value="push">Push</option>
-            <option value="pull">Pull</option>
-            <option value="legs">Bacak</option>
-            <option value="fullbody">Full Body</option>
-            <option value="cardio">Kardiyo</option>
-            <option value="rest">Dinlenme Günü</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-    <!-- GÜNÜN NOTU -->
-    <section class="card">
-      <div class="card-head"><div class="tag"><span class="dot"></span><h2>Günün Notu</h2></div><span class="hint" id="noteCount">0 / 280</span></div>
-      <div class="card-body"><div class="note-shell"><textarea id="dayNote" maxlength="280" placeholder="Bugün nasıl geçti? Enerji, uyku, ağrı, motivasyon..."></textarea></div></div>
     </section>
   </div>
 
-  <div class="save-zone"><button class="btn-save" id="saveBtn" type="button">⛺ Günü Kaydet (Firebase)</button><div class="save-sub">Buluta ışık hızında yazılır</div></div>
-  <footer class="camp-footer"><span class="stamp">Kamp Defteri · Sürüm 6.0</span></footer>
+  <div class="save-zone"><button class="btn-save" id="saveBtn" type="button">⛺ VIP KASAYA KAYDET</button></div>
 </div>
 
-<!-- FIREBASE BAĞLANTISI (MODÜL OLARAK) -->
+<!-- FIREBASE MOTORLARI (AUTH VE FIRESTORE) -->
 <script type="module">
-  // Npm yerine CDN kullanıyoruz
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDocs, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  // SENİN ANAHTARLARIN
   const firebaseConfig = {
     apiKey: "AIzaSyBQX1kjUu40_rEvvYJZFM8rmWu9lyHXMU0",
     authDomain: "kampgunlugum2.firebaseapp.com",
     projectId: "kampgunlugum2",
     storageBucket: "kampgunlugum2.firebasestorage.app",
     messagingSenderId: "596003065684",
-    appId: "1:596003065684:web:e50e96688eb03dff33c2c1",
-    measurementId: "G-8QS580X8M3"
+    appId: "1:596003065684:web:e50e96688eb03dff33c2c1"
   };
 
-  // Motorları çalıştır
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
-  // GÜVENLİK VE LİMİT FONKSİYONLARI (Global olması için window objesine ekledik)
-  window.limitInput = function(el, maxVal) {
-    if (el.value !== "" && parseInt(el.value) > maxVal) el.value = maxVal;
-    if (el.value !== "" && parseInt(el.value) < 0) el.value = 0;
-  };
+  // --- GİRİŞ SİSTEMİ KONTROLÜ ---
+  const authScreen = document.getElementById("authScreen");
+  const mainApp = document.getElementById("mainApp");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const authError = document.getElementById("authError");
 
-  window.checkSleepLimits = function() {
-    const tMins = (parseInt(document.getElementById('sleepHours').value)||0)*60 + (parseInt(document.getElementById('sleepMins').value)||0);
-    const dMins = (parseInt(document.getElementById('deepSleepHours').value)||0)*60 + (parseInt(document.getElementById('deepSleepMins').value)||0);
-    const rMins = (parseInt(document.getElementById('remSleepHours').value)||0)*60 + (parseInt(document.getElementById('remSleepMins').value)||0);
-
-    const warnEls = [
-      document.getElementById('deepSleepHours'), document.getElementById('deepSleepMins'),
-      document.getElementById('remSleepHours'), document.getElementById('remSleepMins')
-    ];
-
-    if (tMins > 0 && (dMins + rMins > tMins)) {
-        warnEls.forEach(el => el.style.color = 'var(--coral)');
+  // Kullanıcı durumu değiştiğinde (Girdi/Çıktı)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Giriş başarılı, ana uygulamayı göster
+      authScreen.style.display = "none";
+      mainApp.style.display = "block";
+      loadDayData(document.getElementById("logDate").value); // Verileri getir
     } else {
-        warnEls.forEach(el => el.style.color = '');
+      // Çıkış yapıldı veya giriş yok, kilit ekranını göster
+      authScreen.style.display = "flex";
+      mainApp.style.display = "none";
     }
-  };
+  });
 
-  const dayNote = document.getElementById('dayNote');
-  const noteCount = document.getElementById('noteCount');
-  dayNote.addEventListener('input', () => { noteCount.innerText = `${dayNote.value.length} / 280`; });
+  // Giriş Yap Butonu
+  loginBtn.addEventListener("click", () => {
+    const email = document.getElementById("emailInput").value;
+    const pass = document.getElementById("passwordInput").value;
+    loginBtn.innerText = "Bekle...";
+    
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(() => { authError.style.display = "none"; loginBtn.innerText = "KASAYI AÇ"; })
+      .catch((error) => { authError.style.display = "block"; loginBtn.innerText = "KASAYI AÇ"; });
+  });
 
-  const calInInput = document.getElementById("caloriesIn");
-  const calOutInput = document.getElementById("caloriesOut");
-  const calBalanceDisplay = document.getElementById("calorieBalance");
+  // Çıkış Yap Butonu
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth).then(() => {
+      document.getElementById("emailInput").value = "";
+      document.getElementById("passwordInput").value = "";
+    });
+  });
 
-  function updateCalorieBalance() {
-    const inVal = parseInt(calInInput.value) || 0;
-    const outVal = parseInt(calOutInput.value) || 0;
-    const balance = inVal - outVal;
-    if (balance > 0) { calBalanceDisplay.innerText = "+" + balance + " kcal"; calBalanceDisplay.style.color = "var(--mint)"; } 
-    else if (balance < 0) { calBalanceDisplay.innerText = balance + " kcal"; calBalanceDisplay.style.color = "var(--coral)"; } 
-    else { calBalanceDisplay.innerText = "0 kcal"; calBalanceDisplay.style.color = "var(--ink-dim)"; }
-  }
-  calInInput.addEventListener("input", updateCalorieBalance);
-  calOutInput.addEventListener("input", updateCalorieBalance);
 
-  // Tarih ve Sayaç
+  // --- ANA UYGULAMA MOTORU ---
   const logDateInput = document.getElementById("logDate");
   const displayDate = document.getElementById("displayDate");
   const campDayNumber = document.getElementById("campDayNumber");
 
-  function updateDateAndCampDay() {
-    const [year, month, day] = logDateInput.value.split('-');
-    const selectedDate = new Date(year, month - 1, day);
+  function clearFields() {
+    document.querySelectorAll("#mainApp input[type='number'], #mainApp input[type='url'], #mainApp textarea").forEach(el => el.value = "");
+    document.getElementById("viewPdfBtn").style.display = "none";
+  }
+
+  async function loadDayData(dateStr) {
+    clearFields();
+    document.getElementById("displayDate").innerText = "Yükleniyor...";
     
+    const [year, month, day] = dateStr.split('-');
+    const selectedDate = new Date(year, month - 1, day);
     displayDate.innerText = selectedDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
     
     const baseDate = new Date(2026, 5, 19); 
     let diffDays = Math.round((selectedDate.getTime() - baseDate.getTime()) / (1000 * 3600 * 24)) + 1;
-    if (diffDays < 1) diffDays = 0;
-    
-    let htmlStr = "";
-    if (diffDays < 10) htmlStr = '<span class="zero">00</span>' + diffDays;
-    else if (diffDays < 100) htmlStr = '<span class="zero">0</span>' + diffDays;
-    else htmlStr = diffDays;
-    
-    campDayNumber.innerHTML = htmlStr;
+    campDayNumber.innerHTML = diffDays > 0 ? (diffDays < 10 ? '<span class="zero">00</span>'+diffDays : diffDays) : "00";
+
+    try {
+      const docSnap = await getDoc(doc(db, "kamp_logs", dateStr));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById("weightValue").value = data.weight || "";
+        document.getElementById("bodyFatValue").value = data.bodyFat || "";
+        document.getElementById("stepsValue").value = data.steps || "";
+        document.getElementById("sleepHours").value = data.sleep || "";
+        document.getElementById("caloriesIn").value = data.calIn || "";
+        document.getElementById("caloriesOut").value = data.calOut || "";
+        document.getElementById("dayNote").value = data.note || "";
+        document.getElementById("pdfLinkInput").value = data.driveLink || "";
+        
+        if (data.driveLink) {
+          const viewBtn = document.getElementById("viewPdfBtn");
+          viewBtn.href = data.driveLink;
+          viewBtn.style.display = "block";
+        }
+      }
+    } catch(e) { console.error("Okuma hatası", e); }
   }
 
   function shiftDate(days) {
     const [year, month, day] = logDateInput.value.split('-');
     const current = new Date(year, month - 1, day);
     current.setDate(current.getDate() + days);
-    
     const y = current.getFullYear();
     const m = String(current.getMonth() + 1).padStart(2, '0');
     const d = String(current.getDate()).padStart(2, '0');
-    
     logDateInput.value = `${y}-${m}-${d}`;
-    updateDateAndCampDay();
+    loadDayData(logDateInput.value);
   }
 
   document.getElementById("prevDayBtn").addEventListener("click", () => shiftDate(-1));
   document.getElementById("nextDayBtn").addEventListener("click", () => shiftDate(1));
-  updateDateAndCampDay();
 
-  // Menü
-  const menuBtn = document.getElementById('menuBtn');
-  const drawer = document.getElementById('drawer');
-  const overlay = document.getElementById('menuOverlay');
-  const closeBtn = document.getElementById('drawerCloseBtn');
-  const statsLink = document.getElementById('statsLink');
-  const homeLink = document.getElementById('homeLink');
-  const statsPanel = document.getElementById('statsPanel');
-  const statsClose = document.getElementById('statsCloseBtn');
-
-  function toggleMenu(){
-    drawer.classList.toggle('is-active');
-    overlay.classList.toggle('is-active');
-    menuBtn.classList.toggle('is-open');
-  }
-  menuBtn.addEventListener('click', toggleMenu);
-  closeBtn.addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', toggleMenu);
-  homeLink.addEventListener('click', (e) => { e.preventDefault(); toggleMenu(); });
-
-  function openStats(e){
-    if(e) e.preventDefault();
-    drawer.classList.remove('is-active');
-    overlay.classList.remove('is-active');
-    menuBtn.classList.remove('is-open');
-    statsPanel.classList.add('is-active');
-    document.body.style.overflow = 'hidden'; 
-    
-    if(!window.chartsLoaded) {
-      loadDashboardData();
-      window.chartsLoaded = true;
-    }
-  }
-  function closeStats(){
-    statsPanel.classList.remove('is-active');
-    document.body.style.overflow = '';
-  }
-  statsLink.addEventListener('click', openStats);
-  statsClose.addEventListener('click', closeStats);
-
-  window.currentChartRange = 7; 
-  const rangeToggle = document.getElementById('rangeToggle');
-  if(rangeToggle){
-    rangeToggle.addEventListener('click', function(e){
-      const opt = e.target.closest('.toggle-option');
-      if(!opt) return;
-      const value = opt.dataset.value;
-      rangeToggle.setAttribute('data-range', value);
-      rangeToggle.querySelectorAll('.toggle-option').forEach(function(o){ o.classList.toggle('is-active', o === opt); });
-      
-      window.currentChartRange = (value === 'monthly') ? 30 : 7;
-      loadDashboardData();
-    });
-  }
-
-  // FIREBASE'E VERİ KAYDETME
+  // Kaydetme
   const saveBtn = document.getElementById("saveBtn");
   saveBtn.addEventListener("click", async () => {
-    
-    const tMins = (parseInt(document.getElementById('sleepHours').value)||0)*60 + (parseInt(document.getElementById('sleepMins').value)||0);
-    const dMins = (parseInt(document.getElementById('deepSleepHours').value)||0)*60 + (parseInt(document.getElementById('deepSleepMins').value)||0);
-    const rMins = (parseInt(document.getElementById('remSleepHours').value)||0)*60 + (parseInt(document.getElementById('remSleepMins').value)||0);
-    
-    if (tMins > 0 && (dMins + rMins > tMins)) {
-        alert("Kanka, Derin Uyku ve REM'in toplamı Toplam Uykuyu geçemez! Lütfen düzelt.");
-        return; 
-    }
-
-    saveBtn.innerText = "⏳ Buluta Yükleniyor...";
+    saveBtn.innerText = "⏳ Şifreli Kasaya Yazılıyor...";
     saveBtn.disabled = true;
 
-    let supps = [];
-    if(document.getElementById("suppBoneBroth").checked) supps.push("Kemik Suyu");
-    if(document.getElementById("suppOmega3").checked) supps.push("Omega 3");
-    if(document.getElementById("suppCreatine").checked) supps.push("Kreatin");
-
+    const dateStr = logDateInput.value;
     const payload = {
-      date: logDateInput.value, // "2026-06-19" formatında
-      campDay: campDayNumber.innerText.replace(/<[^>]*>?/gm, ''),
+      date: dateStr,
       weight: document.getElementById("weightValue").value,
       bodyFat: document.getElementById("bodyFatValue").value,
       steps: document.getElementById("stepsValue").value,
-      sleep: (document.getElementById("sleepHours").value || "0") + "sa " + (document.getElementById("sleepMins").value || "0") + "dk",
-      sleepScore: document.getElementById("sleepScore").value,
-      deepSleep: (document.getElementById("deepSleepHours").value || "0") + "sa " + (document.getElementById("deepSleepMins").value || "0") + "dk",
-      remSleep: (document.getElementById("remSleepHours").value || "0") + "sa " + (document.getElementById("remSleepMins").value || "0") + "dk",
-      calIn: calInInput.value,
-      calOut: calOutInput.value,
-      protein: document.getElementById("macroProtein").value,
-      carb: document.getElementById("macroCarb").value,
-      fat: document.getElementById("macroFat").value,
-      supps: supps.join(", "),
-      training: document.getElementById("trainingType").value,
-      note: document.getElementById("dayNote").value
+      sleep: document.getElementById("sleepHours").value,
+      calIn: document.getElementById("caloriesIn").value,
+      calOut: document.getElementById("caloriesOut").value,
+      note: document.getElementById("dayNote").value,
+      driveLink: document.getElementById("pdfLinkInput").value // Drive Linki Burada Kaydedilir
     };
 
     try {
-      // "kamp_logs" adında bir koleksiyona, o günün tarihiyle kaydediyoruz!
-      await setDoc(doc(db, "kamp_logs", payload.date), payload);
-      
-      saveBtn.innerText = "✅ Efsane Kaydedildi";
-      window.chartsLoaded = false; 
-      setTimeout(() => { saveBtn.innerText = "⛺ Günü Kaydet (Firebase)"; saveBtn.disabled = false; }, 2000);
+      await setDoc(doc(db, "kamp_logs", dateStr), payload);
+      saveBtn.innerText = "✅ VIP KAYIT BAŞARILI";
+      loadDayData(dateStr); 
+      setTimeout(() => { saveBtn.innerText = "⛺ VIP KASAYA KAYDET"; saveBtn.disabled = false; }, 2000);
     } catch (e) {
-      console.error("Yazma Hatası: ", e);
-      saveBtn.innerText = "❌ Hata (İzinlere Bak)";
-      setTimeout(() => { saveBtn.innerText = "⛺ Günü Kaydet (Firebase)"; saveBtn.disabled = false; }, 3000);
+      saveBtn.innerText = "❌ Hata Oluştu";
+      setTimeout(() => { saveBtn.innerText = "⛺ VIP KASAYA KAYDET"; saveBtn.disabled = false; }, 3000);
     }
   });
-
-  // ============================================
-  // FIREBASE'DEN OKUMA VE ÇİZİM MOTORU
-  // ============================================
-  const parseSleepStr = (str) => {
-    const match = (str || "").match(/(\d+)sa\s*(\d+)dk/);
-    if (match) return parseInt(match[1]) + (parseInt(match[2]) / 60);
-    return parseFloat(str) || 0;
-  };
-
-  async function loadDashboardData() {
-    const statusText = document.getElementById('loadingStatus');
-    statusText.innerText = "Yükleniyor...";
-    statusText.style.color = "var(--ink-faint)";
-
-    try {
-      // Verileri Firebase'den tarih sırasına göre çekiyoruz
-      const q = query(collection(db, "kamp_logs"), orderBy("date", "asc"));
-      const querySnapshot = await getDocs(q);
-      
-      let rows = [];
-      querySnapshot.forEach((doc) => {
-        rows.push(doc.data());
-      });
-
-      if (rows.length > window.currentChartRange) {
-         rows = rows.slice(-window.currentChartRange);
-      }
-
-      const labels = [];
-      const stepsData = [], weightData = [], fatData = [], calInData = [], calOutData = [];
-      const sDeep = [], sRem = [], sLight = [];
-      let totalSleep = 0, maxSleep = 0, minSleep = 999;
-      let totalSteps = 0, maxSteps = 0, totalCalIn = 0, totalCalOut = 0;
-
-      rows.forEach(row => {
-        if(!row.date) return;
-        
-        const dateObj = new Date(row.date);
-        labels.push(dateObj.toLocaleDateString('tr-TR', {day: 'numeric', month: 'short'}) !== "Invalid Date" ? dateObj.toLocaleDateString('tr-TR', {day: 'numeric', month: 'short'}) : row.date);
-
-        let stp = parseInt(row.steps) || 0;
-        stepsData.push(stp);
-        if(stp > 0) {
-            totalSteps += stp;
-            if(stp > maxSteps) maxSteps = stp;
-        }
-
-        let totalHrs = parseSleepStr(row.sleep);
-        let deepHrs = parseSleepStr(row.deepSleep);
-        let remHrs = parseSleepStr(row.remSleep);
-        let lightHrs = totalHrs - deepHrs - remHrs;
-        if(lightHrs < 0) lightHrs = 0; 
-
-        sDeep.push(deepHrs);
-        sRem.push(remHrs);
-        sLight.push(lightHrs);
-
-        if(totalHrs > 0) {
-          totalSleep += totalHrs;
-          if(totalHrs > maxSleep) maxSleep = totalHrs;
-          if(totalHrs < minSleep) minSleep = totalHrs;
-        }
-
-        weightData.push(parseFloat(row.weight) || null);
-        fatData.push(parseFloat(row.bodyFat) || null);
-        
-        const cin = parseInt(row.calIn) || 0;
-        const cout = parseInt(row.calOut) || 0;
-        calInData.push(cin);
-        calOutData.push(cout);
-        totalCalIn += cin;
-        totalCalOut += cout;
-      });
-
-      // İSTATİSTİKLER
-      const validSteps = stepsData.filter(x => x > 0).length || 1;
-      document.getElementById('stepsAvg').innerText = Math.round(totalSteps / validSteps).toLocaleString('tr-TR');
-      document.getElementById('stepsMax').innerText = maxSteps.toLocaleString('tr-TR');
-      document.getElementById('stepsTotal').innerText = totalSteps.toLocaleString('tr-TR');
-
-      const validDays = sDeep.filter((_, i) => (sDeep[i]+sRem[i]+sLight[i]) > 0).length || 1;
-      document.getElementById('sleepAvg').innerText = formatHrs(totalSleep / validDays);
-      document.getElementById('sleepMax').innerText = formatHrs(maxSleep === 0 ? 0 : maxSleep);
-      document.getElementById('sleepMin').innerText = formatHrs(minSleep === 999 ? 0 : minSleep);
-
-      const validWeights = weightData.filter(x => x !== null);
-      const currentWeight = validWeights.length > 0 ? validWeights[validWeights.length - 1] : 0;
-      const firstWeight = validWeights.length > 0 ? validWeights[0] : 0;
-      const weightDelta = currentWeight - firstWeight;
-      
-      document.getElementById('weightCurrent').innerText = currentWeight ? currentWeight + " kg" : "—";
-      const deltaEl = document.getElementById('weightDelta');
-      deltaEl.innerText = (weightDelta > 0 ? "+" : "") + weightDelta.toFixed(1) + " kg";
-      deltaEl.className = "chip-value " + (weightDelta <= 0 ? "up" : "down");
-
-      const validFats = fatData.filter(x => x !== null);
-      document.getElementById('bodyFatCurrent').innerText = validFats.length > 0 ? "%" + validFats[validFats.length - 1] : "—";
-
-      const calDays = calInData.filter(x => x > 0).length || 1;
-      const avgIn = Math.round(totalCalIn / calDays);
-      const avgOut = Math.round(totalCalOut / calDays);
-      document.getElementById('calorieAvgIn').innerText = avgIn + " kcal";
-      document.getElementById('calorieAvgOut').innerText = avgOut + " kcal";
-      document.getElementById('calorieAvgNet').innerText = (avgIn - avgOut) + " kcal";
-
-      // ÇİZİMLER
-      Chart.defaults.color = '#9499B3';
-      Chart.defaults.font.family = "'JetBrains Mono', monospace";
-      const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } };
-
-      if(window.stepChart) window.stepChart.destroy();
-      if(window.sChart) window.sChart.destroy();
-      if(window.wChart) window.wChart.destroy();
-      if(window.cChart) window.cChart.destroy();
-
-      window.stepChart = new Chart(document.getElementById('stepsChart'), {
-        type: 'bar',
-        data: { labels: labels, datasets: [{ label: 'Adım', data: stepsData, backgroundColor: '#3DDC97', borderRadius: 6 }] },
-        options: commonOptions
-      });
-
-      window.sChart = new Chart(document.getElementById('sleepChart'), {
-        type: 'bar',
-        data: { 
-          labels: labels, 
-          datasets: [
-            { label: 'Derin Uyku', data: sDeep, backgroundColor: '#8C7CFF' }, 
-            { label: 'REM Uykusu', data: sRem, backgroundColor: '#FF7A9C' },  
-            { label: 'Hafif Uyku', data: sLight, backgroundColor: '#5B8DFF', borderRadius: { topLeft: 6, topRight: 6 } } 
-          ] 
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-          scales: {
-            x: { stacked: true, grid: { display: false } },
-            y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }
-          }
-        }
-      });
-
-      window.wChart = new Chart(document.getElementById('weightChart'), {
-        type: 'line',
-        data: { labels: labels, datasets: [ { label: 'Kilo', data: weightData, borderColor: '#3DDC97', tension: 0.4, yAxisID: 'y' }, { label: 'Yağ %', data: fatData, borderColor: '#FF7A9C', tension: 0.4, yAxisID: 'y1' } ] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { type: 'linear', position: 'left', grid: { color: 'rgba(255,255,255,0.05)' } }, y1: { type: 'linear', position: 'right', grid: { display: false } }, x: { grid: { display: false } } } }
-      });
-
-      window.cChart = new Chart(document.getElementById('calorieChart'), {
-        type: 'line',
-        data: { labels: labels, datasets: [ { label: 'Alınan', data: calInData, borderColor: '#3DDC97', backgroundColor: 'rgba(61,220,151,0.1)', fill: true, tension: 0.4 }, { label: 'Yakılan', data: calOutData, borderColor: '#FF7A9C', borderDash: [5, 5], tension: 0.4 } ] },
-        options: commonOptions
-      });
-
-      statusText.innerText = "Canlı (Bulut)";
-      statusText.style.color = "var(--mint)";
-
-    } catch (e) {
-      console.error("Grafik çekilemedi:", e);
-      statusText.innerText = "Veri Yok / İzin Hatası";
-      statusText.style.color = "var(--coral)";
-    }
-  }
-
-  function formatHrs(decimalHrs) {
-    if(isNaN(decimalHrs)) return "—";
-    const h = Math.floor(decimalHrs);
-    const m = Math.round((decimalHrs - h) * 60);
-    return `${h}sa ${m}dk`;
-  }
 </script>
 </body>
 </html>
-
