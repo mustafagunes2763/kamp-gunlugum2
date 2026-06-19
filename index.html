@@ -14,20 +14,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  /* HİPERTROFİ STİLLERİ */
-  .full-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; max-width: 100%; background: var(--bg); z-index: 100; transform: translateY(100%); transition: transform .35s ease; overflow-y: auto; }
-  .full-panel.is-active{ transform: translateY(0); }
-  .panel-inner{ max-width: 480px; margin: 0 auto; padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 28px); }
-  .panel-head{ display:flex; align-items:center; justify-content:space-between; padding: 4px 4px 22px; }
-  .panel-head .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; display:block; margin-bottom: 4px;}
-  .panel-head .panel-title{ font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--ink); }
-  .set-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .btn-add-set { width: 100%; padding: 12px; background: transparent; border: 1px dashed var(--violet); color: var(--violet); border-radius: 12px; font-family: var(--font-display); font-weight: 600; cursor: pointer; margin-top: 5px; }
-  .workout-log-item { background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
-  .workout-log-item h3 { font-family: var(--font-display); font-size: 15px; color: var(--violet); margin-bottom: 10px; }
-  .log-set-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-  .log-set-row:last-child { border-bottom: none; padding-bottom: 0; }
-
 <style>
   :root{
     --bg:        #0A0C14;
@@ -263,11 +249,6 @@
       <a href="#" class="drawer-link" id="statsLink">
         <span class="link-icon">📊</span>
         <span class="link-text"><span class="link-title">Grafikler &amp; İstatistikler</span><span class="link-sub">Kişisel verilerin</span></span>
-            <a href="#" class="drawer-link" id="hypertrophyLink">
-      <span class="link-icon">💪</span>
-      <span class="link-text"><span class="link-title">Hipertrofi</span><span class="link-sub">Bölgesel Gelişim</span></span>
-    </a>
-
       </a>
       <a href="#" class="drawer-link" id="hypertrophyLink">
         <span class="link-icon">💪</span>
@@ -276,34 +257,6 @@
     </div>
     <div class="drawer-foot">Kamp Defteri · VIP Sürüm</div>
   </nav>
-  <!-- HİPERTROFİ PANELİ -->
-  <section class="full-panel" id="hypertrophyPanel">
-    <div class="panel-inner">
-      <div class="panel-head">
-        <div><span class="eyebrow">Bölgesel Gelişim</span><span class="panel-title">Hipertrofi Merkezi</span></div>
-        <button class="drawer-close" id="hypertrophyCloseBtn" type="button">✕</button>
-      </div>
-      <div class="stack">
-        <section class="card">
-          <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet);"></span><h2>Antrenman Girişi</h2></div></div>
-          <div class="card-body">
-            <div class="input-shell accent-violet" style="margin-bottom: 15px;">
-              <input type="text" id="exerciseName" placeholder="Hareket Adı (Örn: Bench Press)">
-            </div>
-            <div id="setsContainer"></div>
-            <button id="addSetBtn" class="btn-add-set">+ Yeni Set Ekle</button>
-            <button id="saveExerciseBtn" class="btn-save" style="margin-top: 15px; font-size: 15px;">💪 Hareketi Kaydet</button>
-          </div>
-        </section>
-        <section class="card">
-          <div class="card-head"><div class="tag"><span class="dot" style="background: var(--mint);"></span><h2>Günün Antrenmanı</h2></div><span class="hint" id="hypLogDateHint"></span></div>
-          <div class="card-body" id="todaysWorkoutLog">
-            <p style="color: var(--ink-faint); font-size: 12px; text-align: center;">Yükleniyor...</p>
-          </div>
-        </section>
-      </div>
-    </div>
-  </section>
 
   <!-- TAM SAYFA GRAFİK PANELİ -->
   <section class="stats-panel" id="statsPanel" aria-label="Grafikler ve İstatistikler">
