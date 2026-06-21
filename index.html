@@ -641,6 +641,11 @@
             <div class="input-shell accent-fire" style="flex:1; padding:0;"><input type="number" id="recFat" step="0.1" placeholder="Yağ (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
           </div>
           <div class="input-shell" style="border-left:3px solid var(--ink-faint); padding:0;"><input type="number" id="recCal" placeholder="Toplam Kalori (KCAL)" style="padding:10px; font-size:13px; text-align:center;"></div>
+          
+          <div class="input-shell" style="border-left:3px solid var(--mint-dim); padding:0; margin-top:5px;">
+            <textarea id="recDetails" placeholder="Tarif detayı / Hazırlanışı (İsteğe bağlı)" style="width:100%; min-height:50px; background:transparent; border:none; outline:none; color:var(--ink); font-family:var(--font-mono); font-size:12px; padding:10px; resize:vertical;"></textarea>
+          </div>
+          
           <button type="button" id="btnSaveRecipe" class="btn-save" style="padding:12px; font-size:14px; margin-top:5px; border-radius:12px;">💾 Kütüphaneye Kaydet</button>
         </div>
 
@@ -1358,15 +1363,23 @@
 
       let html = "";
       recipes.forEach((r, idx) => {
-        // Tıklanınca applyRecipe fonksiyonunu çalıştırır
         html += `
-          <div class="recipe-card" onclick="applyRecipe(${r.pro}, ${r.carb}, ${r.fat}, ${r.cal})">
-            <div class="recipe-card-icon">${r.icon}</div>
-            <div class="recipe-card-info">
-              <div class="recipe-card-title">${r.name}</div>
-              <div class="recipe-card-macros">P:<span>${r.pro}g</span> K:<span>${r.carb}g</span> Y:<span>${r.fat}g</span> 🔥 <span>${r.cal} kcal</span></div>
+          <div class="recipe-card" style="flex-direction:column; align-items:flex-start; cursor:pointer;" onclick="applyRecipe(${r.pro}, ${r.carb}, ${r.fat}, ${r.cal})">
+            
+            <div style="display:flex; width:100%; align-items:center; gap:15px;">
+              <div class="recipe-card-icon">${r.icon}</div>
+              <div class="recipe-card-info" style="flex:1;">
+                <div class="recipe-card-title">${r.name}</div>
+                <div class="recipe-card-macros">P:<span>${r.pro}g</span> K:<span>${r.carb}g</span> Y:<span>${r.fat}g</span> 🔥 <span>${r.cal} kcal</span></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:5px;">
+                ${r.details ? `<button type="button" style="background:none; border:none; font-size:18px; cursor:pointer; opacity:0.8; padding:5px;" onclick="event.stopPropagation(); toggleRecipeInfo(${idx})">ℹ️</button>` : ''}
+                <button type="button" class="recipe-del-btn" onclick="event.stopPropagation(); deleteRecipe(${idx})">🗑️</button>
+              </div>
             </div>
-            <button class="recipe-del-btn" onclick="event.stopPropagation(); deleteRecipe(${idx})">🗑️</button>
+            
+            ${r.details ? `<div id="recipeInfo-${idx}" style="display:none; width:100%; font-size:11px; color:var(--ink-faint); margin-top:10px; padding-top:10px; border-top:1px dashed var(--line-soft); line-height:1.5;">${r.details.replace(/\n/g, '<br>')}</div>` : ''}
+            
           </div>
         `;
       });
@@ -1382,6 +1395,7 @@
     const carb = parseFloat(document.getElementById("recCarb").value) || 0;
     const fat = parseFloat(document.getElementById("recFat").value) || 0;
     const cal = parseInt(document.getElementById("recCal").value) || 0;
+    const details = document.getElementById("recDetails").value; // YENİ: Tarif detayını okur
 
     if(!name) { alert("Kanka tarifin adını girmeyi unuttun!"); return; }
     
@@ -1392,7 +1406,9 @@
       const docRef = await getRecipeDocRef();
       const snap = await getDoc(docRef);
       let recipes = (snap.exists() && snap.data().list) ? snap.data().list : [];
-      recipes.push({ icon, name, pro, carb, fat, cal });
+      
+      // YENİ: details (tarif hazırlık notu) veritabanına eklenir
+      recipes.push({ icon, name, pro, carb, fat, cal, details }); 
       
       await setDoc(docRef, { list: recipes }, { merge: true });
       
@@ -1403,6 +1419,7 @@
       document.getElementById("recCarb").value = "";
       document.getElementById("recFat").value = "";
       document.getElementById("recCal").value = "";
+      document.getElementById("recDetails").value = ""; // YENİ: Detay kutusunu temizler
       
       loadRecipes();
       btn.innerText = "💾 Kütüphaneye Kaydet";
@@ -1446,6 +1463,12 @@
         loadRecipes(); // Ekranı yenile
       }
     } catch(e) { alert("Silinemedi!"); }
+  };
+
+  // Tarif bilgisini Aç/Kapat motoru
+  window.toggleRecipeInfo = function(idx) {
+    const infoDiv = document.getElementById(`recipeInfo-${idx}`);
+    if(infoDiv) infoDiv.style.display = infoDiv.style.display === "block" ? "none" : "block";
   };
 </script>
 </body>
