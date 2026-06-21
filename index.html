@@ -207,6 +207,20 @@
   .stat-chip .chip-value{ font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--ink); }
   .stat-chip .chip-value.up{ color: var(--mint); }
   .stat-chip .chip-value.down{ color: var(--coral); }
+
+  /* HİPERTROFİ PANELİ STİLLERİ */
+  .full-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; max-width: 100%; background: var(--bg); z-index: 100; transform: translateY(100%); transition: transform .35s ease; overflow-y: auto; }
+  .full-panel.is-active{ transform: translateY(0); }
+  .panel-inner{ max-width: 480px; margin: 0 auto; padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 28px); }
+  .panel-head{ display:flex; align-items:center; justify-content:space-between; padding: 4px 4px 22px; }
+  .panel-head .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; display:block; margin-bottom: 4px;}
+  .panel-head .panel-title{ font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--ink); }
+  .set-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .btn-add-set { width: 100%; padding: 12px; background: transparent; border: 1px dashed var(--violet); color: var(--violet); border-radius: 12px; font-family: var(--font-display); font-weight: 600; cursor: pointer; margin-top: 5px; }
+  .workout-log-item { background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .workout-log-item h3 { font-family: var(--font-display); font-size: 15px; color: var(--violet); margin-bottom: 10px; }
+  .log-set-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .log-set-row:last-child { border-bottom: none; padding-bottom: 0; }
 </style>
 </head>
 <body>
@@ -252,11 +266,40 @@
       </a>
       <a href="#" class="drawer-link" id="hypertrophyLink">
         <span class="link-icon">💪</span>
-        <span class="link-text"><span class="link-title">Hipertrofi</span><span class="link-sub">Bölgesel Gelişim</span></span>
+        <span class="link-text"><span class="link-title">Hipertrofi</span><span class="link-sub">Bölgesel Gelişim (Set & Ağırlık)</span></span>
       </a>
     </div>
     <div class="drawer-foot">Kamp Defteri · VIP Sürüm</div>
   </nav>
+
+  <!-- HİPERTROFİ PANELİ -->
+  <section class="full-panel" id="hypertrophyPanel">
+    <div class="panel-inner">
+      <div class="panel-head">
+        <div><span class="eyebrow">Bölgesel Gelişim</span><span class="panel-title">Hipertrofi Merkezi</span></div>
+        <button class="drawer-close" id="hypertrophyCloseBtn" type="button">✕</button>
+      </div>
+      <div class="stack">
+        <section class="card">
+          <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet);"></span><h2>Antrenman Girişi</h2></div></div>
+          <div class="card-body">
+            <div class="input-shell accent-violet" style="margin-bottom: 15px;">
+              <input type="text" id="exerciseName" placeholder="Hareket Adı (Örn: Bench Press)">
+            </div>
+            <div id="setsContainer"></div>
+            <button id="addSetBtn" class="btn-add-set">+ Yeni Set Ekle</button>
+            <button id="saveExerciseBtn" class="btn-save" style="margin-top: 15px; font-size: 15px;">💪 Hareketi Kaydet</button>
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-head"><div class="tag"><span class="dot" style="background: var(--mint);"></span><h2>Günün Antrenmanı</h2></div><span class="hint" id="hypLogDateHint"></span></div>
+          <div class="card-body" id="todaysWorkoutLog">
+            <p style="color: var(--ink-faint); font-size: 12px; text-align: center;">Yükleniyor...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
 
   <!-- TAM SAYFA GRAFİK PANELİ -->
   <section class="stats-panel" id="statsPanel" aria-label="Grafikler ve İstatistikler">
@@ -927,6 +970,90 @@
     const h = Math.floor(decimalHrs);
     const m = Math.round((decimalHrs - h) * 60);
     return `${h}sa ${m}dk`;
+  }
+
+  // --- HİPERTROFİ MOTORU ---
+  const setsContainer = document.getElementById("setsContainer");
+  let setCounter = 1;
+
+  function createSetRow() {
+    const row = document.createElement("div");
+    row.className = "set-row";
+    row.innerHTML = `
+      <span style="color:var(--ink-faint); font-size:11px; font-weight:700; width: 40px;">Set ${setCounter}</span>
+      <div class="input-shell accent-violet" style="flex:1; padding:0;"><input type="number" class="set-weight" placeholder="KG" style="padding: 10px; font-size:14px; text-align:center;"></div>
+      <span style="color:var(--ink-faint); font-size:12px;">x</span>
+      <div class="input-shell accent-coral" style="flex:1; padding:0;"><input type="number" class="set-reps" placeholder="Tekrar" style="padding: 10px; font-size:14px; text-align:center;"></div>
+    `;
+    setsContainer.appendChild(row);
+    setCounter++;
+  }
+
+  document.getElementById("hypertrophyLink").addEventListener("click", (e) => {
+    e.preventDefault(); 
+    document.getElementById('drawer').classList.remove('is-active');
+    document.getElementById('menuOverlay').classList.remove('is-active');
+    document.getElementById('hypertrophyPanel').classList.add('is-active');
+    document.body.style.overflow = 'hidden'; 
+    setsContainer.innerHTML = ""; setCounter = 1; createSetRow();
+    loadHypertrophyData(document.getElementById("logDate").value);
+  });
+
+  document.getElementById("hypertrophyCloseBtn").addEventListener("click", () => {
+    document.getElementById("hypertrophyPanel").classList.remove("is-active");
+    document.body.style.overflow = "";
+  });
+
+  document.getElementById("addSetBtn").addEventListener("click", createSetRow);
+
+  document.getElementById("saveExerciseBtn").addEventListener("click", async () => {
+    if(!auth.currentUser) return;
+    const exName = document.getElementById("exerciseName").value;
+    if(!exName) { alert("Lütfen hareket adını yaz!"); return; }
+    
+    const weights = setsContainer.querySelectorAll(".set-weight");
+    const reps = setsContainer.querySelectorAll(".set-reps");
+    const setsData = [];
+    
+    for(let i=0; i<weights.length; i++){
+      if(weights[i].value || reps[i].value) setsData.push({ set: i+1, weight: weights[i].value || 0, reps: reps[i].value || 0 });
+    }
+    if(setsData.length === 0) return;
+
+    const dateStr = document.getElementById("logDate").value;
+    const docRef = doc(db, "users", auth.currentUser.uid, "hypertrophy", dateStr);
+    document.getElementById("saveExerciseBtn").innerText = "⏳ Kaydediliyor...";
+
+    try {
+      const docSnap = await getDoc(docRef);
+      let exArr = (docSnap.exists() && docSnap.data().exercises) ? docSnap.data().exercises : [];
+      exArr.push({ name: exName, sets: setsData });
+      await setDoc(docRef, { exercises: exArr }, { merge: true });
+
+      document.getElementById("exerciseName").value = ""; setsContainer.innerHTML = ""; setCounter = 1; createSetRow();
+      loadHypertrophyData(dateStr);
+      document.getElementById("saveExerciseBtn").innerText = "💪 Hareketi Kaydet";
+    } catch(e) { document.getElementById("saveExerciseBtn").innerText = "❌ Hata"; }
+  });
+
+  async function loadHypertrophyData(dateStr) {
+    if(!auth.currentUser) return;
+    const container = document.getElementById("todaysWorkoutLog");
+    document.getElementById("hypLogDateHint").innerText = document.getElementById("displayDate").innerText;
+    container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Yükleniyor...</p>";
+    
+    try {
+      const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid, "hypertrophy", dateStr));
+      if(docSnap.exists() && docSnap.data().exercises && docSnap.data().exercises.length > 0) {
+        let html = "";
+        docSnap.data().exercises.forEach(ex => {
+          html += `<div class="workout-log-item"><h3>${ex.name}</h3>`;
+          ex.sets.forEach(s => { html += `<div class="log-set-row"><span>Set ${s.set}</span><span style="font-family: var(--font-mono); font-weight: 700;">${s.weight} KG <span style="color:var(--coral);">x</span> ${s.reps} TEKRAR</span></div>`; });
+          html += `</div>`;
+        });
+        container.innerHTML = html;
+      } else { container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Bugün hareket kaydedilmedi.</p>"; }
+    } catch(e) { container.innerHTML = "<p style='color: var(--coral); font-size: 12px; text-align: center;'>Hata oluştu.</p>"; }
   }
 </script>
 </body>
