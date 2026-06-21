@@ -477,6 +477,29 @@
   </header>
 
   <div class="stack">
+    <!-- GÜNÜN KARESİ (FOTOĞRAF) -->
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot" style="background: var(--coral);"></span><h2>Günün Karesi</h2></div><span class="hint">Form & Anı</span></div>
+      <div class="card-body">
+        <div class="photo-upload-zone" id="photoZone">
+           <!-- Gizli dosya seçici (Telefonda kamerayı da açar) -->
+           <input type="file" id="photoInput" accept="image/*" style="display:none;">
+           
+           <!-- Boşken Görünen Tıklama Alanı -->
+           <div id="photoPlaceholder" style="text-align:center; color:var(--ink-faint); padding: 30px 10px; border: 1px dashed var(--line-soft); border-radius: var(--radius-sm); cursor:pointer; background: var(--panel-2);">
+             <span style="font-size:24px; display:block; margin-bottom:8px;">📸</span>
+             <span style="font-size:12px; font-family:var(--font-display); font-weight:600;">Fotoğraf Yükle veya Çek</span>
+           </div>
+           
+           <!-- Fotoğraf Seçilince Görünen Alan -->
+           <div id="photoPreviewContainer" style="display:none; position:relative;">
+             <img id="photoPreview" style="width:100%; max-height: 400px; object-fit: cover; border-radius:var(--radius-sm); border:1px solid var(--line-soft);">
+             <button id="btnRemovePhoto" type="button" style="position:absolute; top:10px; right:10px; background:rgba(10,12,20,0.7); backdrop-filter:blur(5px); color:var(--coral); border:1px solid var(--coral); border-radius:10px; width:36px; height:36px; font-size:14px; cursor:pointer;">🗑️</button>
+           </div>
+        </div>
+      </div>
+    </section>
+
     <!-- DOSYA LİNKİ KARTI -->
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot" style="background: var(--coral);"></span><h2>Dosya / PDF Linki</h2></div><span class="hint">Drive Kasan</span></div>
@@ -693,6 +716,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, doc, setDoc, getDocs, collection, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
   // SENİN ANAHTARLARIN
   const firebaseConfig = {
@@ -708,6 +732,36 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
+  const storage = getStorage(app);
+
+  // --- FOTOĞRAF MOTORU ---
+  let currentPhotoUrl = "";
+  let selectedPhotoFile = null;
+
+  document.getElementById("photoPlaceholder").addEventListener("click", () => document.getElementById("photoInput").click());
+
+  document.getElementById("photoInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    selectedPhotoFile = file;
+    
+    // Fotoğrafı anında ekrana çiz
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById("photoPreview").src = e.target.result;
+      document.getElementById("photoPlaceholder").style.display = "none";
+      document.getElementById("photoPreviewContainer").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("btnRemovePhoto").addEventListener("click", () => {
+    selectedPhotoFile = null;
+    currentPhotoUrl = ""; // Buluttakini de iptal eder
+    document.getElementById("photoInput").value = "";
+    document.getElementById("photoPlaceholder").style.display = "block";
+    document.getElementById("photoPreviewContainer").style.display = "none";
+  });
 
   // VIP GİRİŞ / ÇIKIŞ MOTORU
   const authScreen = document.getElementById("authScreen");
@@ -841,6 +895,11 @@
     updateCalorieBalance();
     dailyWater = 0;
     updateWaterUI();
+    currentPhotoUrl = "";
+    selectedPhotoFile = null;
+    document.getElementById("photoInput").value = "";
+    document.getElementById("photoPlaceholder").style.display = "block";
+    document.getElementById("photoPreviewContainer").style.display = "none";
   }
 
   // Tarih ve Sayaç
@@ -890,6 +949,19 @@
         const data = docSnap.data();
         document.getElementById("weightValue").value = data.weight || "";
         document.getElementById("bodyFatValue").value = data.bodyFat || "";
+
+        currentPhotoUrl = data.photoUrl || "";
+        selectedPhotoFile = null;
+        document.getElementById("photoInput").value = "";
+        if(currentPhotoUrl) {
+           document.getElementById("photoPreview").src = currentPhotoUrl;
+           document.getElementById("photoPlaceholder").style.display = "none";
+           document.getElementById("photoPreviewContainer").style.display = "block";
+        } else {
+           document.getElementById("photoPlaceholder").style.display = "block";
+           document.getElementById("photoPreviewContainer").style.display = "none";
+        }
+
         document.getElementById("stepsValue").value = data.steps || "";
         document.getElementById("sleepHours").value = data.sleepH || "";
         document.getElementById("sleepMins").value = data.sleepM || "";
@@ -1014,11 +1086,25 @@
     if(document.getElementById("suppOmega3").checked) supps.push("Omega 3");
     if(document.getElementById("suppCreatine").checked) supps.push("Kreatin");
 
+    let finalPhotoUrl = currentPhotoUrl;
+    if(selectedPhotoFile) {
+        saveBtn.innerText = "📸 Fotoğraf Yükleniyor...";
+        try {
+           // Fotoğrafı o günün tarihiyle buluta yükler
+           const storageRef = ref(storage, `users/${auth.currentUser.uid}/photos/${logDateInput.value}`);
+           await uploadBytes(storageRef, selectedPhotoFile);
+           finalPhotoUrl = await getDownloadURL(storageRef); // Bulut linkini alır
+        } catch(e) {
+           alert("Fotoğraf yüklenemedi kanka, Firebase Storage açık mı kontrol et!");
+        }
+    }
+
     const payload = {
       date: logDateInput.value, 
       campDay: campDayNumber.innerText.replace(/<[^>]*>?/gm, ''),
       weight: document.getElementById("weightValue").value,
       bodyFat: document.getElementById("bodyFatValue").value,
+      photoUrl: finalPhotoUrl,
       water: dailyWater,
       steps: document.getElementById("stepsValue").value,
       sleepH: document.getElementById("sleepHours").value,
@@ -1554,85 +1640,4 @@
   document.getElementById("btnSaveRecipe").addEventListener("click", async () => {
     const icon = document.getElementById("recIcon").value || "🍽️";
     const name = document.getElementById("recName").value;
-    const pro = parseFloat(document.getElementById("recPro").value) || 0;
-    const carb = parseFloat(document.getElementById("recCarb").value) || 0;
-    const fat = parseFloat(document.getElementById("recFat").value) || 0;
-    const cal = parseInt(document.getElementById("recCal").value) || 0;
-    const details = document.getElementById("recDetails").value; // YENİ: Tarif detayını okur
-
-    if(!name) { alert("Kanka tarifin adını girmeyi unuttun!"); return; }
-    
-    const btn = document.getElementById("btnSaveRecipe");
-    btn.innerText = "⏳...";
-
-    try {
-      const docRef = await getRecipeDocRef();
-      const snap = await getDoc(docRef);
-      let recipes = (snap.exists() && snap.data().list) ? snap.data().list : [];
-      
-      // YENİ: details (tarif hazırlık notu) veritabanına eklenir
-      recipes.push({ icon, name, pro, carb, fat, cal, details }); 
-      
-      await setDoc(docRef, { list: recipes }, { merge: true });
-      
-      // Formu temizle
-      document.getElementById("recIcon").value = "";
-      document.getElementById("recName").value = "";
-      document.getElementById("recPro").value = "";
-      document.getElementById("recCarb").value = "";
-      document.getElementById("recFat").value = "";
-      document.getElementById("recCal").value = "";
-      document.getElementById("recDetails").value = ""; // YENİ: Detay kutusunu temizler
-      
-      loadRecipes();
-      btn.innerText = "💾 Kütüphaneye Kaydet";
-    } catch(e) { btn.innerText = "❌ Hata"; }
-  });
-
-  // Tıklanan tarifi ana ekrandaki inputlara EKLEYEN (Toplayan) motor
-  window.applyRecipe = function(pro, carb, fat, cal) {
-    const addVal = (id, val) => { 
-      const el = document.getElementById(id); 
-      if(el) {
-        // Mevcut değeri de küsuratlı okur
-        const current = parseFloat(el.value) || 0;
-        const total = current + parseFloat(val);
-        
-        // 25.2000000001 gibi saçma sayılar çıkmasın diye tek haneye yuvarlar
-        el.value = Number(total.toFixed(1)); 
-      }
-    };
-    
-    addVal("macroProtein", pro);
-    addVal("macroCarb", carb);
-    addVal("macroFat", fat);
-    addVal("caloriesIn", cal); // Kalori tam sayı
-    
-    if(typeof updateCalorieBalance === "function") updateCalorieBalance();
-    recipeModal.classList.remove("is-active"); 
-    document.body.style.overflow = ""; // Scroll kilidini aç
-  };
-
-  // Çöp kutusu ile tarif silme
-  window.deleteRecipe = async function(idx) {
-    if(!confirm("Bu tarifi kütüphaneden uçurmak istediğine emin misin?")) return;
-    try {
-      const docRef = await getRecipeDocRef();
-      const snap = await getDoc(docRef);
-      if(snap.exists() && snap.data().list) {
-        let recipes = snap.data().list;
-        recipes.splice(idx, 1); // Listeden çıkart
-        await setDoc(docRef, { list: recipes }, { merge: true });
-        loadRecipes(); // Ekranı yenile
-      }
-    } catch(e) { alert("Silinemedi!"); }
-  };
-
-  // Tarif bilgisini Aç/Kapat motoru
-  window.toggleRecipeInfo = function(idx) {
-    const infoDiv = document.getElementById(`recipeInfo-${idx}`);
-    if(infoDiv) infoDiv.style.display = infoDiv.style.display === "block" ? "none" : "block";
-  };
-</script>
-</body>
-</html>
+    const pro = parseFloat(document.getElementById("rec
