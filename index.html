@@ -221,6 +221,16 @@
   .workout-log-item h3 { font-family: var(--font-display); font-size: 15px; color: var(--violet); margin-bottom: 10px; }
   .log-set-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
   .log-set-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+  /* SU TAKİP STİLLERİ VE DOLMA EFEKTİ */
+  .water-progress-bg { width: 100%; height: 8px; background: var(--panel-2); border-radius: 4px; overflow: hidden; margin-bottom: 15px; position: relative; }
+  .water-progress-fill { height: 100%; background: var(--violet-2); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(91,141,255,0.6); }
+  .water-controls { display: flex; gap: 12px; }
+  .water-btn { flex: 1; position: relative; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 16px; padding: 18px 10px; cursor: pointer; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.1s; }
+  .water-btn:active { transform: scale(0.96); }
+  .water-btn .water-fill-anim { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(91,141,255,0.2); transition: height 0.4s ease-out; z-index: 1; }
+  .water-btn .water-icon { font-size: 28px; position: relative; z-index: 2; }
+  .water-btn .water-text { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--violet-2); position: relative; z-index: 2; }
 </style>
 </head>
 <body>
@@ -440,6 +450,28 @@
       </div>
     </section>
 
+    <!-- SU TÜKETİMİ -->
+    <section class="card">
+      <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet-2); box-shadow: 0 0 10px rgba(91,141,255,0.7);"></span><h2>Su Tüketimi</h2></div><span class="hint" id="waterStatus" style="font-family: var(--font-mono); font-weight: 700; color: var(--violet-2);">0 / 3500 ML</span></div>
+      <div class="card-body">
+        <div class="water-progress-bg">
+           <div class="water-progress-fill" id="waterProgressBar"></div>
+        </div>
+        <div class="water-controls">
+          <button class="water-btn glass" id="btnWaterGlass" type="button">
+            <div class="water-fill-anim"></div>
+            <span class="water-icon">🥛</span>
+            <span class="water-text">+200 ML</span>
+          </button>
+          <button class="water-btn bottle" id="btnWaterBottle" type="button">
+            <div class="water-fill-anim"></div>
+            <span class="water-icon">🍼</span>
+            <span class="water-text">+1000 ML</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- AKTİVİTE & TOPARLANMA -->
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet-2); box-shadow: 0 0 10px rgba(91,141,255,0.7);"></span><h2>Aktivite & Toparlanma</h2></div><span class="hint">Huawei Health</span></div>
@@ -542,7 +574,7 @@
   </div>
 
   <div class="save-zone"><button class="btn-save" id="saveBtn" type="button">⛺ Kişisel Kasama Kaydet</button><div class="save-sub">Şifreli buluta anında yazılır</div></div>
-  <footer class="camp-footer"><span class="stamp">Kamp Defteri · Ultimate V10.5</span></footer>
+  <footer class="camp-footer"><span class="stamp">Kamp Defteri · Ultimate V10</span></footer>
 </div>
 
 <!-- FIREBASE BAĞLANTISI (MODÜL OLARAK) -->
@@ -637,6 +669,45 @@
   calInInput.addEventListener("input", updateCalorieBalance);
   calOutInput.addEventListener("input", updateCalorieBalance);
 
+  // --- SU TAKİP MOTORU ---
+  let dailyWater = 0;
+  const waterMax = 3500;
+  const waterStatus = document.getElementById("waterStatus");
+  const waterProgressBar = document.getElementById("waterProgressBar");
+
+  function updateWaterUI() {
+    if(dailyWater > waterMax) dailyWater = waterMax;
+    waterStatus.innerText = `${dailyWater} / ${waterMax} ML`;
+    const pct = Math.min(100, Math.round((dailyWater / waterMax) * 100));
+    waterProgressBar.style.width = pct + "%";
+    
+    // Hedefe ulaşınca yeşil olsun
+    if(dailyWater >= waterMax) {
+      waterStatus.style.color = "var(--mint)";
+      waterProgressBar.style.background = "var(--mint)";
+      waterProgressBar.style.boxShadow = "0 0 10px rgba(61,220,151,0.6)";
+    } else {
+      waterStatus.style.color = "var(--violet-2)";
+      waterProgressBar.style.background = "var(--violet-2)";
+      waterProgressBar.style.boxShadow = "0 0 10px rgba(91,141,255,0.6)";
+    }
+  }
+
+  function addWater(amount, btnId) {
+    if(dailyWater >= waterMax) return; // Dolduysa daha basma
+    dailyWater += amount;
+    updateWaterUI();
+    
+    // Su dolma animasyonu efekti
+    const btn = document.getElementById(btnId);
+    const anim = btn.querySelector('.water-fill-anim');
+    anim.style.height = "100%";
+    setTimeout(() => { anim.style.height = "0%"; }, 400); 
+  }
+
+  document.getElementById("btnWaterGlass").addEventListener("click", () => addWater(200, "btnWaterGlass"));
+  document.getElementById("btnWaterBottle").addEventListener("click", () => addWater(1000, "btnWaterBottle"));
+
   // EKRAN TEMİZLEME MOTORU
   function clearFields() {
     document.querySelectorAll("#mainApp input[type='number'], #mainApp input[type='url'], #mainApp textarea").forEach(el => el.value = "");
@@ -644,6 +715,8 @@
     document.getElementById("trainingType").value = "";
     document.getElementById("viewPdfBtn").style.display = "none";
     updateCalorieBalance();
+    dailyWater = 0;
+    updateWaterUI();
   }
 
   // Tarih ve Sayaç
@@ -722,6 +795,8 @@
         }
         updateCalorieBalance();
         window.checkSleepLimits();
+        dailyWater = data.water || 0;
+        updateWaterUI();
       }
     } catch(e) { console.error("Okuma hatası", e); }
   }
@@ -820,6 +895,7 @@
       campDay: campDayNumber.innerText.replace(/<[^>]*>?/gm, ''),
       weight: document.getElementById("weightValue").value,
       bodyFat: document.getElementById("bodyFatValue").value,
+      water: dailyWater,
       steps: document.getElementById("stepsValue").value,
       sleepH: document.getElementById("sleepHours").value,
       sleepM: document.getElementById("sleepMins").value,
