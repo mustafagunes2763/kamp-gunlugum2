@@ -984,13 +984,27 @@
     const row = document.createElement("div");
     row.className = "set-row";
     row.innerHTML = `
-      <span style="color:var(--ink-faint); font-size:11px; font-weight:700; width: 40px;">Set ${setCounter}</span>
+      <span class="set-number-label" style="color:var(--ink-faint); font-size:11px; font-weight:700; width: 40px;">Set 1</span>
       <div class="input-shell accent-violet" style="flex:1; padding:0;"><input type="number" class="set-weight" placeholder="KG" style="padding: 10px; font-size:14px; text-align:center;"></div>
       <span style="color:var(--ink-faint); font-size:12px;">x</span>
       <div class="input-shell accent-coral" style="flex:1; padding:0;"><input type="number" class="set-reps" placeholder="Tekrar" style="padding: 10px; font-size:14px; text-align:center;"></div>
+      <button class="remove-set-btn" type="button" style="background:none; border:none; color:var(--coral); font-size:18px; cursor:pointer; padding-left:8px;">✕</button>
     `;
+    
+    // Çarpıya basınca seti silen ve sayıları güncelleyen motor
+    row.querySelector('.remove-set-btn').addEventListener('click', () => {
+      row.remove();
+      document.querySelectorAll('#setsContainer .set-row').forEach((r, idx) => {
+        r.querySelector('.set-number-label').innerText = 'Set ' + (idx + 1);
+      });
+    });
+
     setsContainer.appendChild(row);
-    setCounter++;
+    
+    // Yeni set eklenince sayıları güncelle
+    document.querySelectorAll('#setsContainer .set-row').forEach((r, idx) => {
+        r.querySelector('.set-number-label').innerText = 'Set ' + (idx + 1);
+    });
   }
 
   document.getElementById("hypertrophyLink").addEventListener("click", (e) => {
