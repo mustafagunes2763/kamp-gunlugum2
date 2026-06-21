@@ -651,6 +651,10 @@
   const displayDate = document.getElementById("displayDate");
   const campDayNumber = document.getElementById("campDayNumber");
 
+  // SİSTEMİ OTOMATİK BUGÜNÜN TARİHİNE AYARLA
+  const bugun = new Date();
+  logDateInput.value = `${bugun.getFullYear()}-${String(bugun.getMonth() + 1).padStart(2, '0')}-${String(bugun.getDate()).padStart(2, '0')}`;
+
   function updateDateAndCampDay() {
     const [year, month, day] = logDateInput.value.split('-');
     const selectedDate = new Date(year, month - 1, day);
