@@ -261,6 +261,16 @@
   .recipe-card-macros { font-size: 10px; color: var(--ink-faint); font-family: var(--font-mono); letter-spacing:0.05em;}
   .recipe-card-macros span { color: var(--ink-dim); font-weight:700;}
   .recipe-del-btn { background: none; border: none; color: var(--coral); font-size: 16px; cursor: pointer; padding: 5px; opacity:0.7;}
+
+  /* PR BİLDİRİMİ (TOAST) VE REKORLAR ODASI STİLLERİ */
+  .toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-150%); background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); color: #0A0C14; padding: 14px 24px; border-radius: 50px; font-family: var(--font-display); font-weight: 800; font-size: 14px; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4); z-index: 9999; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; text-align: center; white-space: nowrap; }
+  .toast-notification.show { transform: translateX(-50%) translateY(0); }
+  
+  .pr-card { background: linear-gradient(135deg, rgba(255,215,0,0.06), transparent); border: 1px solid rgba(255,215,0,0.2); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .pr-card h3 { font-family: var(--font-display); font-size: 15px; color: #FFD700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;}
+  .pr-card .pr-date { font-size: 10px; color: var(--ink-dim); font-family: var(--font-mono); }
+  .pr-card .pr-stats { font-family: var(--font-mono); font-weight: 800; font-size: 20px; color: var(--ink); text-align: right;}
+  .pr-card .pr-stats span { font-size: 12px; color: var(--ink-faint); font-weight: 400; }
 </style>
 </head>
 <body>
@@ -307,6 +317,10 @@
       <a href="#" class="drawer-link" id="hypertrophyLink">
         <span class="link-icon">💪</span>
         <span class="link-text"><span class="link-title">Hipertrofi</span><span class="link-sub">Bölgesel Gelişim (Set & Ağırlık)</span></span>
+      </a>
+      <a href="#" class="drawer-link" id="prLink">
+        <span class="link-icon" style="background: rgba(255,215,0,0.1); color: #FFD700;">🏆</span>
+        <span class="link-text"><span class="link-title" style="color: #FFD700;">Rekorlar Odası</span><span class="link-sub">Kişisel En İyiler (PR)</span></span>
       </a>
     </div>
     <div class="drawer-foot">Kamp Defteri · VIP Sürüm</div>
@@ -658,6 +672,20 @@
       </div>
     </div>
   </div>
+
+  <div id="prToast" class="toast-notification">🏆 YENİ PR!</div>
+
+  <section class="full-panel" id="prPanel">
+    <div class="panel-inner">
+      <div class="panel-head">
+        <div><span class="eyebrow">Onur Tablosu</span><span class="panel-title" style="color:#FFD700;">Rekorlar Odası</span></div>
+        <button class="drawer-close" id="prCloseBtn" type="button">✕</button>
+      </div>
+      <div class="stack" id="prListContainer">
+         <p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Rekorlar yükleniyor...</p>
+      </div>
+    </div>
+  </section>
 
 <!-- FIREBASE BAĞLANTISI (MODÜL OLARAK) -->
 <script type="module">
@@ -1196,35 +1224,145 @@
 
   document.getElementById("addSetBtn").addEventListener("click", createSetRow);
 
+  // --- ZEKİ HAREKET KAYDETME VE PR MOTORU ---
   document.getElementById("saveExerciseBtn").addEventListener("click", async () => {
     if(!auth.currentUser) return;
-    const exName = document.getElementById("exerciseName").value;
-    if(!exName) { alert("Lütfen hareket adını yaz!"); return; }
-    
+    const exName = document.getElementById("exerciseName").value.trim();
+    if(!exName) { alert("Lütfen hareket adını yaz kanka!"); return; }
+
     const weights = setsContainer.querySelectorAll(".set-weight");
     const reps = setsContainer.querySelectorAll(".set-reps");
     const setsData = [];
-    
+    let bestSetThisSession = null;
+
     for(let i=0; i<weights.length; i++){
-      if(weights[i].value || reps[i].value) setsData.push({ set: i+1, weight: weights[i].value || 0, reps: reps[i].value || 0 });
+      const w = parseFloat(weights[i].value) || 0;
+      const r = parseInt(reps[i].value) || 0;
+      if(w > 0 || r > 0) { 
+        setsData.push({ set: i+1, weight: w, reps: r });
+        
+        // Bu girişin EN İYİ setini bul (Önce Ağırlık, sonra Tekrar)
+        if(!bestSetThisSession) {
+           bestSetThisSession = { weight: w, reps: r };
+        } else {
+           if(w > bestSetThisSession.weight) {
+              bestSetThisSession = { weight: w, reps: r };
+           } else if(w === bestSetThisSession.weight && r > bestSetThisSession.reps) {
+              bestSetThisSession = { weight: w, reps: r };
+           }
+        }
+      }
     }
-    if(setsData.length === 0) return;
+
+    if(setsData.length === 0) { alert("En az bir set girmelisin."); return; }
 
     const dateStr = document.getElementById("logDate").value;
     const docRef = doc(db, "users", auth.currentUser.uid, "hypertrophy", dateStr);
+    const prRef = doc(db, "users", auth.currentUser.uid, "records", "prList"); // PR KASASI
+    
     document.getElementById("saveExerciseBtn").innerText = "⏳ Kaydediliyor...";
 
     try {
+      // 1. Günlük Antrenmanı Normal Kaydet
       const docSnap = await getDoc(docRef);
-      let exArr = (docSnap.exists() && docSnap.data().exercises) ? docSnap.data().exercises : [];
-      exArr.push({ name: exName, sets: setsData });
-      await setDoc(docRef, { exercises: exArr }, { merge: true });
+      let existingExercises = (docSnap.exists() && docSnap.data().exercises) ? docSnap.data().exercises : [];
+      existingExercises.push({ name: exName, sets: setsData });
+      await setDoc(docRef, { exercises: existingExercises }, { merge: true });
 
-      document.getElementById("exerciseName").value = ""; setsContainer.innerHTML = ""; setCounter = 1; createSetRow();
-      loadHypertrophyData(dateStr);
+      // 2. PR KONTROLÜ VE KAYDI
+      if(bestSetThisSession) {
+        const prSnap = await getDoc(prRef);
+        let prList = prSnap.exists() ? prSnap.data() : {};
+        let isNewPR = false;
+        
+        // Büyük-küçük harf hatasını engellemek için standarda çevirir (Örn: "Bench press" ile "BENCH PRESS" aynı sayılır)
+        const exKey = exName.toUpperCase(); 
+
+        if(!prList[exKey]) {
+           isNewPR = true; // Daha önce hiç yapılmamışsa direkt PR'dır
+        } else {
+           const oldPR = prList[exKey];
+           // Yeni set eskisinden ağırsa VEYA kilolar aynı ama tekrar fazlaysa PR'ı ezer!
+           if(bestSetThisSession.weight > oldPR.weight) isNewPR = true;
+           else if(bestSetThisSession.weight === oldPR.weight && bestSetThisSession.reps > oldPR.reps) isNewPR = true;
+        }
+
+        if(isNewPR) {
+           prList[exKey] = { originalName: exName, weight: bestSetThisSession.weight, reps: bestSetThisSession.reps, date: dateStr };
+           await setDoc(prRef, prList, { merge: true });
+           
+           // ALTIN SARISI BİLDİRİMİ EKRANDA PATLAT!
+           const toast = document.getElementById("prToast");
+           toast.innerText = `🏆 YENİ PR! ${exName}: ${bestSetThisSession.weight} KG x ${bestSetThisSession.reps}`;
+           toast.classList.add("show");
+           if(navigator.vibrate) navigator.vibrate([200, 100, 200]); // Telefonu şampiyon gibi titret
+           setTimeout(() => toast.classList.remove("show"), 4000); // 4 saniye sonra kaybolur
+        }
+      }
+
+      document.getElementById("exerciseName").value = "";
+      setsContainer.innerHTML = "";
+      createSetRow(); 
+      loadHypertrophyData(dateStr); 
       document.getElementById("saveExerciseBtn").innerText = "💪 Hareketi Kaydet";
     } catch(e) { document.getElementById("saveExerciseBtn").innerText = "❌ Hata"; }
   });
+
+  // --- REKORLAR ODASINI AÇMA VE VERİLERİ ÇEKME MOTORU ---
+  document.getElementById("prLink").addEventListener("click", (e) => {
+    e.preventDefault(); 
+    document.getElementById('drawer').classList.remove('is-active');
+    document.getElementById('menuOverlay').classList.remove('is-active');
+    document.getElementById('menuBtn').classList.remove('is-open'); 
+    document.getElementById('prPanel').classList.add('is-active');
+    document.body.style.overflow = 'hidden'; 
+    loadPRData();
+  });
+
+  document.getElementById("prCloseBtn").addEventListener("click", () => {
+    document.getElementById("prPanel").classList.remove("is-active");
+    document.body.style.overflow = "";
+  });
+
+  async function loadPRData() {
+    if(!auth.currentUser) return;
+    const container = document.getElementById("prListContainer");
+    container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Rekorlar buluttan çekiliyor...</p>";
+    
+    try {
+      const prSnap = await getDoc(doc(db, "users", auth.currentUser.uid, "records", "prList"));
+      if(prSnap.exists() && Object.keys(prSnap.data()).length > 0) {
+        const prData = prSnap.data();
+        let html = "";
+        
+        // Hareket isimlerini A'dan Z'ye sıralayarak dizer
+        const keys = Object.keys(prData).sort();
+        
+        keys.forEach(key => {
+          const pr = prData[key];
+          // Tarihi 2026-06-21 formatından "21 Haziran 2026" formatına çevirir
+          const [y, m, d] = pr.date.split("-");
+          const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+          const dateStr = `${d} ${months[parseInt(m)-1]} ${y}`;
+
+          html += `
+            <div class="pr-card">
+              <div>
+                <h3>${pr.originalName}</h3>
+                <div class="pr-date">📅 ${dateStr}</div>
+              </div>
+              <div class="pr-stats">
+                ${pr.weight}<span>KG</span> <span style="color:#FFD700; font-size:14px;">x</span> ${pr.reps}<span>T</span>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      } else {
+        container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Henüz hiç PR kaydedilmedi kanka. Ağırlıkları artırma vakti!</p>";
+      }
+    } catch(e) { container.innerHTML = "<p style='color: var(--coral); font-size: 12px; text-align: center;'>Hata oluştu.</p>"; }
+  }
 
   async function loadHypertrophyData(dateStr) {
     if(!auth.currentUser) return;
