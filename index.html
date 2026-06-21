@@ -1011,6 +1011,7 @@
     e.preventDefault(); 
     document.getElementById('drawer').classList.remove('is-active');
     document.getElementById('menuOverlay').classList.remove('is-active');
+    document.getElementById('menuBtn').classList.remove('is-open'); // İŞTE SENİ GİDİ TERS ÇALIŞAN KAÇAK X!
     document.getElementById('hypertrophyPanel').classList.add('is-active');
     document.body.style.overflow = 'hidden'; 
     setsContainer.innerHTML = ""; setCounter = 1; createSetRow();
