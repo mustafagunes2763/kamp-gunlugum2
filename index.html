@@ -473,7 +473,7 @@
             <span class="water-text">+1000 ML</span>
           </button>
         </div>
-        <button id="btnWaterUndo" type="button" style="width:100%; margin-top:10px; background:transparent; border:1px dashed var(--line-soft); color:var(--ink-faint); padding:10px; border-radius:12px; font-family:var(--font-display); font-size:12px; cursor:pointer; transition: opacity 0.2s;">↩ Yanlış Tıkladım (-200 ML)</button>
+        <button id="btnWaterUndo" type="button" style="width:100%; margin-top:10px; background:transparent; border:1px dashed var(--line-soft); color:var(--ink-faint); padding:10px; border-radius:12px; font-family:var(--font-display); font-size:12px; cursor:pointer; transition: opacity 0.2s;">↩ Yanlış Tıkladım (-100 ML)</button>
       </div>
     </section>
 
@@ -718,7 +718,7 @@
 
   // Suyu Geri Alma (Yanlışlıkla basanlar için)
   document.getElementById("btnWaterUndo").addEventListener("click", () => {
-    dailyWater -= 200; // Her basışta 200 ml siler
+    dailyWater -= 100; // Her basışta 100 ml siler
     if(dailyWater < 0) dailyWater = 0; // Eksiye düşmesini engeller
     updateWaterUI();
   });
@@ -1153,21 +1153,67 @@
     if(!auth.currentUser) return;
     const container = document.getElementById("todaysWorkoutLog");
     document.getElementById("hypLogDateHint").innerText = document.getElementById("displayDate").innerText;
-    container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Yükleniyor...</p>";
-    
+    container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Veriler Çekiliyor...</p>";
+
     try {
       const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid, "hypertrophy", dateStr));
       if(docSnap.exists() && docSnap.data().exercises && docSnap.data().exercises.length > 0) {
         let html = "";
-        docSnap.data().exercises.forEach(ex => {
-          html += `<div class="workout-log-item"><h3>${ex.name}</h3>`;
-          ex.sets.forEach(s => { html += `<div class="log-set-row"><span>Set ${s.set}</span><span style="font-family: var(--font-mono); font-weight: 700;">${s.weight} KG <span style="color:var(--coral);">x</span> ${s.reps} TEKRAR</span></div>`; });
+        docSnap.data().exercises.forEach((ex, index) => {
+          // Başlık ve Sil Butonunu yan yana koyuyoruz
+          html += `<div class="workout-log-item">
+                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                       <h3 style="margin-bottom:0;">${ex.name}</h3>
+                       <button class="delete-ex-btn" data-index="${index}" style="background:none; border:none; color:var(--coral); font-size:11px; font-family:var(--font-mono); font-weight:700; cursor:pointer; padding: 4px;">🗑️ SİL</button>
+                     </div>`;
+          ex.sets.forEach(s => {
+            html += `<div class="log-set-row">
+                       <span>Set ${s.set}</span>
+                       <span style="font-family: var(--font-mono); font-weight: 700;">${s.weight} <span style="font-size:10px; color:var(--ink-faint);">KG</span> &nbsp;<span style="color:var(--coral);">x</span>&nbsp; ${s.reps} <span style="font-size:10px; color:var(--ink-faint);">TEKRAR</span></span>
+                     </div>`;
+          });
           html += `</div>`;
         });
         container.innerHTML = html;
-      } else { container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Bugün hareket kaydedilmedi.</p>"; }
+      } else {
+        container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Bugün henüz hareket kaydedilmedi.</p>";
+      }
     } catch(e) { container.innerHTML = "<p style='color: var(--coral); font-size: 12px; text-align: center;'>Hata oluştu.</p>"; }
   }
+
+  // --- HAREKET SİLME MOTORU ---
+  document.getElementById("todaysWorkoutLog").addEventListener("click", async (e) => {
+    const btn = e.target.closest(".delete-ex-btn");
+    if(!btn) return; // Sil butonuna basılmadıysa hiçbir şey yapma
+    
+    // Yanlışlıkla basmaya karşı onay iste
+    if(!confirm("Bu hareketi tamamen silmek istediğine emin misin kanka?")) return;
+
+    const index = parseInt(btn.getAttribute("data-index"));
+    const dateStr = document.getElementById("logDate").value;
+    const docRef = doc(db, "users", auth.currentUser.uid, "hypertrophy", dateStr);
+    
+    btn.innerText = "⏳..."; // Silinirken ufak bir bekleme efekti
+    
+    try {
+      const docSnap = await getDoc(docRef);
+      if(docSnap.exists() && docSnap.data().exercises) {
+        let existingExercises = docSnap.data().exercises;
+        
+        // Seçilen hareketi bulut listesinden çıkar
+        existingExercises.splice(index, 1); 
+        
+        // Yeni listeyi buluta tekrar yaz
+        await setDoc(docRef, { exercises: existingExercises }, { merge: true });
+        
+        // Ekranı anında güncelle
+        loadHypertrophyData(dateStr); 
+      }
+    } catch(error) {
+      console.error(error);
+      btn.innerText = "❌ Hata";
+    }
+  });
 </script>
 </body>
 </html>
