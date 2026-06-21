@@ -209,8 +209,8 @@
   .stat-chip .chip-value.down{ color: var(--coral); }
 
   /* HİPERTROFİ PANELİ STİLLERİ */
-  .full-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; max-width: 100%; background: var(--bg); z-index: 100; transform: translateY(100%); transition: transform .35s ease; overflow-y: auto; }
-  .full-panel.is-active{ transform: translateY(0); }
+  .full-panel{ position:fixed; top:0; left:0; height:100%; width: 100%; max-width: 100%; background: var(--bg); z-index: 100; transform: translateY(120%); opacity: 0; pointer-events: none; transition: transform .35s ease, opacity .35s ease; overflow-y: auto; }
+  .full-panel.is-active{ transform: translateY(0); opacity: 1; pointer-events: auto; }
   .panel-inner{ max-width: 480px; margin: 0 auto; padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 28px); }
   .panel-head{ display:flex; align-items:center; justify-content:space-between; padding: 4px 4px 22px; }
   .panel-head .eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); text-transform: uppercase; display:block; margin-bottom: 4px;}
@@ -338,7 +338,8 @@
           <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet);"></span><h2>Antrenman Girişi</h2></div></div>
           <div class="card-body">
             <div class="input-shell accent-violet" style="margin-bottom: 15px;">
-              <input type="text" id="exerciseName" placeholder="Hareket Adı (Örn: Bench Press)">
+              <input type="text" id="exerciseName" list="exerciseSuggestions" placeholder="Hareket Adı (Örn: Bench Press)" autocomplete="off">
+              <datalist id="exerciseSuggestions"></datalist>
             </div>
             <div id="setsContainer"></div>
             <button id="addSetBtn" class="btn-add-set">+ Yeni Set Ekle</button>
@@ -1215,6 +1216,7 @@
     document.body.style.overflow = 'hidden'; 
     setsContainer.innerHTML = ""; setCounter = 1; createSetRow();
     loadHypertrophyData(document.getElementById("logDate").value);
+    loadExerciseSuggestions(); // Paneli açınca önerileri yükle
   });
 
   document.getElementById("hypertrophyCloseBtn").addEventListener("click", () => {
@@ -1304,9 +1306,32 @@
       setsContainer.innerHTML = "";
       createSetRow(); 
       loadHypertrophyData(dateStr); 
+      loadExerciseSuggestions(); // Yeni hareket kaydedilince listeyi güncelle
       document.getElementById("saveExerciseBtn").innerText = "💪 Hareketi Kaydet";
     } catch(e) { document.getElementById("saveExerciseBtn").innerText = "❌ Hata"; }
   });
+
+  // --- OTOMATİK HAREKET İSMİ ÖNERİ MOTORU ---
+  async function loadExerciseSuggestions() {
+    if(!auth.currentUser) return;
+    try {
+      // Rekorlar kasasındaki hareket isimlerini okuyoruz (Çünkü tüm benzersiz isimler orada var)
+      const prSnap = await getDoc(doc(db, "users", auth.currentUser.uid, "records", "prList"));
+      if(prSnap.exists()) {
+        const prData = prSnap.data();
+        const datalist = document.getElementById("exerciseSuggestions");
+        datalist.innerHTML = ""; // Önce içini temizle
+        
+        // İsimleri A'dan Z'ye sıralayıp listeye ekle
+        const keys = Object.keys(prData).sort();
+        keys.forEach(key => {
+          const option = document.createElement("option");
+          option.value = prData[key].originalName; // Örn: Incline dumbbell bench press
+          datalist.appendChild(option);
+        });
+      }
+    } catch(e) { console.error("Öneri motoru hatası:", e); }
+  }
 
   // --- REKORLAR ODASINI AÇMA VE VERİLERİ ÇEKME MOTORU ---
   document.getElementById("prLink").addEventListener("click", (e) => {
