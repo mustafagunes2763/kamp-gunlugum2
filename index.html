@@ -231,6 +231,15 @@
   .water-btn .water-fill-anim { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(91,141,255,0.2); transition: height 0.4s ease-out; z-index: 1; }
   .water-btn .water-icon { font-size: 28px; position: relative; z-index: 2; }
   .water-btn .water-text { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--violet-2); position: relative; z-index: 2; }
+
+  /* HIZLI EKLE STİLLERİ */
+  .quick-add-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; scrollbar-width: none; }
+  .quick-add-scroll::-webkit-scrollbar { display: none; }
+  .quick-chip { flex-shrink: 0; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 10px 14px; font-family: var(--font-display); font-weight: 600; font-size: 11px; color: var(--ink); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: transform 0.1s, background 0.2s; }
+  .quick-chip:active { transform: scale(0.95); }
+  .quick-chip.lime { border-color: rgba(61,220,151,0.3); }
+  .quick-chip.cheese { border-color: rgba(255,122,156,0.3); }
+  .quick-chip.meal { border-color: rgba(91,141,255,0.3); }
 </style>
 </head>
 <body>
@@ -537,6 +546,11 @@
     <section class="card">
       <div class="card-head"><div class="tag"><span class="dot"></span><h2>Makrolar</h2></div><span class="hint">GRAM</span></div>
       <div class="card-body">
+        <div class="quick-add-scroll">
+          <button type="button" class="quick-chip lime" id="qaLime">🧪 Cool Lime + Kreatin</button>
+          <button type="button" class="quick-chip cheese" id="qaCheese">🧀 Akşam Peyniri</button>
+          <button type="button" class="quick-chip meal" id="qaMeal">🍛 Clean Bulk Ana Öğün</button>
+        </div>
         <div class="macro-grid">
           <div class="field macro-field" data-macro="protein"><label><span class="swatch"></span>Protein</label><div class="input-shell"><input type="number" id="macroProtein"></div></div>
           <div class="field macro-field" data-macro="carb"><label><span class="swatch"></span>Karb</label><div class="input-shell"><input type="number" id="macroCarb"></div></div>
@@ -731,6 +745,36 @@
 
   document.getElementById("btnWaterGlass").addEventListener("click", () => addWater(200, "btnWaterGlass"));
   document.getElementById("btnWaterBottle").addEventListener("click", () => addWater(1000, "btnWaterBottle"));
+
+  // --- HIZLI ÖĞÜN EKLEME MOTORU ---
+  function addMacroValue(inputId, amount) {
+    const el = document.getElementById(inputId);
+    const current = parseInt(el.value) || 0;
+    el.value = current + amount;
+  }
+
+  // 1. Cool Lime + Kreatin: 300ml su ekler ve kreatin tikini işaretler
+  document.getElementById("qaLime").addEventListener("click", () => {
+    addWater(300, null); // Su sayacına 300ml ekler
+    document.getElementById("suppCreatine").checked = true;
+  });
+
+  // 2. Akşam Peyniri: Akşamları tükettiğin peynirin tahmini değerleri
+  document.getElementById("qaCheese").addEventListener("click", () => {
+    addMacroValue("macroProtein", 15); // +15g Protein
+    addMacroValue("macroFat", 10);     // +10g Yağ
+    addMacroValue("caloriesIn", 150);  // +150 Kcal
+    updateCalorieBalance();
+  });
+
+  // 3. Clean Bulk Ana Öğün: O kusursuz 400g karb hedefine uygun sağlam bir öğün
+  document.getElementById("qaMeal").addEventListener("click", () => {
+    addMacroValue("macroProtein", 40); // +40g Protein
+    addMacroValue("macroCarb", 100);   // +100g Karb
+    addMacroValue("macroFat", 10);     // +10g Yağ
+    addMacroValue("caloriesIn", 650);  // +650 Kcal
+    updateCalorieBalance();
+  });
 
   // EKRAN TEMİZLEME MOTORU
   function clearFields() {
