@@ -570,11 +570,6 @@
         <button id="btnOpenRecipes" type="button" style="width:100%; background:var(--panel-2); border:1px dashed var(--violet); color:var(--violet); padding:14px; border-radius:14px; font-family:var(--font-display); font-weight:600; cursor:pointer; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
           <span style="font-size:18px;">📖</span> Tarif Kütüphanesini Aç
         </button>
-        <div class="quick-add-scroll">
-          <button type="button" class="quick-chip lime" id="qaLime">🧪 Cool Lime + Kreatin</button>
-          <button type="button" class="quick-chip cheese" id="qaCheese">🧀 Akşam Peyniri</button>
-          <button type="button" class="quick-chip meal" id="qaMeal">🍛 Clean Bulk Ana Öğün</button>
-        </div>
         <div class="macro-grid">
           <div class="field macro-field" data-macro="protein"><label><span class="swatch"></span>Protein</label><div class="input-shell"><input type="number" id="macroProtein"></div></div>
           <div class="field macro-field" data-macro="carb"><label><span class="swatch"></span>Karb</label><div class="input-shell"><input type="number" id="macroCarb"></div></div>
@@ -802,36 +797,6 @@
 
   document.getElementById("btnWaterGlass").addEventListener("click", () => addWater(200, "btnWaterGlass"));
   document.getElementById("btnWaterBottle").addEventListener("click", () => addWater(1000, "btnWaterBottle"));
-
-  // --- HIZLI ÖĞÜN EKLEME MOTORU ---
-  function addMacroValue(inputId, amount) {
-    const el = document.getElementById(inputId);
-    const current = parseInt(el.value) || 0;
-    el.value = current + amount;
-  }
-
-  // 1. Cool Lime + Kreatin: 300ml su ekler ve kreatin tikini işaretler
-  document.getElementById("qaLime").addEventListener("click", () => {
-    addWater(300, null); // Su sayacına 300ml ekler
-    document.getElementById("suppCreatine").checked = true;
-  });
-
-  // 2. Akşam Peyniri: Akşamları tükettiğin peynirin tahmini değerleri
-  document.getElementById("qaCheese").addEventListener("click", () => {
-    addMacroValue("macroProtein", 15); // +15g Protein
-    addMacroValue("macroFat", 10);     // +10g Yağ
-    addMacroValue("caloriesIn", 150);  // +150 Kcal
-    updateCalorieBalance();
-  });
-
-  // 3. Clean Bulk Ana Öğün: O kusursuz 400g karb hedefine uygun sağlam bir öğün
-  document.getElementById("qaMeal").addEventListener("click", () => {
-    addMacroValue("macroProtein", 40); // +40g Protein
-    addMacroValue("macroCarb", 100);   // +100g Karb
-    addMacroValue("macroFat", 10);     // +10g Yağ
-    addMacroValue("caloriesIn", 650);  // +650 Kcal
-    updateCalorieBalance();
-  });
 
   // EKRAN TEMİZLEME MOTORU
   function clearFields() {
@@ -1349,13 +1314,25 @@
   // --- TARİF KÜTÜPHANESİ MOTORU ---
   const recipeModal = document.getElementById("recipeModal");
   
+  // AÇARKEN ARKAYI KİLİTLE
   document.getElementById("btnOpenRecipes").addEventListener("click", () => {
     recipeModal.classList.add("is-active");
+    document.body.style.overflow = "hidden"; // Scroll Kilidi
     loadRecipes();
   });
   
+  // ÇARPIYA BASINCA KAPAT VE KİLİDİ AÇ
   document.getElementById("btnCloseRecipes").addEventListener("click", () => {
     recipeModal.classList.remove("is-active");
+    document.body.style.overflow = "";
+  });
+
+  // BOŞLUĞA (KARANLIK ALANA) TIKLAYINCA KAPAT VE KİLİDİ AÇ
+  recipeModal.addEventListener("click", (e) => {
+    if(e.target === recipeModal) {
+      recipeModal.classList.remove("is-active");
+      document.body.style.overflow = "";
+    }
   });
 
   // Hangi kasayı kullanacağımızı bulur (VIP uyumlu)
@@ -1446,6 +1423,7 @@
     
     if(typeof updateCalorieBalance === "function") updateCalorieBalance();
     recipeModal.classList.remove("is-active"); // İş bitince paneli kapat
+    document.body.style.overflow = ""; // Scroll kilidini aç
   };
 
   // Çöp kutusu ile tarif silme
