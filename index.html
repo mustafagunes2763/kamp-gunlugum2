@@ -636,9 +636,9 @@
             <div class="input-shell accent-violet" style="flex:1; padding:0;"><input type="text" id="recName" placeholder="Adı (Örn: Akşam Peyniri)" style="padding:10px; font-size:14px;"></div>
           </div>
           <div class="recipe-row">
-            <div class="input-shell accent-acid" style="flex:1; padding:0;"><input type="number" id="recPro" placeholder="Pro (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
-            <div class="input-shell accent-blue" style="flex:1; padding:0;"><input type="number" id="recCarb" placeholder="Karb (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
-            <div class="input-shell accent-fire" style="flex:1; padding:0;"><input type="number" id="recFat" placeholder="Yağ (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
+            <div class="input-shell accent-acid" style="flex:1; padding:0;"><input type="number" id="recPro" step="0.1" placeholder="Pro (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
+            <div class="input-shell accent-blue" style="flex:1; padding:0;"><input type="number" id="recCarb" step="0.1" placeholder="Karb (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
+            <div class="input-shell accent-fire" style="flex:1; padding:0;"><input type="number" id="recFat" step="0.1" placeholder="Yağ (g)" style="padding:10px; font-size:13px; text-align:center;"></div>
           </div>
           <div class="input-shell" style="border-left:3px solid var(--ink-faint); padding:0;"><input type="number" id="recCal" placeholder="Toplam Kalori (KCAL)" style="padding:10px; font-size:13px; text-align:center;"></div>
           <button type="button" id="btnSaveRecipe" class="btn-save" style="padding:12px; font-size:14px; margin-top:5px; border-radius:12px;">💾 Kütüphaneye Kaydet</button>
@@ -1378,9 +1378,9 @@
   document.getElementById("btnSaveRecipe").addEventListener("click", async () => {
     const icon = document.getElementById("recIcon").value || "🍽️";
     const name = document.getElementById("recName").value;
-    const pro = parseInt(document.getElementById("recPro").value) || 0;
-    const carb = parseInt(document.getElementById("recCarb").value) || 0;
-    const fat = parseInt(document.getElementById("recFat").value) || 0;
+    const pro = parseFloat(document.getElementById("recPro").value) || 0;
+    const carb = parseFloat(document.getElementById("recCarb").value) || 0;
+    const fat = parseFloat(document.getElementById("recFat").value) || 0;
     const cal = parseInt(document.getElementById("recCal").value) || 0;
 
     if(!name) { alert("Kanka tarifin adını girmeyi unuttun!"); return; }
@@ -1413,16 +1413,23 @@
   window.applyRecipe = function(pro, carb, fat, cal) {
     const addVal = (id, val) => { 
       const el = document.getElementById(id); 
-      if(el) el.value = (parseInt(el.value)||0) + val; 
+      if(el) {
+        // Mevcut değeri de küsuratlı okur
+        const current = parseFloat(el.value) || 0;
+        const total = current + parseFloat(val);
+        
+        // 25.2000000001 gibi saçma sayılar çıkmasın diye tek haneye yuvarlar
+        el.value = Number(total.toFixed(1)); 
+      }
     };
     
     addVal("macroProtein", pro);
     addVal("macroCarb", carb);
     addVal("macroFat", fat);
-    addVal("caloriesIn", cal);
+    addVal("caloriesIn", cal); // Kalori tam sayı
     
     if(typeof updateCalorieBalance === "function") updateCalorieBalance();
-    recipeModal.classList.remove("is-active"); // İş bitince paneli kapat
+    recipeModal.classList.remove("is-active"); 
     document.body.style.overflow = ""; // Scroll kilidini aç
   };
 
