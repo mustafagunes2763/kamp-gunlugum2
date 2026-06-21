@@ -302,7 +302,13 @@
           </div>
         </section>
         <section class="card">
-          <div class="card-head"><div class="tag"><span class="dot" style="background: var(--mint);"></span><h2>Günün Antrenmanı</h2></div><span class="hint" id="hypLogDateHint"></span></div>
+          <div class="card-head">
+            <div class="tag"><span class="dot" style="background: var(--mint);"></span><h2>Günün Antrenmanı</h2></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="hint" id="hypLogDateHint" style="margin: 0;">Tarih</span>
+              <button id="toggleEditBtn" style="background:var(--panel-2); border:1px solid var(--line-soft); color:var(--ink-dim); padding:5px 10px; border-radius:8px; font-family:var(--font-display); font-size:10px; cursor:pointer; font-weight: 600; transition: all 0.2s;">✏️ DÜZENLE</button>
+            </div>
+          </div>
           <div class="card-body" id="todaysWorkoutLog">
             <p style="color: var(--ink-faint); font-size: 12px; text-align: center;">Yükleniyor...</p>
           </div>
@@ -1151,6 +1157,11 @@
 
   async function loadHypertrophyData(dateStr) {
     if(!auth.currentUser) return;
+    isEditMode = false;
+    document.getElementById("toggleEditBtn").innerHTML = "✏️ DÜZENLE";
+    document.getElementById("toggleEditBtn").style.background = "var(--panel-2)";
+    document.getElementById("toggleEditBtn").style.color = "var(--ink-dim)";
+    document.getElementById("toggleEditBtn").style.borderColor = "var(--line-soft)";
     const container = document.getElementById("todaysWorkoutLog");
     document.getElementById("hypLogDateHint").innerText = document.getElementById("displayDate").innerText;
     container.innerHTML = "<p style='color: var(--ink-faint); font-size: 12px; text-align: center;'>Veriler Çekiliyor...</p>";
@@ -1164,7 +1175,7 @@
           html += `<div class="workout-log-item">
                      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
                        <h3 style="margin-bottom:0;">${ex.name}</h3>
-                       <button class="delete-ex-btn" data-index="${index}" style="background:none; border:none; color:var(--coral); font-size:11px; font-family:var(--font-mono); font-weight:700; cursor:pointer; padding: 4px;">🗑️ SİL</button>
+                       <button class="delete-ex-btn" data-index="${index}" style="display:none; background:none; border:none; color:var(--coral); font-size:11px; font-family:var(--font-mono); font-weight:700; cursor:pointer; padding: 4px;">🗑️ SİL</button>
                      </div>`;
           ex.sets.forEach(s => {
             html += `<div class="log-set-row">
@@ -1180,6 +1191,25 @@
       }
     } catch(e) { container.innerHTML = "<p style='color: var(--coral); font-size: 12px; text-align: center;'>Hata oluştu.</p>"; }
   }
+
+  // --- DÜZENLEME MODU KONTROLCÜSÜ ---
+  let isEditMode = false;
+  document.getElementById("toggleEditBtn").addEventListener("click", () => {
+    isEditMode = !isEditMode;
+    const editBtn = document.getElementById("toggleEditBtn");
+    
+    // Butonun tasarımını duruma göre değiştir
+    editBtn.innerHTML = isEditMode ? "✅ BİTTİ" : "✏️ DÜZENLE";
+    editBtn.style.color = isEditMode ? "var(--bg)" : "var(--ink-dim)";
+    editBtn.style.background = isEditMode ? "var(--mint)" : "var(--panel-2)";
+    editBtn.style.borderColor = isEditMode ? "var(--mint)" : "var(--line-soft)";
+    
+    // Sahnede ne kadar sil butonu varsa hepsini göster/gizle
+    const delBtns = document.querySelectorAll(".delete-ex-btn");
+    delBtns.forEach(btn => {
+      btn.style.display = isEditMode ? "block" : "none";
+    });
+  });
 
   // --- HAREKET SİLME MOTORU ---
   document.getElementById("todaysWorkoutLog").addEventListener("click", async (e) => {
