@@ -460,15 +460,20 @@
         <div class="water-controls">
           <button class="water-btn glass" id="btnWaterGlass" type="button">
             <div class="water-fill-anim"></div>
-            <span class="water-icon">🥛</span>
+            <span class="water-icon" style="color: var(--violet-2);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l1.5 12h9L18 8"/><path d="M4 8h16"/></svg>
+            </span>
             <span class="water-text">+200 ML</span>
           </button>
           <button class="water-btn bottle" id="btnWaterBottle" type="button">
             <div class="water-fill-anim"></div>
-            <span class="water-icon">🍼</span>
+            <span class="water-icon" style="color: var(--violet-2);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2"/><path d="M8.5 6l-1 2.5A2.5 2.5 0 0 0 8 12v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-9a2.5 2.5 0 0 0 .5-3.5L15.5 6"/></svg>
+            </span>
             <span class="water-text">+1000 ML</span>
           </button>
         </div>
+        <button id="btnWaterUndo" type="button" style="width:100%; margin-top:10px; background:transparent; border:1px dashed var(--line-soft); color:var(--ink-faint); padding:10px; border-radius:12px; font-family:var(--font-display); font-size:12px; cursor:pointer; transition: opacity 0.2s;">↩ Yanlış Tıkladım (-200 ML)</button>
       </div>
     </section>
 
@@ -676,12 +681,13 @@
   const waterProgressBar = document.getElementById("waterProgressBar");
 
   function updateWaterUI() {
-    if(dailyWater > waterMax) dailyWater = waterMax;
+    // 3500'ü geçse bile saymaya devam edecek, sınır yok!
     waterStatus.innerText = `${dailyWater} / ${waterMax} ML`;
+    
+    // Progress bar taşmasın diye görseli %100'de sabitliyoruz
     const pct = Math.min(100, Math.round((dailyWater / waterMax) * 100));
     waterProgressBar.style.width = pct + "%";
     
-    // Hedefe ulaşınca yeşil olsun
     if(dailyWater >= waterMax) {
       waterStatus.style.color = "var(--mint)";
       waterProgressBar.style.background = "var(--mint)";
@@ -694,16 +700,28 @@
   }
 
   function addWater(amount, btnId) {
-    if(dailyWater >= waterMax) return; // Dolduysa daha basma
     dailyWater += amount;
     updateWaterUI();
     
     // Su dolma animasyonu efekti
-    const btn = document.getElementById(btnId);
-    const anim = btn.querySelector('.water-fill-anim');
-    anim.style.height = "100%";
-    setTimeout(() => { anim.style.height = "0%"; }, 400); 
+    if(btnId) {
+      const btn = document.getElementById(btnId);
+      if(btn) {
+        const anim = btn.querySelector('.water-fill-anim');
+        if(anim) {
+          anim.style.height = "100%";
+          setTimeout(() => { anim.style.height = "0%"; }, 400); 
+        }
+      }
+    }
   }
+
+  // Suyu Geri Alma (Yanlışlıkla basanlar için)
+  document.getElementById("btnWaterUndo").addEventListener("click", () => {
+    dailyWater -= 200; // Her basışta 200 ml siler
+    if(dailyWater < 0) dailyWater = 0; // Eksiye düşmesini engeller
+    updateWaterUI();
+  });
 
   document.getElementById("btnWaterGlass").addEventListener("click", () => addWater(200, "btnWaterGlass"));
   document.getElementById("btnWaterBottle").addEventListener("click", () => addWater(1000, "btnWaterBottle"));
