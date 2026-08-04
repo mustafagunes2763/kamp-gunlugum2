@@ -467,10 +467,130 @@
     <span class="link-sub" id="themeStatus">🌙 Koyu</span>
   </span>
       </a>
+      <a href="#" class="drawer-link" id="reminderLink">
+  <span class="link-icon">🔔</span>
+  <span class="link-text">
+    <span class="link-title">Hatırlatıcılar</span>
+    <span class="link-sub" id="reminderBadge">0 aktif</span>
+  </span>
+      </a>
     </div>
     <div class="drawer-foot">Kamp Defteri · VIP Sürüm</div>
   </nav>
 
+<!-- HATIRLATICI PANELİ -->
+<section class="full-panel" id="reminderPanel">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div>
+        <span class="eyebrow">Zamanında Hareket Et</span>
+        <span class="panel-title">🔔 Hatırlatıcılar</span>
+      </div>
+      <button class="drawer-close" id="reminderCloseBtn" type="button">✕</button>
+    </div>
+
+    <!-- BİLDİRİM İZİN BUTONU -->
+    <div style="margin-bottom: 16px; background: var(--panel-2); border-radius: 12px; padding: 12px 16px; border: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div style="font-weight: 600; font-size: 13px; color: var(--ink);">📢 Bildirim İzni</div>
+        <div style="font-size: 11px; color: var(--ink-faint);">Tarayıcı bildirimlerini aktifleştir</div>
+      </div>
+      <button id="notificationPermissionBtn" style="background: var(--grad-brand); border: none; color: #0A0C14; padding: 8px 16px; border-radius: 10px; font-family: var(--font-display); font-weight: 700; font-size: 12px; cursor: pointer;">İzin Ver</button>
+    </div>
+
+    <!-- HAZIR HATIRLATICILAR -->
+    <div class="stack" style="gap: 12px;">
+      
+      <!-- Su Hatırlatıcısı -->
+      <section class="card" style="border-left: 3px solid #5B8DFF;">
+        <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px; color: var(--ink);">💧 Su İçme</div>
+            <div style="font-size: 11px; color: var(--ink-faint);">Her 2 saatte bir hatırlat</div>
+          </div>
+          <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+            <input type="checkbox" id="waterReminder" style="opacity: 0; width: 0; height: 0;">
+            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--panel-2); border-radius: 26px; transition: 0.3s;">
+              <span style="position: absolute; content: ''; height: 20px; width: 20px; left: 3px; bottom: 3px; background: var(--ink-faint); border-radius: 50%; transition: 0.3s;"></span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Protein Hatırlatıcısı -->
+      <section class="card" style="border-left: 3px solid #3DDC97;">
+        <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px; color: var(--ink);">🥛 Protein Shake</div>
+            <div style="font-size: 11px; color: var(--ink-faint);">Antrenman sonrası hatırlat</div>
+          </div>
+          <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+            <input type="checkbox" id="proteinReminder" style="opacity: 0; width: 0; height: 0;">
+            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--panel-2); border-radius: 26px; transition: 0.3s;">
+              <span style="position: absolute; content: ''; height: 20px; width: 20px; left: 3px; bottom: 3px; background: var(--ink-faint); border-radius: 50%; transition: 0.3s;"></span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Tartı Hatırlatıcısı -->
+      <section class="card" style="border-left: 3px solid #FF7A9C;">
+        <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px; color: var(--ink);">⚖️ Sabah Tartısı</div>
+            <div style="font-size: 11px; color: var(--ink-faint);">Her sabah 8:00'de hatırlat</div>
+          </div>
+          <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+            <input type="checkbox" id="weightReminder" style="opacity: 0; width: 0; height: 0;">
+            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--panel-2); border-radius: 26px; transition: 0.3s;">
+              <span style="position: absolute; content: ''; height: 20px; width: 20px; left: 3px; bottom: 3px; background: var(--ink-faint); border-radius: 50%; transition: 0.3s;"></span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- AKILLI ANTRENMAN HATIRLATICISI -->
+      <section class="card" style="border-left: 3px solid #FFD700;">
+        <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px; color: var(--ink);">🏋️ Akıllı Antrenman</div>
+            <div style="font-size: 11px; color: var(--ink-faint);" id="smartWorkoutStatus">Bugün antrenman yapmadın! 💪</div>
+          </div>
+          <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+            <input type="checkbox" id="smartWorkoutReminder" checked style="opacity: 0; width: 0; height: 0;">
+            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--grad-brand); border-radius: 26px; transition: 0.3s;">
+              <span style="position: absolute; content: ''; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; transform: translateX(24px);"></span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- ÖZEL HATIRLATICI EKLE -->
+      <section class="card" style="border: 1px dashed var(--violet);">
+        <div class="card-body">
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="customReminderName" placeholder="Hatırlatıcı adı (Örn: Magnezyum al)" style="flex: 1; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 10px; padding: 10px 14px; color: var(--ink); font-family: var(--font-mono); font-size: 13px; outline: none;">
+            <input type="time" id="customReminderTime" value="12:00" style="width: 120px; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 10px; padding: 10px 14px; color: var(--ink); font-family: var(--font-mono); font-size: 13px; outline: none;">
+            <button id="addCustomReminderBtn" style="background: var(--grad-brand); border: none; color: #0A0C14; padding: 10px 18px; border-radius: 10px; font-family: var(--font-display); font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap;">➕ Ekle</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- KAYITLI HATIRLATICILAR -->
+      <section class="card">
+        <div class="card-head">
+          <div class="tag"><span class="dot" style="background: var(--violet);"></span><h2>Kayıtlı Hatırlatıcılar</h2></div>
+          <span class="hint" id="reminderCount">0</span>
+        </div>
+        <div class="card-body" id="reminderList">
+          <p style="color: var(--ink-faint); font-size: 12px; text-align: center;">Henüz hatırlatıcı eklenmedi</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</section>
+  
   <!-- HİPERTROFİ PANELİ -->
   <section class="full-panel" id="hypertrophyPanel">
     <div class="panel-inner">
@@ -3536,6 +3656,292 @@ window.addEventListener('load', () => {
   setTimeout(calculateEfficiency, 2000);
 });
 
+// --- BİLDİRİM / HATIRLATICI SİSTEMİ ---
+
+// 1. Panel açma/kapama
+document.getElementById("reminderLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  document.getElementById('drawer').classList.remove('is-active');
+  document.getElementById('menuOverlay').classList.remove('is-active');
+  document.getElementById('menuBtn').classList.remove('is-open');
+  document.getElementById('reminderPanel').classList.add('is-active');
+  document.body.style.overflow = 'hidden';
+  loadReminders();
+  setTimeout(checkWorkoutReminder, 500);
+});
+
+document.getElementById("reminderCloseBtn").addEventListener("click", () => {
+  document.getElementById('reminderPanel').classList.remove('is-active');
+  document.body.style.overflow = '';
+});
+
+// 2. Bildirim izni
+document.getElementById("notificationPermissionBtn").addEventListener("click", async () => {
+  if ('Notification' in window) {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      alert('✅ Bildirim izni verildi!');
+      document.getElementById("notificationPermissionBtn").textContent = '✅ Aktif';
+      document.getElementById("notificationPermissionBtn").style.background = 'var(--mint)';
+    } else {
+      alert('❌ Bildirim izni reddedildi. Tarayıcı ayarlarından değiştirebilirsin.');
+    }
+  } else {
+    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+  }
+});
+
+// 3. Hatırlatıcıları kaydetme ve gösterme
+function loadReminders() {
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  const list = document.getElementById('reminderList');
+  const count = document.getElementById('reminderCount');
+  
+  count.textContent = reminders.length;
+  
+  if (reminders.length === 0) {
+    list.innerHTML = '<p style="color: var(--ink-faint); font-size: 12px; text-align: center;">Henüz hatırlatıcı eklenmedi</p>';
+    return;
+  }
+  
+  let html = '';
+  reminders.forEach((r, index) => {
+    html += `
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line-soft);">
+        <div>
+          <div style="font-weight: 600; font-size: 13px; color: var(--ink);">${r.icon || '🔔'} ${r.name}</div>
+          <div style="font-size: 11px; color: var(--ink-faint);">🕐 ${r.time} ${r.active ? '✅ Aktif' : '⛔ Pasif'}</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="toggle-reminder-btn" data-index="${index}" style="background: ${r.active ? 'var(--mint)' : 'var(--panel-2)'}; border: 1px solid ${r.active ? 'var(--mint)' : 'var(--line-soft)'}; color: ${r.active ? '#0A0C14' : 'var(--ink-dim)'}; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">${r.active ? '🔄 Kapat' : '▶️ Aç'}</button>
+          <button class="delete-reminder-btn" data-index="${index}" style="background: none; border: none; color: var(--coral); cursor: pointer; font-size: 16px;">🗑️</button>
+        </div>
+      </div>
+    `;
+  });
+  list.innerHTML = html;
+  
+  document.querySelectorAll('.toggle-reminder-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = parseInt(btn.dataset.index);
+      toggleReminder(index);
+    });
+  });
+  
+  document.querySelectorAll('.delete-reminder-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = parseInt(btn.dataset.index);
+      deleteReminder(index);
+    });
+  });
+  
+  updateBadge();
+}
+
+function saveReminders(reminders) {
+  localStorage.setItem('reminders', JSON.stringify(reminders));
+  loadReminders();
+  updateBadge();
+}
+
+function toggleReminder(index) {
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  reminders[index].active = !reminders[index].active;
+  saveReminders(reminders);
+}
+
+function deleteReminder(index) {
+  if (!confirm('Bu hatırlatıcıyı silmek istediğine emin misin?')) return;
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  reminders.splice(index, 1);
+  saveReminders(reminders);
+}
+
+function updateBadge() {
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  const activeCount = reminders.filter(r => r.active).length;
+  const badge = document.getElementById('reminderBadge');
+  if (badge) badge.textContent = `${activeCount} aktif`;
+}
+
+// 4. Özel hatırlatıcı ekle
+document.getElementById("addCustomReminderBtn").addEventListener("click", () => {
+  const name = document.getElementById("customReminderName").value.trim();
+  const time = document.getElementById("customReminderTime").value;
+  
+  if (!name) {
+    alert('Lütfen hatırlatıcı adını girin!');
+    return;
+  }
+  
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  reminders.push({
+    name: name,
+    time: time,
+    icon: '🔔',
+    active: true,
+    type: 'custom'
+  });
+  
+  saveReminders(reminders);
+  document.getElementById("customReminderName").value = '';
+  alert(`✅ "${name}" hatırlatıcısı eklendi!`);
+});
+
+// 5. Hazır hatırlatıcı toggle'ları
+const reminderToggles = {
+  water: { id: 'waterReminder', name: '💧 Su İçme', time: '10:00' },
+  protein: { id: 'proteinReminder', name: '🥛 Protein Shake', time: '20:00' },
+  weight: { id: 'weightReminder', name: '⚖️ Sabah Tartısı', time: '08:00' }
+};
+
+Object.values(reminderToggles).forEach(r => {
+  const el = document.getElementById(r.id);
+  if (el) {
+    el.addEventListener('change', () => {
+      const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+      const existing = reminders.find(item => item.name === r.name);
+      if (el.checked) {
+        if (!existing) {
+          reminders.push({
+            name: r.name,
+            time: r.time,
+            icon: r.name.split(' ')[0],
+            active: true,
+            type: 'preset'
+          });
+          alert(`✅ "${r.name}" hatırlatıcısı aktifleştirildi!`);
+        }
+      } else {
+        if (existing) {
+          const index = reminders.indexOf(existing);
+          reminders.splice(index, 1);
+          alert(`❌ "${r.name}" hatırlatıcısı kapatıldı.`);
+        }
+      }
+      saveReminders(reminders);
+      updateBadge();
+    });
+  }
+});
+
+// 6. Bildirim gönderme fonksiyonu
+function sendNotification(title, body) {
+  if (!('Notification' in window)) {
+    console.warn('Bildirim desteklenmiyor');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    new Notification(title, {
+      body: body,
+      icon: 'icon.png'
+    });
+  }
+}
+
+// 7. Hatırlatıcı kontrolü (her dakika)
+function checkReminders() {
+  const now = new Date();
+  const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  const activeReminders = reminders.filter(r => r.active && r.time === currentTime);
+  
+  activeReminders.forEach(r => {
+    sendNotification(r.name, `⏰ Zamanı geldi! ${r.name}`);
+  });
+}
+
+// Her dakika kontrol et
+setInterval(checkReminders, 60000);
+
+// 8. Önceki hatırlatıcıları yükle
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    loadReminders();
+    if ('Notification' in window && Notification.permission === 'granted') {
+      document.getElementById("notificationPermissionBtn").textContent = '✅ Aktif';
+      document.getElementById("notificationPermissionBtn").style.background = 'var(--mint)';
+    }
+  }, 1000);
+});
+
+// --- AKILLI ANTRENMAN HATIRLATICISI ---
+
+async function checkWorkoutReminder() {
+  if (!auth.currentUser) return;
+  
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  
+  const todayDoc = await getDoc(doc(db, "users", auth.currentUser.uid, "hypertrophy", todayStr));
+  const hasWorkoutToday = todayDoc.exists() && todayDoc.data().exercises && todayDoc.data().exercises.length > 0;
+  
+  let workoutCount = 0;
+  for (let i = 1; i <= 3; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid, "hypertrophy", dateStr));
+    if (docSnap.exists() && docSnap.data().exercises && docSnap.data().exercises.length > 0) {
+      workoutCount++;
+    }
+  }
+  
+  const statusEl = document.getElementById('smartWorkoutStatus');
+  const isEnabled = document.getElementById('smartWorkoutReminder')?.checked;
+  
+  if (!isEnabled) {
+    if (statusEl) statusEl.textContent = '⏸️ Hatırlatıcı kapalı';
+    return;
+  }
+  
+  if (hasWorkoutToday) {
+    if (statusEl) statusEl.textContent = '✅ Bugün antrenman yaptın! Tebrikler! 🎉';
+    return;
+  }
+  
+  if (workoutCount === 0) {
+    if (statusEl) statusEl.textContent = '⚠️ 3 gündür antrenman yapmadın! Bugün gym günü! 💪';
+    const hour = new Date().getHours();
+    if (hour >= 9 && hour <= 11) {
+      sendNotification('🏋️ Antrenman Zamanı!', '3 gündür antrenman yapmadın! Bugün gym günü! 💪');
+    }
+  } else if (workoutCount === 1) {
+    if (statusEl) statusEl.textContent = '⚠️ 2 gündür antrenman yapmadın! Bugün gym günü! 💪';
+    const hour = new Date().getHours();
+    if (hour >= 9 && hour <= 11) {
+      sendNotification('🏋️ Antrenman Zamanı!', '2 gündür antrenman yapmadın! Bugün gym günü! 💪');
+    }
+  } else if (workoutCount === 2) {
+    if (statusEl) statusEl.textContent = '📊 Bugün dinlenme günü olabilir, ama istersen hafif kardiyo yapabilirsin 🏃';
+  } else {
+    if (statusEl) statusEl.textContent = '✅ Son 3 günde antrenman yapmışsın, iyi gidiyorsun! 💪';
+  }
+}
+
+document.getElementById('smartWorkoutReminder')?.addEventListener('change', checkWorkoutReminder);
+
+setInterval(() => {
+  checkWorkoutReminder();
+}, 1800000); // 30 dakika
+
+window.addEventListener('load', () => {
+  setTimeout(checkWorkoutReminder, 3000);
+});
+
+document.getElementById('saveExerciseBtn')?.addEventListener('click', () => {
+  setTimeout(checkWorkoutReminder, 2000);
+});
+
+document.getElementById('prevDayBtn')?.addEventListener('click', () => {
+  setTimeout(checkWorkoutReminder, 1000);
+});
+document.getElementById('nextDayBtn')?.addEventListener('click', () => {
+  setTimeout(checkWorkoutReminder, 1000);
+});
+  
 // --- MANUEL TEMA DEĞİŞTİRİCİ (3 Tema) ---
 const themeToggle = document.getElementById('themeToggle');
 const themeStatus = document.getElementById('themeStatus');
