@@ -1548,25 +1548,132 @@
       carb: document.getElementById("macroCarb").value,
       fat: document.getElementById("macroFat").value,
       supplementsArray: dailyCheckedSupplements, // Tikli olan takviyelerin ID listesi buluta gider
-      training: document.getElementById("trainingType").value,
-      note: document.getElementById("dayNote").value,
-      driveLink: document.getElementById("pdfLinkInput").value
-    };
 
-    // 3. FİREBASE'E YAZ
+// --- FIREBASE'E VERİ KAYDETME (OFFLINE DESTEKLİ) ---
+const saveBtn = document.getElementById("saveBtn");
+saveBtn.addEventListener("click", async () => {
+  if(!auth.currentUser) {
+    alert("Lütfen önce giriş yap!");
+    return;
+  }
+
+  const tMins = (parseInt(document.getElementById('sleepHours').value)||0)*60 + (parseInt(document.getElementById('sleepMins').value)||0);
+  const dMins = (parseInt(document.getElementById('deepSleepHours').value)||0)*60 + (parseInt(document.getElementById('deepSleepMins').value)||0);
+  const rMins = (parseInt(document.getElementById('remSleepHours').value)||0)*60 + (parseInt(document.getElementById('remSleepMins').value)||0);
+  
+  if (tMins > 0 && (dMins + rMins > tMins)) {
+      alert("Kanka, Derin Uyku ve REM'in toplamı Toplam Uykuyu geçemez! Lütfen düzelt.");
+      return; 
+  }
+
+  saveBtn.innerText = "⏳ Kaydediliyor...";
+  saveBtn.disabled = true;
+
+  // --- 1. FOTOĞRAF YÜKLEME ---
+  let finalPhotoUrl = currentPhotoUrl;
+  if(selectedPhotoFile) {
+      saveBtn.innerText = "📸 Fotoğraf Yükleniyor...";
+      try {
+        const formData = new FormData();
+        formData.append("image", selectedPhotoFile);
+        
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: "POST",
+          body: formData
+        });
+        const imgData = await response.json();
+        
+        if(imgData.success) {
+          finalPhotoUrl = imgData.data.url;
+        } else {
+          alert("ImgBB Hatası: " + imgData.error.message);
+          saveBtn.innerText = "⛺ Kişisel Kasama Kaydet";
+          saveBtn.disabled = false;
+          return;
+        }
+      } catch(err) {
+        console.error(err);
+        alert("Fotoğraf yüklenirken bağlantı hatası oluştu.");
+        saveBtn.innerText = "⛺ Kişisel Kasama Kaydet";
+        saveBtn.disabled = false;
+        return;
+      }
+  }
+
+  // --- 2. VERİYİ HAZIRLA ---
+  const payload = {
+    date: logDateInput.value, 
+    campDay: campDayNumber.innerText.replace(/<[^>]*>?/gm, ''),
+    weight: document.getElementById("weightValue").value || "",
+    bodyFat: document.getElementById("bodyFatValue").value || "",
+    photoUrl: finalPhotoUrl || "",
+    water: dailyWater || 0,
+    steps: document.getElementById("stepsValue").value || "",
+    sleepH: document.getElementById("sleepHours").value || "",
+    sleepM: document.getElementById("sleepMins").value || "",
+    sleepScore: document.getElementById("sleepScore").value || "",
+    deepH: document.getElementById("deepSleepHours").value || "",
+    deepM: document.getElementById("deepSleepMins").value || "",
+    remH: document.getElementById("remSleepHours").value || "",
+    remM: document.getElementById("remSleepMins").value || "",
+    calIn: calInInput.value || "",
+    calOut: calOutInput.value || "",
+    protein: document.getElementById("macroProtein").value || "",
+    carb: document.getElementById("macroCarb").value || "",
+    fat: document.getElementById("macroFat").value || "",
+    supplementsArray: dailyCheckedSupplements || [],
+    training: document.getElementById("trainingType").value || "",
+    note: document.getElementById("dayNote").value || "",
+    driveLink: document.getElementById("pdfLinkInput").value || ""
+  };
+
+  // --- 3. İNTERNET KONTROLÜ ---
+  if (!navigator.onLine) {
+    // 📴 İNTERNET YOK: Veriyi telefona kaydet
     try {
-      await setDoc(doc(db, "users", auth.currentUser.uid, "logs", payload.date), payload);
-      saveBtn.innerText = "✅ Efsane Kaydedildi";
-      window.chartsLoaded = false; 
-      setTimeout(() => { saveBtn.innerText = "⛺ Kişisel Kasama Kaydet"; saveBtn.disabled = false; }, 2000);
-      loadDayData(payload.date); // PDF butonu görünsün diye yenile
-    } catch (e) {
-      console.error("Yazma Hatası: ", e);
-      saveBtn.innerText = "❌ Hata (İzinlere Bak)";
-      setTimeout(() => { saveBtn.innerText = "⛺ Kişisel Kasama Kaydet"; saveBtn.disabled = false; }, 3000);
+      let offlineQueue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
+      offlineQueue.push({
+        ...payload,
+        timestamp: Date.now(),
+        userId: auth.currentUser.uid
+      });
+      localStorage.setItem('offlineQueue', JSON.stringify(offlineQueue));
+      
+      saveBtn.innerText = "💾 Offline Kaydedildi";
+      alert("📴 İnternet yok! Verin telefona kaydedildi. Bağlanınca otomatik gönderilecek.");
+      setTimeout(() => { 
+        saveBtn.innerText = "⛺ Kişisel Kasama Kaydet"; 
+        saveBtn.disabled = false; 
+      }, 2000);
+      return;
+    } catch(e) {
+      console.error("Offline kayıt hatası:", e);
+      saveBtn.innerText = "❌ Hata";
+      saveBtn.disabled = false;
+      return;
     }
-  });
+  }
 
+  // --- 4. İNTERNET VAR: Normal Firebase'e kaydet ---
+  try {
+    await setDoc(doc(db, "users", auth.currentUser.uid, "logs", payload.date), payload);
+    saveBtn.innerText = "✅ Efsane Kaydedildi";
+    window.chartsLoaded = false; 
+    setTimeout(() => { 
+      saveBtn.innerText = "⛺ Kişisel Kasama Kaydet"; 
+      saveBtn.disabled = false; 
+    }, 2000);
+    loadDayData(payload.date);
+  } catch (e) {
+    console.error("Yazma Hatası: ", e);
+    saveBtn.innerText = "❌ Hata (İzinlere Bak)";
+    setTimeout(() => { 
+      saveBtn.innerText = "⛺ Kişisel Kasama Kaydet"; 
+      saveBtn.disabled = false; 
+    }, 3000);
+  }
+});
+    
   // FIREBASE'DEN OKUMA VE ÇİZİM MOTORU
   const parseSleepObj = (h, m) => { return (parseInt(h)||0) + ((parseInt(m)||0) / 60); };
 
@@ -3194,6 +3301,89 @@ window.addEventListener('load', () => {
     });
   }
 
+// --- OFFLINE VERİ GÖNDERME MOTORU ---
+
+// 1. İnternet geldiğinde otomatik gönder
+window.addEventListener('online', async () => {
+  console.log('📶 İnternet bağlantısı geldi!');
+  await sendOfflineData();
+});
+
+// 2. Sayfa yüklendiğinde kontrol et (zaten internet varsa)
+window.addEventListener('load', async () => {
+  // Service Worker kaydından sonra biraz bekle
+  setTimeout(async () => {
+    if (navigator.onLine) {
+      await sendOfflineData();
+    }
+  }, 3000);
+});
+
+// 3. Offline verileri gönderme fonksiyonu
+async function sendOfflineData() {
+  if (!auth.currentUser) {
+    console.log('👤 Kullanıcı giriş yapmamış, offline veri bekliyor...');
+    return;
+  }
+
+  const offlineQueue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
+  if (offlineQueue.length === 0) {
+    console.log('📭 Gönderilecek offline veri yok.');
+    return;
+  }
+
+  console.log(`📤 ${offlineQueue.length} offline veri gönderiliyor...`);
+
+  let successCount = 0;
+  let failCount = 0;
+
+  for (let i = 0; i < offlineQueue.length; i++) {
+    const item = offlineQueue[i];
+    try {
+      // Tarih kontrolü
+      if (!item.date) {
+        console.warn('⚠️ Tarihsiz veri atlanıyor:', item);
+        failCount++;
+        continue;
+      }
+
+      await setDoc(doc(db, "users", auth.currentUser.uid, "logs", item.date), item);
+      successCount++;
+      console.log(`✅ ${i+1}/${offlineQueue.length} gönderildi: ${item.date}`);
+    } catch (e) {
+      console.error(`❌ ${i+1}/${offlineQueue.length} gönderilemedi:`, e);
+      failCount++;
+    }
+  }
+
+  // Başarılı gönderilenleri temizle
+  if (successCount > 0) {
+    const remaining = offlineQueue.slice(successCount);
+    localStorage.setItem('offlineQueue', JSON.stringify(remaining));
+  }
+
+  if (successCount > 0 && failCount === 0) {
+    // Hepsi gönderildiyse
+    if (offlineQueue.length > 0) {
+      alert(`✅ ${successCount} offline veri başarıyla buluta gönderildi!`);
+    }
+    localStorage.removeItem('offlineQueue');
+  } else if (successCount > 0 && failCount > 0) {
+    alert(`⚠️ ${successCount} veri gönderildi, ${failCount} veri gönderilemedi. Tekrar denenicek.`);
+  } else if (failCount > 0 && successCount === 0) {
+    console.warn('⚠️ Hiçbir veri gönderilemedi, tekrar denenicek.');
+  }
+
+  // Güncel durumu kaydet
+  const remainingCount = JSON.parse(localStorage.getItem('offlineQueue') || '[]').length;
+  if (remainingCount > 0) {
+    console.log(`📦 ${remainingCount} veri kaldı.`);
+  }
+}
+
+// 4. Manuel gönderim butonu (isteğe bağlı)
+// Menüye ekleyebilirsin: "📤 Bekleyen Verileri Gönder"    
+    
 // --- MANUEL TEMA DEĞİŞTİRİCİ (3 Tema) ---
 const themeToggle = document.getElementById('themeToggle');
 const themeStatus = document.getElementById('themeStatus');
