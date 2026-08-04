@@ -4019,6 +4019,65 @@ if (themeToggle) {
 
 window.addEventListener('load', loadTheme);
 
+// --- AKILLI ANTRENMAN TOGGLE'INI DÜZELT ---
+function fixSmartWorkoutToggle() {
+  const toggle = document.getElementById('smartWorkoutReminder');
+  if (!toggle) return;
+  
+  // Eski event listener'ları temizle
+  const newToggle = toggle.cloneNode(true);
+  toggle.parentNode.replaceChild(newToggle, toggle);
+  
+  // Yeni event listener ekle
+  newToggle.addEventListener('change', function(e) {
+    e.stopPropagation();
+    
+    const isChecked = this.checked;
+    const statusEl = document.getElementById('smartWorkoutStatus');
+    
+    if (!isChecked) {
+      if (statusEl) statusEl.textContent = '⏸️ Hatırlatıcı kapalı';
+    } else {
+      if (statusEl) statusEl.textContent = '🔄 Kontrol ediliyor...';
+      setTimeout(checkWorkoutReminder, 500);
+    }
+    
+    // LocalStorage'a kaydet
+    localStorage.setItem('smartWorkoutEnabled', isChecked ? 'true' : 'false');
+  });
+  
+  // Kaydedilmiş durumu yükle
+  const saved = localStorage.getItem('smartWorkoutEnabled');
+  if (saved === 'false') {
+    newToggle.checked = false;
+    const statusEl = document.getElementById('smartWorkoutStatus');
+    if (statusEl) statusEl.textContent = '⏸️ Hatırlatıcı kapalı';
+  } else {
+    newToggle.checked = true;
+  }
+}
+
+// checkWorkoutReminder fonksiyonunu güncelle (toggle kontrolü ekle)
+const originalCheckWorkout = checkWorkoutReminder;
+checkWorkoutReminder = async function() {
+  if (!auth.currentUser) return;
+  
+  const toggle = document.getElementById('smartWorkoutReminder');
+  const isEnabled = toggle ? toggle.checked : true;
+  
+  if (!isEnabled) {
+    const statusEl = document.getElementById('smartWorkoutStatus');
+    if (statusEl) statusEl.textContent = '⏸️ Hatırlatıcı kapalı';
+    return;
+  }
+  
+  // Orijinal fonksiyonu çağır
+  await originalCheckWorkout.call(this);
+};
+
+// Sayfa yüklendiğinde düzelt
+setTimeout(fixSmartWorkoutToggle, 1000);
+  
 // --- BİLDİRİM İZNİ DURUMUNU GERÇEK ZAMANLI GÜNCELLE ---
 function updateNotificationUI() {
   const btn = document.getElementById('notificationPermissionBtn');
