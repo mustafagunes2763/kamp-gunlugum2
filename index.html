@@ -460,8 +460,8 @@
         <span class="link-icon" style="background: rgba(140,124,255,0.1); color: var(--violet);">📏</span>
         <span class="link-text"><span class="link-title">Mezura &amp; Recomp</span><span class="link-sub">Fiziksel İnşaat Takibi</span></span>
       </a>
-      <a href="#" class="drawer-link" id="themeToggle" data-toggle-theme="amber,mint,dark">
-  <span class="link-icon">🎨</span>
+      <a href="#" class="drawer-link" id="themeToggle">
+  <span class="link-icon">🌙</span>
   <span class="link-text">
     <span class="link-title">Tema Değiştir</span>
     <span class="link-sub" id="themeStatus">🌙 Koyu</span>
@@ -3194,9 +3194,12 @@ window.addEventListener('load', () => {
     });
   }
 
-// --- TEMA DEĞİŞTİRİCİ ---
+// --- MANUEL TEMA DEĞİŞTİRİCİ (3 Tema) ---
 const themeToggle = document.getElementById('themeToggle');
 const themeStatus = document.getElementById('themeStatus');
+
+const themes = ['dark', 'amber', 'mint'];
+let currentThemeIndex = 0;
 
 const themeNames = {
   dark: '🌙 Koyu',
@@ -3210,8 +3213,12 @@ const themeIcons = {
   mint: '🌿'
 };
 
-document.addEventListener('themeChanged', (e) => {
-  const theme = e.detail.theme;
+function applyTheme(theme) {
+  document.documentElement.removeAttribute('data-theme');
+  if (theme !== 'dark') {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+  
   if (themeStatus) {
     themeStatus.textContent = themeNames[theme] || '🌙 Koyu';
   }
@@ -3219,27 +3226,32 @@ document.addEventListener('themeChanged', (e) => {
   if (icon) {
     icon.textContent = themeIcons[theme] || '🌙';
   }
-});
+  
+  localStorage.setItem('theme', theme);
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  const index = themes.indexOf(savedTheme);
+  if (index !== -1) {
+    currentThemeIndex = index;
+    applyTheme(savedTheme);
+  }
+}
 
 if (themeToggle) {
   themeToggle.addEventListener('click', (e) => {
     e.preventDefault();
+    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+    applyTheme(themes[currentThemeIndex]);
+    
     drawer.classList.remove('is-active');
     overlay.classList.remove('is-active');
     menuBtn.classList.remove('is-open');
   });
 }
 
-window.addEventListener('load', () => {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  if (themeStatus) {
-    themeStatus.textContent = themeNames[savedTheme] || '🌙 Koyu';
-  }
-  const icon = themeToggle?.querySelector('.link-icon');
-  if (icon) {
-    icon.textContent = themeIcons[savedTheme] || '🌙';
-  }
-});
+window.addEventListener('load', loadTheme);
   
 </script>
 </body>
