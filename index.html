@@ -13,47 +13,77 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-  :root{
-    --bg:        #0A0C14;
-    --bg-2:      #0E1120;
-    --panel:     rgba(255,255,255,0.045);
-    --panel-2:   rgba(255,255,255,0.03);
-    --panel-solid: #141828;
-    --line:      rgba(255,255,255,0.09);
-    --line-soft: rgba(255,255,255,0.06);
-    --ink:       #F3F4FA;
-    --ink-dim:   #9499B3;
-    --ink-faint: #5C6180;
-    --violet:    #8C7CFF;
-    --violet-2:  #5B8DFF;
-    --mint:      #3DDC97;
-    --mint-dim:  #1F6B4C;
-    --coral:     #FF7A9C;
-    --grad-brand: linear-gradient(135deg, #8C7CFF 0%, #5B8DFF 100%);
-    --grad-mint:  linear-gradient(135deg, #3DDC97 0%, #29B7D8 100%);
-    --radius:    22px;
-    --radius-sm: 14px;
-    --font-display: 'Sora', sans-serif;
-    --font-mono:    'JetBrains Mono', monospace;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  
-  /* AÇIK TEMA */
-:root.light-theme {
-  --bg: #F5F6FA;
-  --bg-2: #FFFFFF;
-  --panel: rgba(0,0,0,0.04);
-  --panel-2: rgba(0,0,0,0.02);
-  --panel-solid: #E8E9EE;
-  --line: rgba(0,0,0,0.09);
-  --line-soft: rgba(0,0,0,0.05);
-  --ink: #1A1C24;
-  --ink-dim: #6B7085;
-  --ink-faint: #9A9FB0;
+  /* KOYU TEMA (varsayılan) */
+:root {
+  --bg: #0A0C14;
+  --bg-2: #0E1120;
+  --panel: rgba(255,255,255,0.045);
+  --panel-2: rgba(255,255,255,0.03);
+  --panel-solid: #141828;
+  --line: rgba(255,255,255,0.09);
+  --line-soft: rgba(255,255,255,0.06);
+  --ink: #F3F4FA;
+  --ink-dim: #9499B3;
+  --ink-faint: #5C6180;
+  --violet: #8C7CFF;
+  --violet-2: #5B8DFF;
+  --mint: #3DDC97;
+  --mint-dim: #1F6B4C;
+  --coral: #FF7A9C;
+  --grad-brand: linear-gradient(135deg, #8C7CFF 0%, #5B8DFF 100%);
+  --grad-mint: linear-gradient(135deg, #3DDC97 0%, #29B7D8 100%);
+  --radius: 22px;
+  --radius-sm: 14px;
+  --font-display: 'Sora', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* AMBER TEMA */
+[data-theme="amber"] {
+  --bg: #1A1410;
+  --bg-2: #221C18;
+  --panel: rgba(255,180,100,0.06);
+  --panel-2: rgba(255,180,100,0.03);
+  --panel-solid: #2A221E;
+  --line: rgba(255,180,100,0.12);
+  --line-soft: rgba(255,180,100,0.06);
+  --ink: #F5E6D3;
+  --ink-dim: #C4A88A;
+  --ink-faint: #8A735F;
+  --violet: #FF8C42;
+  --violet-2: #FFB347;
+  --mint: #FFD700;
+  --mint-dim: #B8860B;
+  --coral: #FF6B35;
+  --grad-brand: linear-gradient(135deg, #FF8C42 0%, #FFB347 100%);
+  --grad-mint: linear-gradient(135deg, #FFD700 0%, #FF8C42 100%);
+}
+
+/* MINT TEMA */
+[data-theme="mint"] {
+  --bg: #0F1A14;
+  --bg-2: #14201A;
+  --panel: rgba(61,220,151,0.06);
+  --panel-2: rgba(61,220,151,0.03);
+  --panel-solid: #1A2A22;
+  --line: rgba(61,220,151,0.12);
+  --line-soft: rgba(61,220,151,0.06);
+  --ink: #D4F5E8;
+  --ink-dim: #8ABFA8;
+  --ink-faint: #5A7F6E;
+  --violet: #3DDC97;
+  --violet-2: #29B7D8;
+  --mint: #3DDC97;
+  --mint-dim: #1F6B4C;
+  --coral: #FF7A9C;
+  --grad-brand: linear-gradient(135deg, #3DDC97 0%, #29B7D8 100%);
+  --grad-mint: linear-gradient(135deg, #3DDC97 0%, #29B7D8 100%);
 }
 
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
@@ -430,11 +460,11 @@
         <span class="link-icon" style="background: rgba(140,124,255,0.1); color: var(--violet);">📏</span>
         <span class="link-text"><span class="link-title">Mezura &amp; Recomp</span><span class="link-sub">Fiziksel İnşaat Takibi</span></span>
       </a>
-      <a href="#" class="drawer-link" id="themeToggle">
-  <span class="link-icon">🌙</span>
+      <a href="#" class="drawer-link" id="themeToggle" data-toggle-theme="amber,mint,dark">
+  <span class="link-icon">🎨</span>
   <span class="link-text">
     <span class="link-title">Tema Değiştir</span>
-    <span class="link-sub">Karanlık / Açık</span>
+    <span class="link-sub" id="themeStatus">🌙 Koyu</span>
   </span>
       </a>
     </div>
@@ -3164,32 +3194,34 @@ window.addEventListener('load', () => {
     });
   }
 
-  // --- TEMA DEĞİŞTİRİCİ ---
+// --- TEMA DEĞİŞTİRİCİ (theme-change kütüphanesi) ---
 const themeToggle = document.getElementById('themeToggle');
+const themeStatus = document.getElementById('themeStatus');
 
-// Kaydedilmiş temayı yükle
-function loadTheme() {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  if (savedTheme === 'light') {
-    document.documentElement.classList.add('light-theme');
-    if (themeToggle) {
-      const icon = themeToggle.querySelector('.link-icon');
-      if (icon) icon.textContent = '🌙';
-    }
+// Tema isimleri
+const themeNames = {
+  dark: '🌙 Koyu',
+  amber: '🔥 Amber',
+  mint: '🌿 Mint'
+};
+
+// Tema değiştiğinde status'u güncelle
+document.addEventListener('themeChanged', (e) => {
+  const theme = e.detail.theme;
+  if (themeStatus) themeStatus.textContent = themeNames[theme] || '🌙 Koyu';
+  
+  // İkonu güncelle
+  const icon = themeToggle.querySelector('.link-icon');
+  if (icon) {
+    const icons = { dark: '🌙', amber: '🔥', mint: '🌿' };
+    icon.textContent = icons[theme] || '🌙';
   }
-}
+});
 
-// Tema değiştir
+// Tema değiştir butonu
 if (themeToggle) {
   themeToggle.addEventListener('click', (e) => {
     e.preventDefault();
-    const isLight = document.documentElement.classList.toggle('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    
-    // İkonu güncelle
-    const icon = themeToggle.querySelector('.link-icon');
-    if (icon) icon.textContent = isLight ? '🌙' : '☀️';
-    
     // Menüyü kapat
     drawer.classList.remove('is-active');
     overlay.classList.remove('is-active');
@@ -3197,8 +3229,16 @@ if (themeToggle) {
   });
 }
 
-// Sayfa yüklendiğinde temayı yükle
-window.addEventListener('load', loadTheme);
+// Kaydedilmiş temayı yükle
+window.addEventListener('load', () => {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  if (themeStatus) themeStatus.textContent = themeNames[savedTheme] || '🌙 Koyu';
+  const icon = themeToggle.querySelector('.link-icon');
+  if (icon) {
+    const icons = { dark: '🌙', amber: '🔥', mint: '🌿' };
+    icon.textContent = icons[savedTheme] || '🌙';
+  }
+});
   
 </script>
 </body>
