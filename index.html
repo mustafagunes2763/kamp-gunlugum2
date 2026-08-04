@@ -4019,6 +4019,59 @@ if (themeToggle) {
 
 window.addEventListener('load', loadTheme);
 
+// --- TOGGLE'LARI YENİDEN BAĞLA ---
+function fixToggles() {
+  const toggleIds = ['waterReminder', 'proteinReminder', 'weightReminder'];
+  
+  toggleIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      // Eski event listener'ları temizle
+      const newEl = el.cloneNode(true);
+      el.parentNode.replaceChild(newEl, el);
+      
+      // Yeni event listener ekle
+      newEl.addEventListener('change', function(e) {
+        e.stopPropagation();
+        
+        let name = '';
+        let time = '';
+        if (this.id === 'waterReminder') { name = '💧 Su İçme'; time = '10:00'; }
+        else if (this.id === 'proteinReminder') { name = '🥛 Protein Shake'; time = '20:00'; }
+        else if (this.id === 'weightReminder') { name = '⚖️ Sabah Tartısı'; time = '08:00'; }
+        
+        const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+        const existing = reminders.find(item => item.name === name);
+        
+        if (this.checked) {
+          if (!existing) {
+            reminders.push({
+              name: name,
+              time: time,
+              icon: name.split(' ')[0],
+              active: true,
+              type: 'preset'
+            });
+            alert(`✅ "${name}" hatırlatıcısı aktifleştirildi!`);
+          }
+        } else {
+          if (existing) {
+            const index = reminders.indexOf(existing);
+            reminders.splice(index, 1);
+            alert(`❌ "${name}" hatırlatıcısı kapatıldı.`);
+          }
+        }
+        localStorage.setItem('reminders', JSON.stringify(reminders));
+        loadReminders();
+        updateBadge();
+      });
+    }
+  });
+}
+
+// Sayfa yüklendikten sonra toggle'ları düzelt
+setTimeout(fixToggles, 1500);
+  
 // --- HATIRLATICI TOGGLE DÜZELTMESİ ---
 
 // Toggle'lar için event listener'ları yeniden bağla
