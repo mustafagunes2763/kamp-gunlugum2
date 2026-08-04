@@ -4019,6 +4019,78 @@ if (themeToggle) {
 
 window.addEventListener('load', loadTheme);
 
+// --- BİLDİRİM İZNİ DURUMUNU GERÇEK ZAMANLI GÜNCELLE ---
+function updateNotificationUI() {
+  const btn = document.getElementById('notificationPermissionBtn');
+  if (!btn) return;
+  
+  if (!('Notification' in window)) {
+    btn.textContent = '❌ Destek yok';
+    btn.style.background = 'var(--panel-2)';
+    btn.style.borderColor = 'var(--line-soft)';
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    btn.textContent = '✅ Aktif';
+    btn.style.background = 'var(--mint)';
+    btn.style.borderColor = 'var(--mint)';
+    btn.style.color = '#0A0C14';
+  } else if (Notification.permission === 'denied') {
+    btn.textContent = '🚫 Engellendi';
+    btn.style.background = 'var(--coral)';
+    btn.style.borderColor = 'var(--coral)';
+    btn.style.color = '#0A0C14';
+  } else {
+    btn.textContent = '🔔 İzin Ver';
+    btn.style.background = 'var(--panel-2)';
+    btn.style.borderColor = 'var(--line-soft)';
+    btn.style.color = 'var(--ink)';
+  }
+}
+
+// Her 5 saniyede bir durumu kontrol et (tarayıcıda izin değişirse güncellesin)
+setInterval(updateNotificationUI, 5000);
+
+// Sayfa her açıldığında kontrol et
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    updateNotificationUI();
+  }
+});
+
+// Bildirim butonuna tıklayınca izin iste
+document.getElementById('notificationPermissionBtn').addEventListener('click', async function() {
+  if (!('Notification' in window)) {
+    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    alert('✅ Bildirim izni zaten verilmiş!');
+    updateNotificationUI();
+    return;
+  }
+  
+  if (Notification.permission === 'denied') {
+    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
+    return;
+  }
+  
+  // İzin iste
+  const permission = await Notification.requestPermission();
+  updateNotificationUI();
+  
+  if (permission === 'granted') {
+    alert('✅ Bildirim izni verildi!');
+  } else {
+    alert('❌ Bildirim izni reddedildi.');
+  }
+});
+
+// Sayfa yüklendiğinde bir kere çalıştır
+setTimeout(updateNotificationUI, 500);  
+
 // --- TOGGLE'LARI YENİDEN BAĞLA ---
 function fixToggles() {
   const toggleIds = ['waterReminder', 'proteinReminder', 'weightReminder'];
