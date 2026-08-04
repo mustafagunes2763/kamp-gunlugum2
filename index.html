@@ -3254,5 +3254,17 @@ if (themeToggle) {
 window.addEventListener('load', loadTheme);
   
 </script>
+  <script>
+  // Service Worker'ı kaydet (offline desteği için)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('[ServiceWorker] Başarıyla kaydedildi! 🎉', registration);
+      })
+      .catch((error) => {
+        console.error('[ServiceWorker] Kayıt hatası:', error);
+      });
+  }
+  </script>
 </body>
 </html>
