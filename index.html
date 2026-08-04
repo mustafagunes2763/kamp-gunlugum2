@@ -1197,7 +1197,18 @@
                 <option value="">— Hareket seç —</option>
               </select>
             </div>
+            <!-- 1RM GÖSTERİMİ -->
+<div style="margin-top: 14px; padding: 12px; background: var(--panel-2); border-radius: 12px; border: 1px solid rgba(255,215,0,0.15);">
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--ink);">🏋️ 1RM (Tahmini Maksimum)</div>
+      <div id="pr1rmDisplay" style="font-size: 11px; color: var(--ink-faint);">Hareket seçin</div>
+    </div>
+    <div id="pr1rmValue" style="font-family: var(--font-display); font-weight: 800; font-size: 24px; color: #FFD700;">—</div>
+  </div>
+</div>
 
+            
             <div style="display:flex; gap:8px; align-items:center; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 14px; padding: 10px 12px;">
               <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
                 <label style="font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);">Başlangıç</label>
@@ -2419,6 +2430,25 @@ saveBtn.addEventListener("click", async () => {
   tabPrCurrentBtn.addEventListener("click", () => activatePrTab("current"));
   tabPrChartBtn.addEventListener("click", () => activatePrTab("chart"));
 
+  // PR Grafikleri sekmesi açıldığında 1RM'yi de güncelle
+tabPrChartBtn.addEventListener("click", () => {
+  // Sekmeyi aktifleştir
+  activatePrTab("chart");
+  
+  // Mevcut seçili hareketin 1RM'ini hesapla
+  const currentExercise = document.getElementById("prChartExerciseSelect").value;
+  if (currentExercise) {
+    setTimeout(() => calculatePR1RM(currentExercise), 300);
+  }
+});
+
+// PR Current sekmesi açıldığında 1RM'yi temizle
+tabPrCurrentBtn.addEventListener("click", () => {
+  activatePrTab("current");
+  document.getElementById('pr1rmValue').textContent = '—';
+  document.getElementById('pr1rmDisplay').textContent = 'Hareket seçin';
+});
+
   // --- PR GRAFİKLERİ MOTORU ---
   // Hareket dropdown'ını PR listesinden (kayıtlı tüm hareket isimlerinden) doldurur
   async function loadPrChartExerciseList() {
@@ -2560,6 +2590,8 @@ saveBtn.addEventListener("click", async () => {
         }
       });
     } catch(e) { console.error("PR grafiği çizilemedi:", e); }
+    // 1RM'yi de hesapla
+await calculatePR1RM(exKey);
   }
 
   async function loadHypertrophyData(dateStr) {
@@ -3959,6 +3991,75 @@ document.getElementById('prevDayBtn')?.addEventListener('click', () => {
 document.getElementById('nextDayBtn')?.addEventListener('click', () => {
   setTimeout(checkWorkoutReminder, 1000);
 });
+
+// --- 1RM HESAPLAMA (PR Grafikleri için) ---
+
+async function calculatePR1RM(exKey) {
+  if (!exKey || !auth.currentUser) {
+    document.getElementById('pr1rmValue').textContent = '—';
+    document.getElementById('pr1rmDisplay').textContent = 'Hareket seçin';
+    return;
+  }
+  
+  try {
+    // Tüm hipertrofi kayıtlarını çek
+    const hypSnap = await getDocs(collection(db, "users", auth.currentUser.uid, "hypertrophy"));
+    let bestRM = 0;
+    let bestRMDate = '';
+    let bestRMWeight = 0;
+    let bestRMReps = 0;
+    let exerciseName = '';
+    
+    hypSnap.forEach(d => {
+      const data = d.data();
+      if (!data.exercises) return;
+      
+      data.exercises.forEach(ex => {
+        if ((ex.name || "").trim().toUpperCase() !== exKey) return;
+        
+        (ex.sets || []).forEach(s => {
+          const weight = parseFloat(s.weight) || 0;
+          const reps = parseInt(s.reps) || 0;
+          if (weight > 0 && reps > 0 && reps <= 30) {
+            // 1RM formülü: Ağırlık × (1 + 0.033 × Tekrar)
+            const oneRM = weight * (1 + 0.033 * reps);
+            if (oneRM > bestRM) {
+              bestRM = oneRM;
+              bestRMDate = d.id;
+              bestRMWeight = weight;
+              bestRMReps = reps;
+              exerciseName = ex.name;
+            }
+          }
+        });
+      });
+    });
+    
+    // Sonucu göster
+    const valueEl = document.getElementById('pr1rmValue');
+    const displayEl = document.getElementById('pr1rmDisplay');
+    
+    if (bestRM > 0) {
+      valueEl.textContent = Math.round(bestRM * 10) / 10 + ' KG';
+      valueEl.style.color = '#FFD700';
+      
+      // Tarih formatı
+      const [y, m, d] = bestRMDate.split('-');
+      const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+      const dateStr = `${d} ${months[parseInt(m)-1]} ${y}`;
+      
+      displayEl.textContent = `${exerciseName} · ${bestRMWeight}KG × ${bestRMReps} tekrar · ${dateStr}`;
+    } else {
+      valueEl.textContent = '—';
+      valueEl.style.color = 'var(--ink-faint)';
+      displayEl.textContent = 'Bu hareket için veri yok';
+    }
+    
+  } catch (e) {
+    console.error('1RM hesaplanamadı:', e);
+    document.getElementById('pr1rmValue').textContent = '⚠️ Hata';
+  }
+}
   
 // --- MANUEL TEMA DEĞİŞTİRİCİ (3 Tema) ---
 const themeToggle = document.getElementById('themeToggle');
