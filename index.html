@@ -303,37 +303,45 @@
   
   /* Açılma Açıları ve Mesafeleri */
 /* PP Konumları - Kopyala ve CSS'ne yapıştır */
+/* PP Konumları - 8 PP, Sağda 2 Sıra */
 
 .interactive-pp-container.active .sub-pp {
   /* Her PP için ayrı konum */
 }
 
+/* ÜST SIRA (1, 3, 5, 7) */
 .interactive-pp-container.active .sub-pp:nth-child(2) {
-  transform: translate(70px, -52px);
-}
-
-.interactive-pp-container.active .sub-pp:nth-child(3) {
-  transform: translate(141px, -53px);
+  transform: translate(70px, -45px);
 }
 
 .interactive-pp-container.active .sub-pp:nth-child(4) {
-  transform: translate(69px, 12px);
-}
-
-.interactive-pp-container.active .sub-pp:nth-child(5) {
-  transform: translate(138px, 13px);
+  transform: translate(130px, -45px);
 }
 
 .interactive-pp-container.active .sub-pp:nth-child(6) {
-  transform: translate(206px, -53px);
+  transform: translate(190px, -45px);
+}
+
+.interactive-pp-container.active .sub-pp:nth-child(8) {
+  transform: translate(250px, -45px);
+}
+
+/* ALT SIRA (2, 4, 6, 8) */
+.interactive-pp-container.active .sub-pp:nth-child(3) {
+  transform: translate(70px, 15px);
+}
+
+.interactive-pp-container.active .sub-pp:nth-child(5) {
+  transform: translate(130px, 15px);
 }
 
 .interactive-pp-container.active .sub-pp:nth-child(7) {
-  transform: translate(207px, 15px);
+  transform: translate(190px, 15px);
 }
 
-/* Toplam 6 PP */
-/* Not: CSS'deki :nth-child() sıralamasına dikkat et! */
+.interactive-pp-container.active .sub-pp:nth-child(9) {
+  transform: translate(250px, 15px);
+}
 
 
 </style>
