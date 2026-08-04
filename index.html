@@ -2760,27 +2760,60 @@
     } catch(e) { console.error("Mezura verileri çekilemedi: ", e); }
   }
 
-  // --- PP TIKLAMA MOTORU ---
-  const ppContainer = document.getElementById("ppContainer");
-  const mainPPBtn = document.getElementById("mainPPBtn");
-  if(ppContainer && mainPPBtn) {
-    mainPPBtn.addEventListener("click", () => {
-      ppContainer.classList.toggle("active"); // Tıklanınca açılır/kapanır
-    });
+// --- KALICI PP SEÇİMİ MOTORU ---
+const ppContainer = document.getElementById("ppContainer");
+const mainPPBtn = document.getElementById("mainPPBtn");
 
-    // Etraftaki fotoğraflardan birine tıklayınca ana foto ile yer değiştir
-    document.querySelectorAll(".sub-pp").forEach(sub => {
-      sub.addEventListener("click", () => {
-        const mainImg = mainPPBtn.style.backgroundImage;
-        const subImg = sub.style.backgroundImage;
-
-        mainPPBtn.style.backgroundImage = subImg;
-        sub.style.backgroundImage = mainImg;
-
-        ppContainer.classList.remove("active"); // Seçince paneli kapat
-      });
-    });
+// 1. Kaydedilmiş PP'yi yükle (sayfa açıldığında)
+function loadSavedPP() {
+  const savedPP = localStorage.getItem('selectedPP');
+  if (savedPP) {
+    mainPPBtn.style.backgroundImage = savedPP;
   }
+}
+
+// 2. PP'yi kaydet ve değiştir
+function selectPP(imageUrl, subElement) {
+  // Ana PP'yi değiştir
+  mainPPBtn.style.backgroundImage = imageUrl;
+  
+  // LocalStorage'a kaydet (kalıcı yap)
+  localStorage.setItem('selectedPP', imageUrl);
+  
+  // Menüyü kapat
+  ppContainer.classList.remove("active");
+  
+  // Tüm alt PP'lerden vurguyu kaldır
+  document.querySelectorAll(".sub-pp").forEach(s => {
+    s.style.border = "2px solid var(--panel-2)";
+  });
+  
+  // Seçileni vurgula (isteğe bağlı)
+  if (subElement) {
+    subElement.style.border = "3px solid #FFD700";
+  }
+}
+
+// 3. Alt PP'lere tıklama olayını bağla
+document.querySelectorAll(".sub-pp").forEach(sub => {
+  sub.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const subImg = this.style.backgroundImage;
+    selectPP(subImg, this);
+  });
+});
+
+// 4. Ana PP'ye tıklayınca menüyü aç/kapa (mevcut)
+if(mainPPBtn) {
+  mainPPBtn.addEventListener("click", () => {
+    ppContainer.classList.toggle("active");
+  });
+}
+
+// 5. Sayfa yüklendiğinde kaydedilmiş PP'yi göster
+window.addEventListener('load', () => {
+  loadSavedPP();
+});
 
   // --- PDF KAMP RAPORU OLUŞTURUCU MOTOR (METİN TABANLI) ---
   const exportPdfBtn = document.getElementById("exportPdfBtn");
