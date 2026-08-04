@@ -3194,49 +3194,50 @@ window.addEventListener('load', () => {
     });
   }
 
-// --- TEMA DEĞİŞTİRİCİ (theme-change kütüphanesi) ---
+// --- TEMA DEĞİŞTİRİCİ ---
 const themeToggle = document.getElementById('themeToggle');
 const themeStatus = document.getElementById('themeStatus');
 
-// Tema isimleri
 const themeNames = {
   dark: '🌙 Koyu',
   amber: '🔥 Amber',
   mint: '🌿 Mint'
 };
 
-// Tema değiştiğinde status'u güncelle
+const themeIcons = {
+  dark: '🌙',
+  amber: '🔥',
+  mint: '🌿'
+};
+
 document.addEventListener('themeChanged', (e) => {
   const theme = e.detail.theme;
-  if (themeStatus) themeStatus.textContent = themeNames[theme] || '🌙 Koyu';
-  
-  // İkonu güncelle
-  const icon = themeToggle.querySelector('.link-icon');
+  if (themeStatus) {
+    themeStatus.textContent = themeNames[theme] || '🌙 Koyu';
+  }
+  const icon = themeToggle?.querySelector('.link-icon');
   if (icon) {
-    const icons = { dark: '🌙', amber: '🔥', mint: '🌿' };
-    icon.textContent = icons[theme] || '🌙';
+    icon.textContent = themeIcons[theme] || '🌙';
   }
 });
 
-// Tema değiştir butonu
 if (themeToggle) {
   themeToggle.addEventListener('click', (e) => {
     e.preventDefault();
-    // Menüyü kapat
     drawer.classList.remove('is-active');
     overlay.classList.remove('is-active');
     menuBtn.classList.remove('is-open');
   });
 }
 
-// Kaydedilmiş temayı yükle
 window.addEventListener('load', () => {
   const savedTheme = localStorage.getItem('theme') || 'dark';
-  if (themeStatus) themeStatus.textContent = themeNames[savedTheme] || '🌙 Koyu';
-  const icon = themeToggle.querySelector('.link-icon');
+  if (themeStatus) {
+    themeStatus.textContent = themeNames[savedTheme] || '🌙 Koyu';
+  }
+  const icon = themeToggle?.querySelector('.link-icon');
   if (icon) {
-    const icons = { dark: '🌙', amber: '🔥', mint: '🌿' };
-    icon.textContent = icons[savedTheme] || '🌙';
+    icon.textContent = themeIcons[savedTheme] || '🌙';
   }
 });
   
