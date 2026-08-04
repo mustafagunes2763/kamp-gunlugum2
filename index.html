@@ -387,7 +387,25 @@
   transform: translate(250px, 15px);
 }
 
+/* TOGGLE SWITCH DÜZELTMESİ */
+#reminderPanel label span {
+  border-radius: 26px !important;
+  transition: 0.3s !important;
+}
 
+#reminderPanel label input:checked + span {
+  background: var(--grad-brand) !important;
+}
+
+#reminderPanel label input:checked + span span {
+  transform: translateX(24px) !important;
+  background: white !important;
+}
+
+#reminderPanel label input:not(:checked) + span span {
+  transform: translateX(0px) !important;
+}
+  
 </style>
 </head>
 <body>
@@ -4000,6 +4018,60 @@ if (themeToggle) {
 }
 
 window.addEventListener('load', loadTheme);
+
+// --- HATIRLATICI TOGGLE DÜZELTMESİ ---
+
+// Toggle'lar için event listener'ları yeniden bağla
+function fixReminderToggles() {
+  const reminderToggles = {
+    water: { id: 'waterReminder', name: '💧 Su İçme', time: '10:00' },
+    protein: { id: 'proteinReminder', name: '🥛 Protein Shake', time: '20:00' },
+    weight: { id: 'weightReminder', name: '⚖️ Sabah Tartısı', time: '08:00' }
+  };
+
+  Object.values(reminderToggles).forEach(r => {
+    const el = document.getElementById(r.id);
+    if (el) {
+      // Eski event listener'ları temizle (clone ile)
+      const newEl = el.cloneNode(true);
+      el.parentNode.replaceChild(newEl, el);
+      
+      // Yeni event listener ekle
+      newEl.addEventListener('change', function(e) {
+        e.stopPropagation();
+        const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+        const existing = reminders.find(item => item.name === r.name);
+        
+        if (this.checked) {
+          if (!existing) {
+            reminders.push({
+              name: r.name,
+              time: r.time,
+              icon: r.name.split(' ')[0],
+              active: true,
+              type: 'preset'
+            });
+            alert(`✅ "${r.name}" hatırlatıcısı aktifleştirildi!`);
+          }
+        } else {
+          if (existing) {
+            const index = reminders.indexOf(existing);
+            reminders.splice(index, 1);
+            alert(`❌ "${r.name}" hatırlatıcısı kapatıldı.`);
+          }
+        }
+        localStorage.setItem('reminders', JSON.stringify(reminders));
+        loadReminders();
+        updateBadge();
+      });
+    }
+  });
+}
+
+// Sayfa yüklendiğinde toggle'ları düzelt
+window.addEventListener('load', function() {
+  setTimeout(fixReminderToggles, 500);
+});
   
 </script>
   <script>
