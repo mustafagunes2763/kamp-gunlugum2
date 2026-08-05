@@ -1,12 +1,12 @@
 // sw.js - Kamp Günlüğü Service Worker (Offline + Bildirim)
 
 const CACHE_NAME = 'kamp-v1';
-const OFFLINE_URL = 'index-11.html';
+const OFFLINE_URL = 'index.html';
 
 // Cache'lenecek dosyalar
 const urlsToCache = [
   '/',
-  '/index-11.html',
+  '/index.html',
   '/manifest.json',
   'https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap',
   'https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js',
