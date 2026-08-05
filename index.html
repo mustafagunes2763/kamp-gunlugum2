@@ -4779,6 +4779,93 @@ setInterval(checkReminders, 60000);
 console.log('🔄 Hatırlatıcı sistemi aktif! Her dakika kontrol edilecek.');
 console.log('🧪 Test etmek için konsola şunu yaz: addTestReminder(1)');
     
+// ============================================
+// GLOBAL BİLDİRİM FONKSİYONU (Butonlar için)
+// ============================================
+window.sendNotification = function(title, body) {
+  console.log('📢 Bildirim gönderiliyor:', title, body);
+  
+  if (!('Notification' in window)) {
+    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+    return false;
+  }
+  
+  if (Notification.permission !== 'granted') {
+    alert('❌ Bildirim izni verilmemiş! Lütfen "🔔 İzin Ver" butonuna tıkla.');
+    return false;
+  }
+  
+  try {
+    const notification = new Notification(title, {
+      body: body,
+      icon: 'icon.png',
+      vibrate: [200, 100, 200]
+    });
+    
+    notification.onclick = function() {
+      window.focus();
+      this.close();
+    };
+    
+    console.log('✅ Bildirim gönderildi!');
+    alert('✅ Bildirim gönderildi! Bak bakalım geldi mi?');
+    return true;
+  } catch (e) {
+    console.error('❌ Bildirim hatası:', e);
+    alert('❌ Bildirim gönderilemedi: ' + e.message);
+    return false;
+  }
+};
+
+// Bildirim izni isteme (global)
+window.requestNotificationPermission = async function() {
+  const btn = document.getElementById('notificationPermissionBtn');
+  
+  if (!('Notification' in window)) {
+    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    alert('✅ Bildirim izni zaten verilmiş!');
+    if (btn) {
+      btn.textContent = '✅ Aktif';
+      btn.style.background = 'var(--mint)';
+      btn.style.color = '#0A0C14';
+    }
+    window.sendNotification('✅ Bildirim Testi', 'Bu bir test bildirimi! Çalışıyor! 🎉');
+    return;
+  }
+  
+  if (Notification.permission === 'denied') {
+    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
+    return;
+  }
+  
+  try {
+    const permission = await Notification.requestPermission();
+    
+    if (permission === 'granted') {
+      if (btn) {
+        btn.textContent = '✅ Aktif';
+        btn.style.background = 'var(--mint)';
+        btn.style.color = '#0A0C14';
+      }
+      alert('✅ Bildirim izni verildi!');
+      
+      setTimeout(() => {
+        window.sendNotification('✅ Bildirim Çalışıyor!', 'Kamp Günlüğün hazır! 💪');
+      }, 1000);
+    } else {
+      alert('❌ Bildirim izni reddedildi.');
+    }
+  } catch (e) {
+    console.error('Bildirim hatası:', e);
+    alert('❌ Bildirim istenirken hata oluştu.');
+  }
+};
+
+console.log('✅ Bildirim sistemi hazır! "🧪 Test Et" butonuna tıkla.');
     
   </script>
 </body>
