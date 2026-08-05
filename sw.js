@@ -1,57 +1,63 @@
-// sw.js - Kamp Günlüğü Service Worker (Offline Destek)
+// sw.js - Kamp Günlüğü Service Worker (Offline + Bildirim)
 
 const CACHE_NAME = 'kamp-v1';
-const OFFLINE_URL = 'index-11.html'; // Senin ana dosyanın adı bu!
+const OFFLINE_URL = 'index-11.html';
 
-// Cache'lenecek dosyalar (internet olsa da olmasa da çalışmasını istediklerin)
+// Cache'lenecek dosyalar
 const urlsToCache = [
   '/',
   '/index-11.html',
   '/manifest.json',
-  // Fontlar ve kütüphaneler (internet olsa da cache'den alsın diye)
   'https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap',
   'https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js',
   'https://cdn.jsdelivr.net/npm/chart.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
-// 1. KURULUM: Dosyaları cache'le
+// ============================================
+// 1. KURULUM
+// ============================================
 self.addEventListener('install', (event) => {
+  console.log('[SW] Yükleniyor...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[ServiceWorker] Cache açıldı, dosyalar kaydediliyor...');
+        console.log('[SW] Dosyalar cache\'leniyor...');
         return cache.addAll(urlsToCache);
       })
       .then(() => {
-        console.log('[ServiceWorker] Kurulum tamam, beklemeyi bırak!');
-        return self.skipWaiting(); // Hemen aktif ol
+        console.log('[SW] Kurulum tamam!');
+        return self.skipWaiting();
       })
   );
 });
 
-// 2. AKTİFLEŞME: Eski cache'leri temizle
+// ============================================
+// 2. AKTİFLEŞME
+// ============================================
 self.addEventListener('activate', (event) => {
+  console.log('[SW] Aktif!');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('[ServiceWorker] Eski cache siliniyor:', cacheName);
+            console.log('[SW] Eski cache siliniyor:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     }).then(() => {
-      console.log('[ServiceWorker] Şimdi aktif!');
+      console.log('[SW] Aktifleşti, claim ediliyor...');
       return self.clients.claim();
     })
   );
 });
 
-// 3. İSTEKLERİ YAKALA: Önce cache'e bak, yoksa internetten al
+// ============================================
+// 3. İSTEKLERİ YAKALA (OFFLINE DESTEK)
+// ============================================
 self.addEventListener('fetch', (event) => {
-  // Sadece GET isteklerini işle
   if (event.request.method !== 'GET') {
     event.respondWith(fetch(event.request));
     return;
@@ -60,30 +66,22 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Cache'de varsa oradan ver (SÜPER HIZLI!)
         if (response) {
           return response;
         }
-
-        // Cache'de yoksa internetten al ve cache'le
         return fetch(event.request)
           .then((response) => {
-            // Başarılı yanıtı cache'le
             if (response && response.status === 200) {
               const responseToCache = response.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  try {
-                    cache.put(event.request, responseToCache);
-                  } catch (e) {
-                    // Bazı dosyalar cache'lenemez (örnek: videolar)
-                  }
-                });
+              caches.open(CACHE_NAME).then((cache) => {
+                try {
+                  cache.put(event.request, responseToCache);
+                } catch (e) {}
+              });
             }
             return response;
           })
           .catch(() => {
-            // İnternet yok ve cache'de yoksa offline sayfası göster
             if (event.request.mode === 'navigate') {
               return caches.match(OFFLINE_URL);
             }
@@ -96,20 +94,9 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-
-// sw.js - Service Worker
-
-self.addEventListener('install', (event) => {
-  console.log('[SW] Yükleniyor...');
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-  console.log('[SW] Aktif!');
-  event.waitUntil(clients.claim());
-});
-
-// 📢 BİLDİRİM GÖNDERME FONKSİYONU
+// ============================================
+// 4. BİLDİRİM GÖNDERME (MESAJ AL)
+// ============================================
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SEND_NOTIFICATION') {
     const { title, body, icon } = event.data;
@@ -130,8 +117,11 @@ self.addEventListener('message', (event) => {
   }
 });
 
-// Bildirime tıklanınca
+// ============================================
+// 5. BİLDİRİME TIKLANINCA
+// ============================================
 self.addEventListener('notificationclick', (event) => {
+  console.log('[SW] Bildirime tıklandı!');
   event.notification.close();
   event.waitUntil(
     clients.openWindow('/')
