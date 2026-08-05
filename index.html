@@ -508,13 +508,16 @@
     </div>
 
     <!-- BİLDİRİM İZİN BUTONU -->
-    <div style="margin-bottom: 16px; background: var(--panel-2); border-radius: 12px; padding: 12px 16px; border: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between;">
-      <div>
-        <div style="font-weight: 600; font-size: 13px; color: var(--ink);">📢 Bildirim İzni</div>
-        <div style="font-size: 11px; color: var(--ink-faint);">Tarayıcı bildirimlerini aktifleştir</div>
-      </div>
-      <button id="notificationPermissionBtn" style="background: var(--grad-brand); border: none; color: #0A0C14; padding: 8px 16px; border-radius: 10px; font-family: var(--font-display); font-weight: 700; font-size: 12px; cursor: pointer;">İzin Ver</button>
-    </div>
+<div style="margin-bottom: 16px; background: var(--panel-2); border-radius: 12px; padding: 12px 16px; border: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+  <div>
+    <div style="font-weight: 600; font-size: 13px; color: var(--ink);">📢 Bildirim İzni</div>
+    <div style="font-size: 11px; color: var(--ink-faint);">Tarayıcı bildirimlerini aktifleştir</div>
+  </div>
+  <div style="display: flex; gap: 8px; flex-shrink: 0;">
+    <button id="notificationPermissionBtn" style="background: var(--grad-brand); border: none; color: #0A0C14; padding: 8px 16px; border-radius: 10px; font-family: var(--font-display); font-weight: 700; font-size: 12px; cursor: pointer;">🔔 İzin Ver</button>
+    <button onclick="sendNotification('🧪 Test', 'Bildirim çalışıyor!')" style="background: var(--panel-2); border: 1px solid var(--line-soft); color: var(--ink); padding: 8px 12px; border-radius: 10px; font-size: 11px; cursor: pointer;">🧪 Test Et</button>
+  </div>
+</div>
 
     <!-- HAZIR HATIRLATICILAR -->
     <div class="stack" style="gap: 12px;">
@@ -3833,21 +3836,59 @@ document.getElementById("reminderCloseBtn").addEventListener("click", () => {
   document.body.style.overflow = '';
 });
 
-// 2. Bildirim izni
-document.getElementById("notificationPermissionBtn").addEventListener("click", async () => {
-  if ('Notification' in window) {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      alert('✅ Bildirim izni verildi!');
-      document.getElementById("notificationPermissionBtn").textContent = '✅ Aktif';
-      document.getElementById("notificationPermissionBtn").style.background = 'var(--mint)';
-    } else {
-      alert('❌ Bildirim izni reddedildi. Tarayıcı ayarlarından değiştirebilirsin.');
-    }
-  } else {
+// BİLDİRİM İZNİ (GELİŞMİŞ)
+window.requestNotificationPermission = async function() {
+  const btn = document.getElementById('notificationPermissionBtn');
+  
+  if (!('Notification' in window)) {
     alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+    return;
   }
-});
+  
+  if (Notification.permission === 'granted') {
+    alert('✅ Bildirim izni zaten verilmiş!');
+    // Test bildirimi gönder
+    sendNotification('✅ Bildirim Testi', 'Bu bir test bildirimi! Çalışıyor! 🎉');
+    return;
+  }
+  
+  if (Notification.permission === 'denied') {
+    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
+    return;
+  }
+  
+  // İzin iste
+  try {
+    const permission = await Notification.requestPermission();
+    
+    if (permission === 'granted') {
+      btn.textContent = '✅ Aktif';
+      btn.style.background = 'var(--mint)';
+      btn.style.borderColor = 'var(--mint)';
+      btn.style.color = '#0A0C14';
+      
+      alert('✅ Bildirim izni verildi!');
+      
+      // Test bildirimi gönder
+      setTimeout(() => {
+        sendNotification('✅ Bildirim Çalışıyor!', 'Kamp Günlüğün hazır! 💪');
+      }, 1000);
+      
+    } else {
+      alert('❌ Bildirim izni reddedildi.');
+    }
+  } catch (e) {
+    console.error('Bildirim hatası:', e);
+    alert('❌ Bildirim istenirken hata oluştu.');
+  }
+};
+
+// Eski event listener'ı kaldır (varsa)
+const oldBtn = document.getElementById('notificationPermissionBtn');
+if (oldBtn) {
+  const newBtn = oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+}
 
 // 3. Hatırlatıcıları kaydetme ve gösterme
 function loadReminders() {
@@ -4478,6 +4519,267 @@ window.addEventListener('load', function() {
         console.error('[ServiceWorker] Kayıt hatası:', error);
       });
   }
+
+    // Bildirim izni isteme fonksiyonu
+window.requestNotificationPermission = async function() {
+  const btn = document.getElementById('notificationPermissionBtn');
+  
+  if (!('Notification' in window)) {
+    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    alert('✅ Bildirim izni zaten verilmiş!');
+    sendNotification('✅ Bildirim Testi', 'Bu bir test bildirimi! Çalışıyor! 🎉');
+    return;
+  }
+  
+  if (Notification.permission === 'denied') {
+    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
+    return;
+  }
+  
+  try {
+    const permission = await Notification.requestPermission();
+    
+    if (permission === 'granted') {
+      btn.textContent = '✅ Aktif';
+      btn.style.background = 'var(--mint)';
+      btn.style.color = '#0A0C14';
+      alert('✅ Bildirim izni verildi!');
+      
+      setTimeout(() => {
+        sendNotification('✅ Bildirim Çalışıyor!', 'Kamp Günlüğün hazır! 💪');
+      }, 1000);
+    } else {
+      alert('❌ Bildirim izni reddedildi.');
+    }
+  } catch (e) {
+    console.error('Bildirim hatası:', e);
+    alert('❌ Bildirim istenirken hata oluştu.');
+  }
+};
+
+// Bildirim gönderme fonksiyonu (gelişmiş)
+function sendNotification(title, body) {
+  console.log('📢 Bildirim gönderiliyor:', title, body);
+  
+  if (!('Notification' in window)) {
+    console.warn('❌ Bildirim desteklenmiyor');
+    return false;
+  }
+  
+  if (Notification.permission !== 'granted') {
+    console.warn('❌ Bildirim izni yok, mevcut durum:', Notification.permission);
+    return false;
+  }
+  
+  try {
+    const notification = new Notification(title, {
+      body: body,
+      icon: 'icon.png',
+      vibrate: [200, 100, 200]
+    });
+    
+    console.log('✅ Bildirim gönderildi!');
+    return true;
+  } catch (e) {
+    console.error('❌ Bildirim hatası:', e);
+    return false;
+  }
+}
+
+    // ============================================
+// 6. BİLDİRİM GÖNDERME FONKSİYONU (GÜNCELLENMİŞ)
+// ============================================
+
+function sendNotification(title, body) {
+  console.log('📢 Bildirim gönderiliyor:', title, body);
+  
+  // Tarayıcı bildirim destekliyor mu?
+  if (!('Notification' in window)) {
+    console.warn('❌ Bildirim desteklenmiyor');
+    return false;
+  }
+  
+  // İzin kontrolü
+  if (Notification.permission !== 'granted') {
+    console.warn('❌ Bildirim izni yok, mevcut durum:', Notification.permission);
+    
+    // Eğer izin istenmemişse iste
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          sendNotification(title, body);
+        }
+      });
+    }
+    return false;
+  }
+  
+  try {
+    // Bildirimi oluştur ve gönder
+    const notification = new Notification(title, {
+      body: body,
+      icon: 'icon.png',
+      vibrate: [200, 100, 200],
+      tag: 'kampgunlugu_' + Date.now(), // Her bildirim benzersiz olsun
+      requireInteraction: true, // Kullanıcı tıklayana kadar kalsın
+      silent: false
+    });
+    
+    // Bildirime tıklanınca sayfayı aç
+    notification.onclick = function() {
+      window.focus();
+      this.close();
+    };
+    
+    console.log('✅ Bildirim gönderildi!');
+    return true;
+    
+  } catch (e) {
+    console.error('❌ Bildirim hatası:', e);
+    return false;
+  }
+}
+
+// ============================================
+// HATIRLATICI KONTROLÜ (GÜNCELLENMİŞ)
+// ============================================
+
+function checkReminders() {
+  const now = new Date();
+  const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  
+  console.log('🔍 Hatırlatıcı kontrolü:', currentTime);
+  
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  const activeReminders = reminders.filter(r => r.active && r.time === currentTime);
+  
+  console.log(`📌 ${activeReminders.length} aktif hatırlatıcı bulundu`);
+  
+  activeReminders.forEach(r => {
+    const success = sendNotification(r.name, `⏰ Zamanı geldi! ${r.name}`);
+    if (success) {
+      console.log(`✅ Hatırlatıcı gönderildi: ${r.name}`);
+    } else {
+      console.log(`❌ Hatırlatıcı gönderilemedi: ${r.name}`);
+    }
+  });
+}
+
+// ============================================
+// HER DAKİKA KONTROL ET (60000 ms = 1 dakika)
+// ============================================
+setInterval(checkReminders, 60000);
+
+// ============================================
+// SAYFA AÇILINCA BİR KERE KONTROL ET
+// ============================================
+window.addEventListener('load', function() {
+  setTimeout(checkReminders, 3000);
+});
+
+
+    // ============================================
+// 7. HATIRLATICI KONTROLÜ (DÜZELTİLMİŞ)
+// ============================================
+
+// Hatırlatıcıları kontrol et (her dakika çalışır)
+function checkReminders() {
+  const now = new Date();
+  const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  
+  console.log('🔍 Hatırlatıcı kontrolü yapılıyor... Saat:', currentTime);
+  
+  // localStorage'dan hatırlatıcıları al
+  let reminders = [];
+  try {
+    reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  } catch (e) {
+    console.warn('⚠️ Hatırlatıcılar okunamadı:', e);
+    return;
+  }
+  
+  // Aktif ve saati gelen hatırlatıcıları bul
+  const activeReminders = reminders.filter(r => r.active && r.time === currentTime);
+  
+  if (activeReminders.length === 0) {
+    // Her dakika konsolu doldurmasın diye sadece hatırlatıcı varsa yazdır
+    return;
+  }
+  
+  console.log(`📌 ${activeReminders.length} aktif hatırlatıcı bulundu!`);
+  
+  // Her bir hatırlatıcı için bildirim gönder
+  activeReminders.forEach((r, index) => {
+    // Kısa bir gecikmeyle gönder (aynı anda çok bildirim gelmesin)
+    setTimeout(() => {
+      const title = r.icon ? `${r.icon} ${r.name}` : r.name;
+      const body = `⏰ Zamanı geldi! ${r.name}`;
+      
+      const success = sendNotification(title, body);
+      
+      if (success) {
+        console.log(`✅ Hatırlatıcı gönderildi (${index + 1}/${activeReminders.length}): ${r.name}`);
+        
+        // Hatırlatıcıyı bir kere gönderdikten sonra pasif yap (isteğe bağlı)
+        // Yorumdan çıkarırsan her dakika tekrar bildirim gelmez
+        /*
+        r.active = false;
+        localStorage.setItem('reminders', JSON.stringify(reminders));
+        loadReminders(); // UI'ı güncelle
+        */
+      } else {
+        console.log(`❌ Hatırlatıcı gönderilemedi: ${r.name}`);
+      }
+    }, index * 500); // Her bildirim arası 500ms gecikme
+  });
+}
+
+// ============================================
+// TEST HATIRLATICI EKLE (Konsoldan test etmek için)
+// ============================================
+window.addTestReminder = function(minutes = 1) {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + minutes);
+  const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  reminders.push({
+    name: `🧪 Test (${minutes} dk)`,
+    time: timeStr,
+    icon: '🧪',
+    active: true,
+    type: 'test',
+    created: Date.now()
+  });
+  
+  localStorage.setItem('reminders', JSON.stringify(reminders));
+  loadReminders(); // UI'ı güncelle
+  
+  console.log(`✅ Test hatırlatıcı eklendi! Saat: ${timeStr}`);
+  console.log(`📌 ${minutes} dakika sonra bildirim gelecek.`);
+};
+
+// ============================================
+// SAYFA YÜKLENDİĞİNDE BİR KERE ÇALIŞTIR
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  // 5 saniye sonra ilk kontrolü yap
+  setTimeout(checkReminders, 5000);
+});
+
+// ============================================
+// HER DAKİKA KONTROL ET (60000 ms)
+// ============================================
+setInterval(checkReminders, 60000);
+
+console.log('🔄 Hatırlatıcı sistemi aktif! Her dakika kontrol edilecek.');
+console.log('🧪 Test etmek için konsola şunu yaz: addTestReminder(1)');
+    
+    
   </script>
 </body>
 </html>
