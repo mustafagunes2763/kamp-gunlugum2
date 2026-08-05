@@ -4854,6 +4854,78 @@ window.testNotification = function() {
 console.log('✅ Bildirim sistemi hazır!');
 console.log('🧪 Test etmek için: testNotification()');
 
+<!-- KONSOL TEST KODU -->
+<div style="position:fixed; bottom:0; left:0; right:0; background:#0A0C14; color:#3DDC97; padding:8px 12px; font-size:11px; z-index:9999; border-top:1px solid #333; display:flex; justify-content:space-between; align-items:center;">
+  <span id="swStatus">🔄 Service Worker kontrol ediliyor...</span>
+  <button onclick="checkSW()" style="background:#8C7CFF; border:none; color:#fff; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer;">🔄 Kontrol Et</button>
+</div>
+
+<script>
+// Service Worker durumunu gösteren fonksiyon
+function checkSW() {
+  const statusEl = document.getElementById('swStatus');
+  
+  if (!('serviceWorker' in navigator)) {
+    statusEl.innerHTML = '❌ Tarayıcı Service Worker desteklemiyor';
+    return;
+  }
+  
+  navigator.serviceWorker.getRegistration().then(registration => {
+    if (registration) {
+      statusEl.innerHTML = '✅ Service Worker AKTIF!';
+      statusEl.style.color = '#3DDC97';
+      console.log('SW Aktif:', registration);
+    } else {
+      statusEl.innerHTML = '❌ Service Worker KAYITLI DEGIL!';
+      statusEl.style.color = '#FF7A9C';
+      console.log('SW kayıtlı değil');
+      
+      // Tekrar kaydetmeyi dene
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => {
+          statusEl.innerHTML = '🔄 SW yeniden kaydedildi, kontrol et...';
+          setTimeout(checkSW, 2000);
+        })
+        .catch(err => {
+          statusEl.innerHTML = '❌ SW kayıt hatasi: ' + err.message;
+          console.error('SW kayıt hatası:', err);
+        });
+    }
+  });
+}
+
+// Sayfa yüklenince otomatik kontrol et
+window.addEventListener('load', function() {
+  setTimeout(checkSW, 1000);
+});
+
+// Bildirim testi butonu ekle (HTML'e tıklamayla)
+function testNotification() {
+  if (!('Notification' in window)) {
+    alert('❌ Bildirim desteklenmiyor');
+    return;
+  }
+  
+  if (Notification.permission !== 'granted') {
+    alert('❌ Önce "🔔 İzin Ver" butonuna tıkla!');
+    return;
+  }
+  
+  // Service Worker üzerinden bildirim gönder
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'SEND_NOTIFICATION',
+      title: '🧪 Test',
+      body: 'Tabletten test bildirimi! 🎉',
+      icon: 'icon.png'
+    });
+    alert('✅ Bildirim gönderildi!');
+  } else {
+    alert('❌ Service Worker çalışmıyor!');
+  }
+}
+</script>
+    
     
   </script>
 </body>
