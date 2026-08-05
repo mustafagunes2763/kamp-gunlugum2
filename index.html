@@ -3282,7 +3282,40 @@ window.addEventListener('load', () => {
             r.supplementsArray.forEach(id => { supCounts[id] = (supCounts[id]||0) + 1; });
           }
         });
+        // --- KARDİYO VERİLERİNİ ÇEK (DÜZELTİLMİŞ) ---
+const cardioSnap = await getDocs(collection(db, "users", auth.currentUser.uid, "cardio"));
+let cardioSessions = [];
+cardioSnap.forEach(d => {
+  const data = d.data();
+  if (data.sessions && Array.isArray(data.sessions)) {
+    data.sessions.forEach(s => {
+      // Tarih aralığı kontrolü (direkt burada yapalım)
+      const dateStr = d.id || '';
+      if (window.rangeStart && window.rangeEnd) {
+        if (dateStr < window.rangeStart || dateStr > window.rangeEnd) return;
+      }
+      
+      cardioSessions.push({
+        date: dateStr,
+        type: s.type || 'unknown',
+        incline: parseFloat(s.incline) || 0,
+        speed: parseFloat(s.speed) || 0,
+        duration: parseFloat(s.duration) || 0,
+        calories: parseFloat(s.calories) || 0
+      });
+    });
+  }
+});
 
+// Kardiyo istatistikleri (güvenli hesaplama)
+const totalCardioSessions = cardioSessions.length;
+const totalCardioDuration = cardioSessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+const totalCardioCalories = cardioSessions.reduce((sum, s) => sum + (s.calories || 0), 0);
+const avgCardioDuration = totalCardioSessions > 0 ? Math.round(totalCardioDuration / totalCardioSessions) : 0;
+const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalories / totalCardioSessions) : 0;
+
+
+        
         // --- PDF ÇİZİMİ (jsPDF metin API'si, html2canvas YOK) ---
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
