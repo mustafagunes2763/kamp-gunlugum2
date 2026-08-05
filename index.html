@@ -3389,6 +3389,49 @@ window.addEventListener('load', () => {
           y += 4;
         }
 
+        // --- KARDİYO İSTATİSTİKLERİ ---
+// Kardiyo verilerini çek
+const cardioSnap = await getDocs(collection(db, "users", auth.currentUser.uid, "cardio"));
+let cardioSessions = [];
+cardioSnap.forEach(d => {
+  const data = d.data();
+  if (data.sessions) {
+    data.sessions.forEach(s => {
+      cardioSessions.push({
+        date: d.id,
+        type: s.type,
+        incline: s.incline || 0,
+        speed: s.speed || 0,
+        duration: s.duration || 0,
+        calories: s.calories || 0
+      });
+    });
+  }
+});
+
+// Tarih aralığına göre filtrele
+if (window.rangeStart && window.rangeEnd) {
+  cardioSessions = cardioSessions.filter(s => s.date >= window.rangeStart && s.date <= window.rangeEnd);
+}
+
+// Kardiyo istatistikleri
+const totalCardioSessions = cardioSessions.length;
+const totalCardioDuration = cardioSessions.reduce((sum, s) => sum + s.duration, 0);
+const totalCardioCalories = cardioSessions.reduce((sum, s) => sum + s.calories, 0);
+const avgCardioDuration = totalCardioSessions > 0 ? Math.round(totalCardioDuration / totalCardioSessions) : 0;
+const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalories / totalCardioSessions) : 0;
+
+// Kardiyo Özeti
+if (totalCardioSessions > 0) {
+  sectionTitle("🏃 Kardiyo İstatistikleri", coral);
+  statRow("Toplam Kardiyo Seansı", totalCardioSessions + " seans");
+  statRow("Toplam Süre", totalCardioDuration + " dk");
+  statRow("Toplam Yakılan Kalori", totalCardioCalories + " kcal");
+  statRow("Ortalama Süre", avgCardioDuration + " dk");
+  statRow("Ortalama Kalori", avgCardioCalories + " kcal");
+  y += 4;
+}
+        
         // DETAYLI MOD: Günlük döküm
         if (pdfDetail === "full" && rows.length > 0) {
           sectionTitle("Günlük Döküm", accent);
@@ -3428,6 +3471,43 @@ window.addEventListener('load', () => {
             });
             y += 2;
           });
+          // DETAYLI MOD: Kardiyo dökümü
+if (pdfDetail === "full" && cardioSessions.length > 0) {
+  y += 4;
+  sectionTitle("🏃 Kardiyo Dökümü", coral);
+  
+  // Tarihe göre grupla
+  const cardioByDate = {};
+  cardioSessions.forEach(s => {
+    if (!cardioByDate[s.date]) cardioByDate[s.date] = [];
+    cardioByDate[s.date].push(s);
+  });
+  
+  Object.keys(cardioByDate).sort().forEach(date => {
+    const sessions = cardioByDate[date];
+    const totalCal = sessions.reduce((sum, s) => sum + s.calories, 0);
+    const totalDur = sessions.reduce((sum, s) => sum + s.duration, 0);
+    
+    checkPageBreak(8);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.setTextColor(...ink);
+    pdf.text(`${date} (${sessions.length} seans, ${totalDur} dk, ${totalCal} kcal)`, marginX, y);
+    y += 5;
+    
+    sessions.forEach(s => {
+      checkPageBreak(5);
+      const typeLabel = s.type === 'treadmill' ? 'Koşu Bandı' : s.type === 'bike' ? 'Bisiklet' : 'Eliptik';
+      const inclineLabel = s.type === 'treadmill' ? `Eğim: ${s.incline}%` : `Direnç: ${s.incline}`;
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(8.5);
+      pdf.setTextColor(...inkDim);
+      pdf.text(`   ${typeLabel} | ${inclineLabel} | Hız: ${s.speed}km/s | ${s.duration}dk | ${s.calories}kcal`, marginX, y);
+      y += 4.5;
+    });
+    y += 2;
+  });
+}
         }
 
         // Alt bilgi
