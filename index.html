@@ -3322,6 +3322,27 @@ const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalori
         const pageW = 210, marginX = 18;
         let y = 20;
 
+        // Türkçe karakter dönüştürme fonksiyonu
+function turkceToEnglish(text) {
+  const map = {
+    'ç': 'c', 'Ç': 'C',
+    'ğ': 'g', 'Ğ': 'G',
+    'ı': 'i', 'I': 'I',
+    'i': 'i', 'İ': 'I',
+    'ö': 'o', 'Ö': 'O',
+    'ş': 's', 'Ş': 'S',
+    'ü': 'u', 'Ü': 'U'
+  };
+  return text.replace(/[çÇğĞıIiİöÖşŞüÜ]/g, function(m) {
+    return map[m];
+  });
+}
+
+// PDF metin yazma (Türkçe karakter desteği ile)
+function pdfText(text, x, y, options) {
+  pdf.text(turkceToEnglish(text), x, y, options);
+}
+        
         function bgFill() {
           pdf.setFillColor(...bg);
           pdf.rect(0, 0, pageW, 297, 'F');
@@ -3371,7 +3392,7 @@ const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalori
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(20);
         pdf.setTextColor(...accent);
-        pdf.text("⛺ Kamp Raporu", marginX, y);
+        pdfText("⛺ Kamp Raporu", marginX, y);
         y += 8;
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(10);
@@ -3450,7 +3471,7 @@ if (totalCardioSessions > 0) {
         // DETAYLI MOD: Kardiyo dökümü
 if (pdfDetail === "full" && cardioSessions.length > 0) {
   y += 4;
-  sectionTitle("🏃 Kardiyo Dökümü", coral);
+  sectionTitle(turkceToEnglish("Kardiyo Dokumu"), coral);
   
   const cardioByDate = {};
   cardioSessions.forEach(s => {
@@ -3469,17 +3490,17 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(10);
     pdf.setTextColor(...ink);
-    pdf.text(`${date} (${sessions.length} seans, ${totalDur} dk, ${totalCal} kcal)`, marginX, y);
+    pdfText(`${date} (${sessions.length} seans, ${totalDur} dk, ${totalCal} kcal)`, marginX, y);
     y += 5;
     
     sessions.forEach(s => {
       checkPageBreak(5);
-      const typeLabel = s.type === 'treadmill' ? '🏃 Koşu Bandı' : s.type === 'bike' ? '🚴 Bisiklet' : '🌀 Eliptik';
-      const inclineLabel = s.type === 'treadmill' ? `Eğim: ${s.incline}%` : `Direnç: ${s.incline}`;
+      const typeLabel = s.type === 'treadmill' ? 'Kosu Bandi' : s.type === 'bike' ? 'Bisiklet' : 'Eliptik';
+      const inclineLabel = s.type === 'treadmill' ? `Eğim: ${s.incline}%` : `Direnc: ${s.incline}`;
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(8.5);
       pdf.setTextColor(...inkDim);
-      pdf.text(`   ${typeLabel} | ${inclineLabel} | Hız: ${s.speed}km/s | ${s.duration}dk | ${s.calories}kcal`, marginX, y);
+      pdfText(`   ${typeLabel} | ${inclineLabel} | Hiz: ${s.speed}km/s | ${s.duration}dk | ${s.calories}kcal`, marginX, y);
       y += 4.5;
     });
     y += 2;
