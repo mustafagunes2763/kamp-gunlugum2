@@ -95,3 +95,45 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
+
+// sw.js - Service Worker
+
+self.addEventListener('install', (event) => {
+  console.log('[SW] Yükleniyor...');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Aktif!');
+  event.waitUntil(clients.claim());
+});
+
+// 📢 BİLDİRİM GÖNDERME FONKSİYONU
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SEND_NOTIFICATION') {
+    const { title, body, icon } = event.data;
+    
+    self.registration.showNotification(title, {
+      body: body,
+      icon: icon || 'icon.png',
+      vibrate: [200, 100, 200],
+      requireInteraction: true,
+      tag: 'kampgunlugu_' + Date.now()
+    })
+    .then(() => {
+      console.log('[SW] ✅ Bildirim gönderildi:', title);
+    })
+    .catch((err) => {
+      console.error('[SW] ❌ Bildirim hatası:', err);
+    });
+  }
+});
+
+// Bildirime tıklanınca
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/')
+  );
+});
