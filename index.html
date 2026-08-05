@@ -4508,312 +4508,85 @@ window.addEventListener('load', function() {
 });
   
 </script>
+
   <script>
-  // Service Worker'ı kaydet (offline desteği için)
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('[ServiceWorker] Başarıyla kaydedildi! 🎉', registration);
-      })
-      .catch((error) => {
-        console.error('[ServiceWorker] Kayıt hatası:', error);
-      });
-  }
+// ============================================
+// BİLDİRİM SİSTEMİ - TEMİZ VERSİYON (ÇALIŞIR)
+// ============================================
 
-    // Bildirim izni isteme fonksiyonu
-window.requestNotificationPermission = async function() {
-  const btn = document.getElementById('notificationPermissionBtn');
+console.log('🔄 Kamp Günlüğü başlatılıyor...');
+
+// 📌 1. Service Worker durumunu kontrol et
+function checkSW() {
+  const statusEl = document.getElementById('swStatus');
+  if (!statusEl) return;
   
-  if (!('Notification' in window)) {
-    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+  if (!('serviceWorker' in navigator)) {
+    statusEl.innerHTML = '❌ Tarayıcı SW desteklemiyor';
     return;
   }
   
-  if (Notification.permission === 'granted') {
-    alert('✅ Bildirim izni zaten verilmiş!');
-    sendNotification('✅ Bildirim Testi', 'Bu bir test bildirimi! Çalışıyor! 🎉');
-    return;
-  }
-  
-  if (Notification.permission === 'denied') {
-    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
-    return;
-  }
-  
-  try {
-    const permission = await Notification.requestPermission();
-    
-    if (permission === 'granted') {
-      btn.textContent = '✅ Aktif';
-      btn.style.background = 'var(--mint)';
-      btn.style.color = '#0A0C14';
-      alert('✅ Bildirim izni verildi!');
+  navigator.serviceWorker.getRegistration().then(registration => {
+    if (registration) {
+      statusEl.innerHTML = '✅ Service Worker AKTIF!';
+      statusEl.style.color = '#3DDC97';
+      console.log('SW Aktif');
+    } else {
+      statusEl.innerHTML = '❌ SW KAYITLI DEGIL, kaydediliyor...';
+      statusEl.style.color = '#FF7A9C';
       
-      setTimeout(() => {
-        sendNotification('✅ Bildirim Çalışıyor!', 'Kamp Günlüğün hazır! 💪');
-      }, 1000);
-    } else {
-      alert('❌ Bildirim izni reddedildi.');
-    }
-  } catch (e) {
-    console.error('Bildirim hatası:', e);
-    alert('❌ Bildirim istenirken hata oluştu.');
-  }
-};
-
-
-
-// ============================================
-// HATIRLATICI KONTROLÜ (GÜNCELLENMİŞ)
-// ============================================
-
-function checkReminders() {
-  const now = new Date();
-  const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-  
-  console.log('🔍 Hatırlatıcı kontrolü:', currentTime);
-  
-  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
-  const activeReminders = reminders.filter(r => r.active && r.time === currentTime);
-  
-  console.log(`📌 ${activeReminders.length} aktif hatırlatıcı bulundu`);
-  
-  activeReminders.forEach(r => {
-    const success = sendNotification(r.name, `⏰ Zamanı geldi! ${r.name}`);
-    if (success) {
-      console.log(`✅ Hatırlatıcı gönderildi: ${r.name}`);
-    } else {
-      console.log(`❌ Hatırlatıcı gönderilemedi: ${r.name}`);
-    }
-  });
-}
-
-// ============================================
-// HER DAKİKA KONTROL ET (60000 ms = 1 dakika)
-// ============================================
-setInterval(checkReminders, 60000);
-
-// ============================================
-// SAYFA AÇILINCA BİR KERE KONTROL ET
-// ============================================
-window.addEventListener('load', function() {
-  setTimeout(checkReminders, 3000);
-});
-
-
-
-
-
-// ============================================
-// TEST HATIRLATICI EKLE (Konsoldan test etmek için)
-// ============================================
-window.addTestReminder = function(minutes = 1) {
-  const now = new Date();
-  now.setMinutes(now.getMinutes() + minutes);
-  const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-  
-  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
-  reminders.push({
-    name: `🧪 Test (${minutes} dk)`,
-    time: timeStr,
-    icon: '🧪',
-    active: true,
-    type: 'test',
-    created: Date.now()
-  });
-  
-  localStorage.setItem('reminders', JSON.stringify(reminders));
-  loadReminders(); // UI'ı güncelle
-  
-  console.log(`✅ Test hatırlatıcı eklendi! Saat: ${timeStr}`);
-  console.log(`📌 ${minutes} dakika sonra bildirim gelecek.`);
-};
-
-// ============================================
-// SAYFA YÜKLENDİĞİNDE BİR KERE ÇALIŞTIR
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-  // 5 saniye sonra ilk kontrolü yap
-  setTimeout(checkReminders, 5000);
-});
-
-// ============================================
-// HER DAKİKA KONTROL ET (60000 ms)
-// ============================================
-setInterval(checkReminders, 60000);
-
-console.log('🔄 Hatırlatıcı sistemi aktif! Her dakika kontrol edilecek.');
-console.log('🧪 Test etmek için konsola şunu yaz: addTestReminder(1)');
-    
-
-
-// Bildirim izni isteme (global)
-window.requestNotificationPermission = async function() {
-  const btn = document.getElementById('notificationPermissionBtn');
-  
-  if (!('Notification' in window)) {
-    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
-    return;
-  }
-  
-  if (Notification.permission === 'granted') {
-    alert('✅ Bildirim izni zaten verilmiş!');
-    if (btn) {
-      btn.textContent = '✅ Aktif';
-      btn.style.background = 'var(--mint)';
-      btn.style.color = '#0A0C14';
-    }
-    window.sendNotification('✅ Bildirim Testi', 'Bu bir test bildirimi! Çalışıyor! 🎉');
-    return;
-  }
-  
-  if (Notification.permission === 'denied') {
-    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
-    return;
-  }
-  
-  try {
-    const permission = await Notification.requestPermission();
-    
-    if (permission === 'granted') {
-      if (btn) {
-        btn.textContent = '✅ Aktif';
-        btn.style.background = 'var(--mint)';
-        btn.style.color = '#0A0C14';
-      }
-      alert('✅ Bildirim izni verildi!');
-      
-      setTimeout(() => {
-        window.sendNotification('✅ Bildirim Çalışıyor!', 'Kamp Günlüğün hazır! 💪');
-      }, 1000);
-    } else {
-      alert('❌ Bildirim izni reddedildi.');
-    }
-  } catch (e) {
-    console.error('Bildirim hatası:', e);
-    alert('❌ Bildirim istenirken hata oluştu.');
-  }
-};
-
-console.log('✅ Bildirim sistemi hazır! "🧪 Test Et" butonuna tıkla.');
-
-// ============================================
-// BİLDİRİM GÖNDERME (SERVICE WORKER ÜZERİNDEN)
-// ============================================
-
-async function sendNotification(title, body) {
-  console.log('📢 Bildirim gönderiliyor:', title, body);
-  
-  if (!('Notification' in window)) {
-    console.warn('❌ Bildirim desteklenmiyor');
-    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
-    return false;
-  }
-  
-  if (Notification.permission !== 'granted') {
-    console.warn('❌ Bildirim izni yok');
-    alert('❌ Önce "🔔 İzin Ver" butonuna tıkla!');
-    return false;
-  }
-  
-  try {
-    // Service Worker'ı kontrol et
-    const registration = await navigator.serviceWorker.getRegistration();
-    
-    if (!registration) {
-      console.warn('❌ Service Worker bulunamadı, normal bildirim dene');
-      // Fallback: Normal bildirim dene
-      try {
-        const notification = new Notification(title, {
-          body: body,
-          icon: 'icon.png',
-          vibrate: [200, 100, 200]
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => {
+          statusEl.innerHTML = '🔄 SW kaydedildi, yeniden kontrol...';
+          setTimeout(checkSW, 2000);
+        })
+        .catch(err => {
+          statusEl.innerHTML = '❌ SW hatasi: ' + err.message;
         });
-        console.log('✅ Normal bildirim gönderildi!');
-        return true;
-      } catch (e) {
-        console.error('❌ Normal bildirim de başarısız:', e);
-        alert('❌ Bildirim gönderilemedi. Service Worker kayıtlı değil.');
-        return false;
-      }
     }
-    
-    // Service Worker üzerinden bildirim gönder
-    await registration.showNotification(title, {
-      body: body,
-      icon: 'icon.png',
-      vibrate: [200, 100, 200],
-      requireInteraction: true,
-      tag: 'kampgunlugu_' + Date.now()
-    });
-    
-    console.log('✅ Bildirim gönderildi (Service Worker)');
-    return true;
-    
-  } catch (e) {
-    console.error('❌ Bildirim hatası:', e);
-    alert('❌ Bildirim gönderilemedi: ' + e.message);
-    return false;
-  }
+  });
 }
 
-// ============================================
-// BİLDİRİM İZNİ İSTE (GÜNCELLENMİŞ)
-// ============================================
-
+// 📌 2. Bildirim izni isteme
 window.requestNotificationPermission = async function() {
   const btn = document.getElementById('notificationPermissionBtn');
   
   if (!('Notification' in window)) {
-    alert('❌ Bu tarayıcı bildirim desteklemiyor.');
+    alert('❌ Bildirim desteklenmiyor.');
     return;
   }
   
   if (Notification.permission === 'granted') {
-    alert('✅ Bildirim izni zaten verilmiş!');
+    alert('✅ Zaten izin var!');
     if (btn) {
       btn.textContent = '✅ Aktif';
       btn.style.background = 'var(--mint)';
       btn.style.color = '#0A0C14';
     }
-    sendNotification('✅ Bildirim Testi', 'Bu bir test bildirimi! Çalışıyor! 🎉');
     return;
   }
   
   if (Notification.permission === 'denied') {
-    alert('❌ Bildirim izni reddedilmiş. Tarayıcı ayarlarından değiştirmelisin.');
+    alert('❌ İzin reddedilmiş. Tarayıcı ayarlarından aç.');
     return;
   }
   
-  try {
-    const permission = await Notification.requestPermission();
-    
-    if (permission === 'granted') {
-      if (btn) {
-        btn.textContent = '✅ Aktif';
-        btn.style.background = 'var(--mint)';
-        btn.style.color = '#0A0C14';
-      }
-      alert('✅ Bildirim izni verildi!');
-      
-      setTimeout(() => {
-        sendNotification('✅ Bildirim Çalışıyor!', 'Kamp Günlüğün hazır! 💪');
-      }, 1000);
-    } else {
-      alert('❌ Bildirim izni reddedildi.');
+  const result = await Notification.requestPermission();
+  if (result === 'granted') {
+    alert('✅ İzin verildi!');
+    if (btn) {
+      btn.textContent = '✅ Aktif';
+      btn.style.background = 'var(--mint)';
+      btn.style.color = '#0A0C14';
     }
-  } catch (e) {
-    console.error('Bildirim hatası:', e);
-    alert('❌ Bildirim istenirken hata oluştu.');
+    // Test bildirimi gönder
+    setTimeout(() => testNotification(), 500);
+  } else {
+    alert('❌ İzin reddedildi.');
   }
 };
 
-
-
-// ============================================
-// BİLDİRİM SİSTEMİ (TEK FONKSİYON)
-// ============================================
-
+// 📌 3. Bildirim gönderme (Service Worker ile)
 window.testNotification = function() {
   console.log('🧪 Test butonuna tıklandı!');
   
@@ -4827,94 +4600,78 @@ window.testNotification = function() {
     return;
   }
   
-  // Service Worker ile bildirim gönder
-  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+  // Service Worker kontrol et
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({
       type: 'SEND_NOTIFICATION',
       title: '🧪 Test Bildirimi',
       body: 'Bu bir test! Çalışıyor! 🎉',
       icon: 'icon.png'
     });
-    alert('✅ Bildirim gönderildi (Service Worker)!');
+    console.log('✅ Service Worker bildirim gönderdi!');
+    alert('✅ Bildirim gönderildi! (Service Worker)');
   } else {
-    alert('❌ Service Worker çalışmıyor. Sayfayı yenile ve tekrar dene.');
+    // Service Worker yoksa normal dene
+    try {
+      new Notification('🧪 Test Bildirimi', {
+        body: 'Bu bir test! Çalışıyor! 🎉',
+        icon: 'icon.png'
+      });
+      console.log('✅ Normal bildirim gönderildi!');
+      alert('✅ Bildirim gönderildi! (Normal)');
+    } catch(e) {
+      alert('❌ Bildirim hatası: ' + e.message);
+    }
   }
 };
 
-console.log('✅ Bildirim sistemi hazır!');
-console.log('🧪 Test etmek için: testNotification()');
-
-<!-- KONSOL TEST KODU -->
-<div style="position:fixed; bottom:0; left:0; right:0; background:#0A0C14; color:#3DDC97; padding:8px 12px; font-size:11px; z-index:9999; border-top:1px solid #333; display:flex; justify-content:space-between; align-items:center;">
-  <span id="swStatus">🔄 Service Worker kontrol ediliyor...</span>
-  <button onclick="checkSW()" style="background:#8C7CFF; border:none; color:#fff; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer;">🔄 Kontrol Et</button>
-</div>
-
-<script>
-// Service Worker durumunu gösteren fonksiyon
-function checkSW() {
-  const statusEl = document.getElementById('swStatus');
+// 📌 4. Hatırlatıcı sistemi
+function checkReminders() {
+  const now = new Date();
+  const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
   
-  if (!('serviceWorker' in navigator)) {
-    statusEl.innerHTML = '❌ Tarayıcı Service Worker desteklemiyor';
-    return;
-  }
+  const reminders = JSON.parse(localStorage.getItem('reminders') || '[]');
+  const activeReminders = reminders.filter(r => r.active && r.time === currentTime);
   
-  navigator.serviceWorker.getRegistration().then(registration => {
-    if (registration) {
-      statusEl.innerHTML = '✅ Service Worker AKTIF!';
-      statusEl.style.color = '#3DDC97';
-      console.log('SW Aktif:', registration);
+  activeReminders.forEach(r => {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'SEND_NOTIFICATION',
+        title: r.name,
+        body: `⏰ Zamanı geldi! ${r.name}`,
+        icon: 'icon.png'
+      });
     } else {
-      statusEl.innerHTML = '❌ Service Worker KAYITLI DEGIL!';
-      statusEl.style.color = '#FF7A9C';
-      console.log('SW kayıtlı değil');
-      
-      // Tekrar kaydetmeyi dene
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => {
-          statusEl.innerHTML = '🔄 SW yeniden kaydedildi, kontrol et...';
-          setTimeout(checkSW, 2000);
-        })
-        .catch(err => {
-          statusEl.innerHTML = '❌ SW kayıt hatasi: ' + err.message;
-          console.error('SW kayıt hatası:', err);
+      try {
+        new Notification(r.name, {
+          body: `⏰ Zamanı geldi! ${r.name}`,
+          icon: 'icon.png'
         });
+      } catch(e) {}
     }
   });
 }
 
-// Sayfa yüklenince otomatik kontrol et
+// 📌 5. Sayfa yüklenince
 window.addEventListener('load', function() {
   setTimeout(checkSW, 1000);
+  
+  // Service Worker kontrol
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(() => {
+      console.log('✅ Service Worker hazır!');
+    }).catch(() => {
+      console.log('⚠️ Service Worker hazır değil.');
+    });
+  }
 });
 
-// Bildirim testi butonu ekle (HTML'e tıklamayla)
-function testNotification() {
-  if (!('Notification' in window)) {
-    alert('❌ Bildirim desteklenmiyor');
-    return;
-  }
-  
-  if (Notification.permission !== 'granted') {
-    alert('❌ Önce "🔔 İzin Ver" butonuna tıkla!');
-    return;
-  }
-  
-  // Service Worker üzerinden bildirim gönder
-  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({
-      type: 'SEND_NOTIFICATION',
-      title: '🧪 Test',
-      body: 'Tabletten test bildirimi! 🎉',
-      icon: 'icon.png'
-    });
-    alert('✅ Bildirim gönderildi!');
-  } else {
-    alert('❌ Service Worker çalışmıyor!');
-  }
-}
-</script>
+// Her dakika hatırlatıcı kontrol et
+setInterval(checkReminders, 60000);
+
+console.log('✅ Bildirim sistemi hazır!');
+console.log('📌 "🔔 İzin Ver" → izin ver, sonra "🧪 Test Et" butonuna tıkla.');
+  </script>
     
     
   </script>
