@@ -3283,6 +3283,37 @@ window.addEventListener('load', () => {
           }
         });
 
+        // --- KARDİYO VERİLERİNİ ÇEK ---
+const cardioSnap = await getDocs(collection(db, "users", auth.currentUser.uid, "cardio"));
+let cardioSessions = [];
+cardioSnap.forEach(d => {
+  const data = d.data();
+  if (data.sessions && Array.isArray(data.sessions)) {
+    data.sessions.forEach(s => {
+      cardioSessions.push({
+        date: d.id || '',
+        type: s.type || 'unknown',
+        incline: parseFloat(s.incline) || 0,
+        speed: parseFloat(s.speed) || 0,
+        duration: parseFloat(s.duration) || 0,
+        calories: parseFloat(s.calories) || 0
+      });
+    });
+  }
+});
+
+// Tarih aralığına göre filtrele
+if (window.rangeStart && window.rangeEnd) {
+  cardioSessions = cardioSessions.filter(s => s.date >= window.rangeStart && s.date <= window.rangeEnd);
+}
+
+// Kardiyo istatistikleri (güvenli hesaplama)
+const totalCardioSessions = cardioSessions.length;
+const totalCardioDuration = cardioSessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+const totalCardioCalories = cardioSessions.reduce((sum, s) => sum + (s.calories || 0), 0);
+const avgCardioDuration = totalCardioSessions > 0 ? Math.round(totalCardioDuration / totalCardioSessions) : 0;
+const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalories / totalCardioSessions) : 0;
+
         // --- PDF ÇİZİMİ (jsPDF metin API'si, html2canvas YOK) ---
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
@@ -3416,8 +3447,8 @@ if (window.rangeStart && window.rangeEnd) {
 
 // Kardiyo istatistikleri
 const totalCardioSessions = cardioSessions.length;
-const totalCardioDuration = cardioSessions.reduce((sum, s) => sum + s.duration, 0);
-const totalCardioCalories = cardioSessions.reduce((sum, s) => sum + s.calories, 0);
+const totalCardioDuration = cardioSessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+const totalCardioCalories = cardioSessions.reduce((sum, s) => sum + (s.calories || 0), 0);
 const avgCardioDuration = totalCardioSessions > 0 ? Math.round(totalCardioDuration / totalCardioSessions) : 0;
 const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalories / totalCardioSessions) : 0;
 
@@ -3471,6 +3502,7 @@ if (totalCardioSessions > 0) {
             });
             y += 2;
           });
+
           // DETAYLI MOD: Kardiyo dökümü
 if (pdfDetail === "full" && cardioSessions.length > 0) {
   y += 4;
@@ -3485,8 +3517,13 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
   
   Object.keys(cardioByDate).sort().forEach(date => {
     const sessions = cardioByDate[date];
-    const totalCal = sessions.reduce((sum, s) => sum + s.calories, 0);
-    const totalDur = sessions.reduce((sum, s) => sum + s.duration, 0);
+    const totalCal = sessions.reduce((sum, s) => sum + (s.calories || 0), 0);
+    const totalDur = sessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+    
+    // Eğer bu günün verileri geçersizse atla
+    if (totalCal === 0 && totalDur === 0 && sessions.every(s => s.type === 'unknown')) {
+      return; // Bu günü atla
+    }
     
     checkPageBreak(8);
     pdf.setFont("helvetica", "bold");
@@ -3496,8 +3533,11 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
     y += 5;
     
     sessions.forEach(s => {
+      // Geçersiz veriyi kontrol et
+      if (!s.type || s.type === 'unknown') return;
+      
       checkPageBreak(5);
-      const typeLabel = s.type === 'treadmill' ? 'Koşu Bandı' : s.type === 'bike' ? 'Bisiklet' : 'Eliptik';
+      const typeLabel = s.type === 'treadmill' ? '🏃 Koşu Bandı' : s.type === 'bike' ? '🚴 Bisiklet' : '🌀 Eliptik';
       const inclineLabel = s.type === 'treadmill' ? `Eğim: ${s.incline}%` : `Direnç: ${s.incline}`;
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(8.5);
@@ -3508,7 +3548,6 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
     y += 2;
   });
 }
-        }
 
         // Alt bilgi
         checkPageBreak(10);
