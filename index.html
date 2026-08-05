@@ -3324,15 +3324,15 @@ const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalori
 
         // Türkçe karakter dönüştürme fonksiyonu
 function turkceToEnglish(text) {
-  // Türkçe karakterleri Unicode escape ile yaz
+  // Türkçe karakterleri düzgün Unicode ile yaz
   const map = {
-    'ç': '\u00E7', 'Ç': '\u00C7',
-    'ğ': '\u011F', 'Ğ': '\u011E',
-    'ı': '\u0131', 'I': '\u0049',
-    'i': '\u0069', 'İ': '\u0130',
-    'ö': '\u00F6', 'Ö': '\u00D6',
-    'ş': '\u015F', 'Ş': '\u015E',
-    'ü': '\u00FC', 'Ü': '\u00DC'
+    'ç': 'c', 'Ç': 'C',
+    'ğ': 'g', 'Ğ': 'G',
+    'ı': 'i', 'I': 'I',
+    'i': 'i', 'İ': 'I',
+    'ö': 'o', 'Ö': 'O',
+    'ş': 's', 'Ş': 'S',
+    'ü': 'u', 'Ü': 'U'
   };
   return text.replace(/[çÇğĞıIiİöÖşŞüÜ]/g, function(m) {
     return map[m] || m;
