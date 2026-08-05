@@ -3355,35 +3355,38 @@ function pdfText(text, x, y, options) {
           }
         }
         function sectionTitle(text, color) {
-          checkPageBreak(14);
-          pdf.setFont("helvetica", "bold");
-          pdf.setFontSize(13);
-          pdf.setTextColor(...color);
-          pdf.text(text, marginX, y);
-          y += 2;
-          pdf.setDrawColor(...color);
-          pdf.setLineWidth(0.4);
-          pdf.line(marginX, y, pageW - marginX, y);
-          y += 8;
+  checkPageBreak(14);
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(13);
+  pdf.setTextColor(...color);
+  // 🔥 TÜRKÇE KARAKTER DÜZELTMESİ EKLENDİ
+  pdf.text(turkceToEnglish(text), marginX, y);
+  y += 2;
+  pdf.setDrawColor(...color);
+  pdf.setLineWidth(0.4);
+  pdf.line(marginX, y, pageW - marginX, y);
+  y += 8;
         }
         function statRow(label, value) {
-          checkPageBreak(8);
-          pdf.setFont("helvetica", "normal");
-          pdf.setFontSize(10.5);
-          pdf.setTextColor(...inkDim);
-          pdf.text(label, marginX, y);
-          pdf.setFont("helvetica", "bold");
-          pdf.setTextColor(...ink);
-          pdf.text(String(value), pageW - marginX, y, { align: "right" });
-          y += 7;
+  checkPageBreak(8);
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(10.5);
+  pdf.setTextColor(...inkDim);
+  // 🔥 TÜRKÇE KARAKTER DÜZELTMESİ EKLENDİ
+  pdf.text(turkceToEnglish(label), marginX, y);
+  pdf.setFont("helvetica", "bold");
+  pdf.setTextColor(...ink);
+  pdf.text(String(value), pageW - marginX, y, { align: "right" });
+  y += 7;
         }
         function bodyText(text) {
-          checkPageBreak(6);
-          pdf.setFont("helvetica", "normal");
-          pdf.setFontSize(9.5);
-          pdf.setTextColor(...inkDim);
-          pdf.text(text, marginX, y);
-          y += 6;
+  checkPageBreak(6);
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(9.5);
+  pdf.setTextColor(...inkDim);
+  // 🔥 TÜRKÇE KARAKTER DÜZELTMESİ EKLENDİ
+  pdf.text(turkceToEnglish(text), marginX, y);
+  y += 6;
         }
 
         bgFill();
