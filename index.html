@@ -3421,7 +3421,19 @@ const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalori
           });
           y += 4;
         }
+        // --- KARDİYO İSTATİSTİKLERİ ---
+if (totalCardioSessions > 0) {
+  sectionTitle("🏃 Kardiyo İstatistikleri", coral);
+  statRow("Toplam Kardiyo Seansı", totalCardioSessions + " seans");
+  statRow("Toplam Süre", totalCardioDuration + " dk");
+  statRow("Toplam Yakılan Kalori", totalCardioCalories + " kcal");
+  statRow("Ortalama Süre", avgCardioDuration + " dk");
+  statRow("Ortalama Kalori", avgCardioCalories + " kcal");
+  y += 4;
+}
 
+
+        
         // DETAYLI MOD: Günlük döküm
         if (pdfDetail === "full" && rows.length > 0) {
           sectionTitle("Günlük Döküm", accent);
@@ -3435,6 +3447,44 @@ const avgCardioCalories = totalCardioSessions > 0 ? Math.round(totalCardioCalori
             bodyText(`${r.date}   ${parts.join(' · ') || '— veri yok'}`);
           });
         }
+        // DETAYLI MOD: Kardiyo dökümü
+if (pdfDetail === "full" && cardioSessions.length > 0) {
+  y += 4;
+  sectionTitle("🏃 Kardiyo Dökümü", coral);
+  
+  const cardioByDate = {};
+  cardioSessions.forEach(s => {
+    if (!cardioByDate[s.date]) cardioByDate[s.date] = [];
+    cardioByDate[s.date].push(s);
+  });
+  
+  Object.keys(cardioByDate).sort().forEach(date => {
+    const sessions = cardioByDate[date];
+    const totalCal = sessions.reduce((sum, s) => sum + (s.calories || 0), 0);
+    const totalDur = sessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+    
+    if (totalCal === 0 && totalDur === 0) return;
+    
+    checkPageBreak(8);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.setTextColor(...ink);
+    pdf.text(`${date} (${sessions.length} seans, ${totalDur} dk, ${totalCal} kcal)`, marginX, y);
+    y += 5;
+    
+    sessions.forEach(s => {
+      checkPageBreak(5);
+      const typeLabel = s.type === 'treadmill' ? '🏃 Koşu Bandı' : s.type === 'bike' ? '🚴 Bisiklet' : '🌀 Eliptik';
+      const inclineLabel = s.type === 'treadmill' ? `Eğim: ${s.incline}%` : `Direnç: ${s.incline}`;
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(8.5);
+      pdf.setTextColor(...inkDim);
+      pdf.text(`   ${typeLabel} | ${inclineLabel} | Hız: ${s.speed}km/s | ${s.duration}dk | ${s.calories}kcal`, marginX, y);
+      y += 4.5;
+    });
+    y += 2;
+  });
+}
 
         // DETAYLI MOD: Antrenman Dökümü
         if (pdfDetail === "full" && workoutDays.length > 0) {
