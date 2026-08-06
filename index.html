@@ -709,9 +709,11 @@
           <div class="card-body">
             <div class="select-shell" style="margin-bottom: 15px;">
               <select id="cardioType">
-                <option value="treadmill">🏃 Koşu Bandı</option>
-                <option value="bike">🚴 Bisiklet</option>
-                <option value="elliptical">🌀 Eliptik</option>
+  <option value="treadmill">🏃 Koşu Bandı</option>
+  <option value="bike">🚴 Bisiklet</option>
+  <option value="elliptical">🌀 Eliptik</option>
+  <option value="walking">🚶 Açık Alan Yürüyüş</option>   <!-- YENİ -->
+  <option value="running">🏃 Açık Alan Koşu</option>      <!-- YENİ -->
               </select>
             </div>
 
@@ -2656,19 +2658,21 @@ await calculatePR1RM(exKey);
   // --- KARDİYO TÜRÜNE GÖRE ALAN GÖSTERİMİ ---
   const cardioType = document.getElementById("cardioType");
   function updateCardioFields() {
-    const type = cardioType.value;
-    // Bisiklet ve Eliptik'te "Eğim" yerine "Direnç" daha mantıklı ama alanları sade tutuyoruz:
-    // Koşu Bandı: eğim + hız + süre + kalori
-    // Bisiklet / Eliptik: hız yerine direnç kullanmak isteyebilirsin, şimdilik aynı 4 alan kalıyor
-    const inclineField = document.querySelector('[data-cardio-field="incline"]');
-    const inclineLabel = inclineField.querySelector("label");
-    if (type === "treadmill") {
-      inclineField.style.display = "flex";
-      inclineLabel.innerHTML = 'Eğim <span class="unit">%</span>';
-    } else {
-      inclineField.style.display = "flex";
-      inclineLabel.innerHTML = 'Direnç <span class="unit">SVY</span>';
-    }
+  const type = cardioType.value;
+  const inclineField = document.querySelector('[data-cardio-field="incline"]');
+  const inclineLabel = inclineField.querySelector("label");
+  
+  if (type === "treadmill") {
+    inclineField.style.display = "flex";
+    inclineLabel.innerHTML = 'Eğim <span class="unit">%</span>';
+  } else if (type === "walking" || type === "running") {
+    inclineField.style.display = "flex";
+    inclineLabel.innerHTML = 'Mesafe <span class="unit">KM</span>';
+  } else {
+    // bike, elliptical için
+    inclineField.style.display = "flex";
+    inclineLabel.innerHTML = 'Direnç <span class="unit">SVY</span>';
+  }
   }
   cardioType.addEventListener("change", updateCardioFields);
   updateCardioFields();
@@ -2715,8 +2719,13 @@ await calculatePR1RM(exKey);
     }
   });
 
-  const cardioTypeLabels = { treadmill: "🏃 Koşu Bandı", bike: "🚴 Bisiklet", elliptical: "🌀 Eliptik" };
-
+  const cardioTypeLabels = { 
+  treadmill: "🏃 Koşu Bandı", 
+  bike: "🚴 Bisiklet", 
+  elliptical: "🌀 Eliptik",
+  walking: "🚶 Açık Alan Yürüyüş",
+  running: "🏃 Açık Alan Koşu"
+};
   async function loadCardioData(dateStr) {
     if(!auth.currentUser) return;
     const container = document.getElementById("todaysCardioLog");
@@ -2730,7 +2739,7 @@ await calculatePR1RM(exKey);
         let html = "";
         docSnap.data().sessions.forEach((s, idx) => {
           const label = cardioTypeLabels[s.type] || "🏃 Kardiyo";
-          const inclineLabel = s.type === "treadmill" ? "Eğim" : "Direnç";
+          let inclineLabel = "Direnç"; if (s.type === "treadmill") inclineLabel = "Eğim"; else if (s.type === "walking" || s.type === "running") inclineLabel = "Mesafe"; // bike ve elliptical için "Direnç" kalır
           html += `<div class="workout-log-item">
                      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
                        <h3 style="margin-bottom:0;">${label}</h3>
