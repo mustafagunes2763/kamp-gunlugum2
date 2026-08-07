@@ -1124,7 +1124,40 @@
       <div class="card-body"><div class="note-shell"><textarea id="dayNote" maxlength="280" placeholder="Bugün nasıl geçti? Enerji, uyku, ağrı, motivasyon..."></textarea></div></div>
     </section>
   </div>
-
+<!-- CSV YÜKLEME KARTI (Mi Home & Huawei Health) -->
+<section class="card" style="border: 1px dashed var(--mint); margin-top: 14px;">
+  <div class="card-head">
+    <div class="tag">
+      <span class="dot" style="background: var(--mint); box-shadow: 0 0 10px rgba(61,220,151,0.7);"></span>
+      <h2>📤 Rapor Yükle (CSV)</h2>
+    </div>
+    <span class="hint">Mi Home / Huawei</span>
+  </div>
+  <div class="card-body">
+    <p style="font-size: 11px; color: var(--ink-faint); margin-bottom: 12px;">
+      Mi Home veya Huawei Health'ten dışa aktardığın CSV dosyasını yükle. 
+      Tüm geçmiş verilerin otomatik dolsun! 📊
+    </p>
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <input type="file" id="csvUpload" accept=".csv" 
+        style="flex:1; min-width:200px; background:var(--panel-2); border:1px solid var(--line-soft); border-radius:10px; padding:12px; color:var(--ink); font-family:var(--font-mono); font-size:13px; cursor:pointer;">
+      <button id="processCsvBtn" class="btn-save" 
+        style="flex-shrink:0; padding:12px 24px; font-size:14px; border-radius:12px; margin-top:0;">
+        📊 İçe Aktar
+      </button>
+    </div>
+    
+    <div id="csvResult" style="margin-top:12px; font-size:12px; color:var(--ink-faint); min-height:20px;"></div>
+    
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+      <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint);">✅ Mi Home</span>
+      <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint);">✅ Huawei Health</span>
+      <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint);">✅ Tarih &amp; Kilo &amp; Yağ</span>
+      <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint);">✅ Adım &amp; Uyku</span>
+    </div>
+  </div>
+</section>
   <div class="save-zone"><button class="btn-save" id="saveBtn" type="button">⛺ Kişisel Kasama Kaydet</button><div class="save-sub">Şifreli buluta anında yazılır</div></div>
   <footer class="camp-footer"><span class="stamp">Kamp Defteri · Ultimate V10</span></footer>
 </div>
@@ -4681,7 +4714,148 @@ setInterval(checkReminders, 60000);
 console.log('✅ Bildirim sistemi hazır!');
 console.log('📌 "🔔 İzin Ver" → izin ver, sonra "🧪 Test Et" butonuna tıkla.');
   </script>
-    
+
+  // ============================================
+// 📤 CSV YÜKLEME MOTORU (Mi Home & Huawei Health)
+// ============================================
+
+document.getElementById("processCsvBtn")?.addEventListener("click", async function() {
+  const fileInput = document.getElementById("csvUpload");
+  const resultDiv = document.getElementById("csvResult");
+  
+  if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+    resultDiv.innerHTML = "❌ Lütfen bir CSV dosyası seç!";
+    resultDiv.style.color = "var(--coral)";
+    return;
+  }
+  
+  if (!auth.currentUser) {
+    resultDiv.innerHTML = "❌ Lütfen önce giriş yap!";
+    resultDiv.style.color = "var(--coral)";
+    return;
+  }
+  
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  const btn = this;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = "⏳ İşleniyor...";
+  btn.disabled = true;
+  resultDiv.innerHTML = "📖 Dosya okunuyor...";
+  resultDiv.style.color = "var(--ink-faint)";
+  
+  reader.onload = async function(e) {
+    try {
+      const text = e.target.result;
+      const lines = text.split('\n').filter(line => line.trim());
+      
+      if (lines.length < 2) {
+        resultDiv.innerHTML = "❌ Dosya boş veya geçersiz format!";
+        resultDiv.style.color = "var(--coral)";
+        return;
+      }
+      
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      
+      const findIndex = (keywords) => {
+        return headers.findIndex(h => keywords.some(k => h.includes(k)));
+      };
+      
+      const dateIdx = findIndex(['tarih', 'date', 'gün']);
+      const weightIdx = findIndex(['kilo', 'weight', 'vücut ağırlığı']);
+      const fatIdx = findIndex(['yağ', 'fat', 'body fat', 'vücut yağ']);
+      const stepsIdx = findIndex(['adım', 'step', 'steps']);
+      const sleepIdx = findIndex(['uyku', 'sleep', 'uyku süresi']);
+      const sleepScoreIdx = findIndex(['uyku puanı', 'sleep score', 'uyku kalitesi']);
+      
+      let imported = 0;
+      let skipped = 0;
+      let hasWeight = false;
+      let hasSteps = false;
+      let hasSleep = false;
+      
+      resultDiv.innerHTML = "⏳ Veriler işleniyor...";
+      
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.trim());
+        if (cols.length < 2) continue;
+        
+        let dateStr = dateIdx >= 0 ? cols[dateIdx] : "";
+        if (!dateStr) continue;
+        
+        let formattedDate = dateStr;
+        if (dateStr.includes('/')) {
+          const parts = dateStr.split('/');
+          if (parts[2] && parts[2].length === 4) {
+            formattedDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+          } else if (parts[0] && parts[0].length === 4) {
+            formattedDate = `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
+          }
+        } else if (dateStr.includes('.')) {
+          const parts = dateStr.split('.');
+          if (parts[2] && parts[2].length === 4) {
+            formattedDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+          }
+        }
+        
+        if (isNaN(new Date(formattedDate).getTime())) {
+          skipped++;
+          continue;
+        }
+        
+        const weight = weightIdx >= 0 ? parseFloat(cols[weightIdx]) || 0 : 0;
+        const bodyFat = fatIdx >= 0 ? parseFloat(cols[fatIdx]) || 0 : 0;
+        const steps = stepsIdx >= 0 ? parseInt(cols[stepsIdx]) || 0 : 0;
+        const sleep = sleepIdx >= 0 ? parseFloat(cols[sleepIdx]) || 0 : 0;
+        const sleepScore = sleepScoreIdx >= 0 ? parseInt(cols[sleepScoreIdx]) || 0 : 0;
+        
+        if (weight > 0) hasWeight = true;
+        if (steps > 0) hasSteps = true;
+        if (sleep > 0) hasSleep = true;
+        
+        const payload = {
+          date: formattedDate,
+          weight: weight || "",
+          bodyFat: bodyFat || "",
+          steps: steps || "",
+          sleepH: sleep ? Math.floor(sleep) : "",
+          sleepM: sleep ? Math.round((sleep - Math.floor(sleep)) * 60) : "",
+          sleepScore: sleepScore || "",
+          campDay: ""
+        };
+        
+        await setDoc(doc(db, "users", auth.currentUser.uid, "logs", formattedDate), payload, { merge: true });
+        imported++;
+      }
+      
+      let msg = `✅ ${imported} kayıt başarıyla içe aktarıldı!`;
+      if (skipped > 0) msg += ` (${skipped} satır atlandı)`;
+      
+      let detail = [];
+      if (hasWeight) detail.push("📊 Kilo & Yağ");
+      if (hasSteps) detail.push("👣 Adım");
+      if (hasSleep) detail.push("😴 Uyku");
+      
+      if (detail.length > 0) msg += `<br><span style="font-size:11px;">📦 ${detail.join(' · ')}</span>`;
+      
+      resultDiv.innerHTML = msg;
+      resultDiv.style.color = "var(--mint)";
+      
+      loadDashboardData();
+      loadDayData(document.getElementById("logDate").value);
+      
+    } catch(err) {
+      console.error("CSV işleme hatası:", err);
+      resultDiv.innerHTML = `❌ Hata: ${err.message}`;
+      resultDiv.style.color = "var(--coral)";
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  };
+  
+  reader.readAsText(file);
+});
     
   </script>
 </body>
