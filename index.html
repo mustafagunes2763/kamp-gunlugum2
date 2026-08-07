@@ -1334,13 +1334,16 @@
             Tüm geçmiş verilerin (Kilo, Yağ, Adım, Uyku) otomatik dolsun! 📊
           </p>
           
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="file" id="csvUpload" accept=".csv" 
-              style="flex:1; min-width:200px; background:var(--panel-2); border:1px solid var(--line-soft); border-radius:10px; padding:12px; color:var(--ink); font-family:var(--font-mono); font-size:13px; cursor:pointer;">
-            <button type="button" id="processCsvBtn" class="btn-save" 
-              style="flex-shrink:0; padding:12px 24px; font-size:14px; border-radius:12px; margin-top:0;">
-              📊 İçe Aktar
-            </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+  <input type="file" id="csvUpload" accept=".csv" style="display:none;">
+  <button type="button" id="csvUploadBtn" style="flex:1; min-width:200px; background:var(--panel-2); border:1px solid var(--line-soft); border-radius:10px; padding:14px 18px; color:var(--ink); font-family:var(--font-display); font-weight:600; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:10px; transition: all 0.2s; border: 1px dashed var(--mint);">
+    <span style="font-size:20px;">📁</span>
+    <span id="csvFileName">Dosya Seç</span>
+  </button>
+  <button type="button" id="processCsvBtn" class="btn-save" 
+    style="flex-shrink:0; padding:14px 28px; font-size:14px; border-radius:12px; margin-top:0;">
+    📊 İçe Aktar
+  </button>
           </div>
           
           <div id="csvResult" style="margin-top:14px; font-size:13px; color:var(--ink-faint); min-height:24px; padding:10px; background:var(--panel-2); border-radius:10px; border:1px solid var(--line-soft);"></div>
@@ -4772,7 +4775,16 @@ document.getElementById("csvCloseBtn")?.addEventListener("click", () => {
   document.getElementById('csvPanel').classList.remove('is-active');
   document.body.style.overflow = '';
 });
+// Dosya seç butonuna tıklayınca input'u tetikle
+document.getElementById("csvUploadBtn")?.addEventListener("click", () => {
+  document.getElementById("csvUpload").click();
+});
 
+// Dosya seçildiğinde dosya adını göster
+document.getElementById("csvUpload")?.addEventListener("change", function() {
+  const fileName = this.files[0]?.name || "Dosya Seç";
+  document.getElementById("csvFileName").textContent = fileName;
+});
 // 3. CSV İşleme Motoru
 document.getElementById("processCsvBtn")?.addEventListener("click", async function() {
   const fileInput = document.getElementById("csvUpload");
