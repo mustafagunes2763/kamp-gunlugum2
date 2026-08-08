@@ -1335,7 +1335,7 @@
           </p>
           
           <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-  <input type="file" id="csvUpload" accept=".csv" style="display:none;">
+  <input type="file" id="csvUpload" accept=".csv,.json" style="display:none;">
   <button type="button" id="csvUploadBtn" style="flex:1; min-width:200px; background:var(--panel-2); border:1px solid var(--line-soft); border-radius:10px; padding:14px 18px; color:var(--ink); font-family:var(--font-display); font-weight:600; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:10px; transition: all 0.2s; border: 1px dashed var(--mint);">
     <span style="font-size:20px;">📁</span>
     <span id="csvFileName">Dosya Seç</span>
@@ -1349,10 +1349,11 @@
           <div id="csvResult" style="margin-top:14px; font-size:13px; color:var(--ink-faint); min-height:24px; padding:10px; background:var(--panel-2); border-radius:10px; border:1px solid var(--line-soft);"></div>
           
           <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
-            <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Mi Home</span>
-            <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Huawei Health</span>
-            <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Tarih &amp; Kilo &amp; Yağ</span>
-            <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Adım &amp; Uyku</span>
+  <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Mi Home</span>
+  <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Huawei Health</span>
+  <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Tarih &amp; Kilo &amp; Yağ</span>
+  <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ Adım &amp; Uyku</span>
+  <span style="font-size:9px; background:var(--panel-2); padding:4px 10px; border-radius:6px; color:var(--ink-faint); border:1px solid var(--line-soft);">✅ JSON Desteği</span>   <!-- 🆕 EKLENDİ -->
           </div>
         </div>
       </section>
@@ -4785,13 +4786,14 @@ document.getElementById("csvUpload")?.addEventListener("change", function() {
   const fileName = this.files[0]?.name || "Dosya Seç";
   document.getElementById("csvFileName").textContent = fileName;
 });
-// 3. CSV İşleme Motoru
+
+    // 3. CSV / JSON İşleme Motoru
 document.getElementById("processCsvBtn")?.addEventListener("click", async function() {
   const fileInput = document.getElementById("csvUpload");
   const resultDiv = document.getElementById("csvResult");
   
   if (!fileInput || !fileInput.files || !fileInput.files[0]) {
-    resultDiv.innerHTML = "❌ Lütfen bir CSV dosyası seç!";
+    resultDiv.innerHTML = "❌ Lütfen bir dosya seç!";
     resultDiv.style.color = "var(--coral)";
     return;
   }
@@ -4814,86 +4816,158 @@ document.getElementById("processCsvBtn")?.addEventListener("click", async functi
   reader.onload = async function(e) {
     try {
       const text = e.target.result;
-      const lines = text.split('\n').filter(line => line.trim());
-      
-      if (lines.length < 2) {
-        resultDiv.innerHTML = "❌ Dosya boş veya geçersiz format!";
-        resultDiv.style.color = "var(--coral)";
-        return;
-      }
-      
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      
-      const findIndex = (keywords) => {
-        return headers.findIndex(h => keywords.some(k => h.includes(k)));
-      };
-      
-      const dateIdx = findIndex(['tarih', 'date', 'gün']);
-      const weightIdx = findIndex(['kilo', 'weight', 'vücut ağırlığı']);
-      const fatIdx = findIndex(['yağ', 'fat', 'body fat', 'vücut yağ']);
-      const stepsIdx = findIndex(['adım', 'step', 'steps']);
-      const sleepIdx = findIndex(['uyku', 'sleep', 'uyku süresi']);
-      const sleepScoreIdx = findIndex(['uyku puanı', 'sleep score', 'uyku kalitesi']);
+      const fileType = file.name.split('.').pop().toLowerCase();
       
       let imported = 0;
       let skipped = 0;
       let hasWeight = false;
       let hasSteps = false;
       let hasSleep = false;
+      let records = [];
       
-      resultDiv.innerHTML = "⏳ Veriler işleniyor...";
-      
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.trim());
-        if (cols.length < 2) continue;
-        
-        let dateStr = dateIdx >= 0 ? cols[dateIdx] : "";
-        if (!dateStr) continue;
-        
-        let formattedDate = dateStr;
-        if (dateStr.includes('/')) {
-          const parts = dateStr.split('/');
-          if (parts[2] && parts[2].length === 4) {
-            formattedDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-          } else if (parts[0] && parts[0].length === 4) {
-            formattedDate = `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
+      // ============= JSON OKU =============
+      if (fileType === 'json') {
+        try {
+          const jsonData = JSON.parse(text);
+          
+          // JSON array mi yoksa obje mi kontrol et
+          let dataArray = Array.isArray(jsonData) ? jsonData : [jsonData];
+          
+          // Eğer tek bir obje içinde data varsa (örnek: { "records": [...] })
+          if (!Array.isArray(jsonData) && jsonData.records) {
+            dataArray = jsonData.records;
           }
-        } else if (dateStr.includes('.')) {
-          const parts = dateStr.split('.');
-          if (parts[2] && parts[2].length === 4) {
-            formattedDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+          if (!Array.isArray(jsonData) && jsonData.data) {
+            dataArray = jsonData.data;
           }
+          
+          // Her bir kaydı işle
+          dataArray.forEach(item => {
+            // Anahtar kelimelere göre verileri bul
+            let dateStr = item.date || item.tarih || item.timestamp || item.gün || "";
+            let weight = parseFloat(item.weight || item.kilo || item.agirlik || 0);
+            let bodyFat = parseFloat(item.bodyFat || item.fat || item.yağ || item.yağOrani || 0);
+            let steps = parseInt(item.steps || item.adim || 0);
+            let sleep = parseFloat(item.sleep || item.uyku || item.uykuSuresi || 0);
+            let sleepScore = parseInt(item.sleepScore || item.uykuPuanı || 0);
+            
+            // Tarih yoksa veya kilo yoksa atla
+            if (!dateStr && !weight) return;
+            
+            // Tarihi formatla
+            let formattedDate = formatDate(dateStr);
+            if (!formattedDate) {
+              // Eğer timestamp ise dene
+              if (!isNaN(dateStr) && dateStr.length === 10) {
+                const d = new Date(parseInt(dateStr) * 1000);
+                formattedDate = d.toISOString().split('T')[0];
+              }
+            }
+            
+            if (!formattedDate || isNaN(new Date(formattedDate).getTime())) {
+              skipped++;
+              return;
+            }
+            
+            if (weight > 0) hasWeight = true;
+            if (steps > 0) hasSteps = true;
+            if (sleep > 0) hasSleep = true;
+            
+            records.push({
+              date: formattedDate,
+              weight: weight || "",
+              bodyFat: bodyFat || "",
+              steps: steps || "",
+              sleepH: sleep ? Math.floor(sleep) : "",
+              sleepM: sleep ? Math.round((sleep - Math.floor(sleep)) * 60) : "",
+              sleepScore: sleepScore || "",
+              campDay: ""
+            });
+          });
+          
+        } catch(jsonErr) {
+          resultDiv.innerHTML = "❌ JSON dosyası okunamadı! Geçerli bir JSON değil.";
+          resultDiv.style.color = "var(--coral)";
+          return;
         }
         
-        if (isNaN(new Date(formattedDate).getTime())) {
-          skipped++;
-          continue;
+      // ============= CSV OKU =============
+      } else if (fileType === 'csv') {
+        const lines = text.split('\n').filter(line => line.trim());
+        if (lines.length < 2) {
+          resultDiv.innerHTML = "❌ Dosya boş veya geçersiz format!";
+          resultDiv.style.color = "var(--coral)";
+          return;
         }
         
-        const weight = weightIdx >= 0 ? parseFloat(cols[weightIdx]) || 0 : 0;
-        const bodyFat = fatIdx >= 0 ? parseFloat(cols[fatIdx]) || 0 : 0;
-        const steps = stepsIdx >= 0 ? parseInt(cols[stepsIdx]) || 0 : 0;
-        const sleep = sleepIdx >= 0 ? parseFloat(cols[sleepIdx]) || 0 : 0;
-        const sleepScore = sleepScoreIdx >= 0 ? parseInt(cols[sleepScoreIdx]) || 0 : 0;
+        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
         
-        if (weight > 0) hasWeight = true;
-        if (steps > 0) hasSteps = true;
-        if (sleep > 0) hasSleep = true;
-        
-        const payload = {
-          date: formattedDate,
-          weight: weight || "",
-          bodyFat: bodyFat || "",
-          steps: steps || "",
-          sleepH: sleep ? Math.floor(sleep) : "",
-          sleepM: sleep ? Math.round((sleep - Math.floor(sleep)) * 60) : "",
-          sleepScore: sleepScore || "",
-          campDay: ""
+        const findIndex = (keywords) => {
+          return headers.findIndex(h => keywords.some(k => h.includes(k)));
         };
         
-        await setDoc(doc(db, "users", auth.currentUser.uid, "logs", formattedDate), payload, { merge: true });
-        imported++;
+        const dateIdx = findIndex(['tarih', 'date', 'gün']);
+        const weightIdx = findIndex(['kilo', 'weight', 'vücut ağırlığı']);
+        const fatIdx = findIndex(['yağ', 'fat', 'body fat', 'vücut yağ']);
+        const stepsIdx = findIndex(['adım', 'step', 'steps']);
+        const sleepIdx = findIndex(['uyku', 'sleep', 'uyku süresi']);
+        const sleepScoreIdx = findIndex(['uyku puanı', 'sleep score', 'uyku kalitesi']);
+        
+        resultDiv.innerHTML = "⏳ Veriler işleniyor...";
+        
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',').map(c => c.trim());
+          if (cols.length < 2) continue;
+          
+          let dateStr = dateIdx >= 0 ? cols[dateIdx] : "";
+          if (!dateStr) continue;
+          
+          let formattedDate = formatDate(dateStr);
+          if (!formattedDate || isNaN(new Date(formattedDate).getTime())) {
+            skipped++;
+            continue;
+          }
+          
+          const weight = weightIdx >= 0 ? parseFloat(cols[weightIdx]) || 0 : 0;
+          const bodyFat = fatIdx >= 0 ? parseFloat(cols[fatIdx]) || 0 : 0;
+          const steps = stepsIdx >= 0 ? parseInt(cols[stepsIdx]) || 0 : 0;
+          const sleep = sleepIdx >= 0 ? parseFloat(cols[sleepIdx]) || 0 : 0;
+          const sleepScore = sleepScoreIdx >= 0 ? parseInt(cols[sleepScoreIdx]) || 0 : 0;
+          
+          if (weight > 0) hasWeight = true;
+          if (steps > 0) hasSteps = true;
+          if (sleep > 0) hasSleep = true;
+          
+          records.push({
+            date: formattedDate,
+            weight: weight || "",
+            bodyFat: bodyFat || "",
+            steps: steps || "",
+            sleepH: sleep ? Math.floor(sleep) : "",
+            sleepM: sleep ? Math.round((sleep - Math.floor(sleep)) * 60) : "",
+            sleepScore: sleepScore || "",
+            campDay: ""
+          });
+        }
+        
+      } else {
+        resultDiv.innerHTML = "❌ Desteklenmeyen dosya formatı! Sadece CSV ve JSON kabul edilir.";
+        resultDiv.style.color = "var(--coral)";
+        return;
       }
+      
+      // ============= VERİLERİ KAYDET =============
+      let saved = 0;
+      for (const record of records) {
+        try {
+          await setDoc(doc(db, "users", auth.currentUser.uid, "logs", record.date), record, { merge: true });
+          saved++;
+        } catch(e) {
+          skipped++;
+        }
+      }
+      
+      imported = saved;
       
       let msg = `✅ ${imported} kayıt başarıyla içe aktarıldı!`;
       if (skipped > 0) msg += ` (${skipped} satır atlandı)`;
@@ -4912,7 +4986,7 @@ document.getElementById("processCsvBtn")?.addEventListener("click", async functi
       loadDayData(document.getElementById("logDate").value);
       
     } catch(err) {
-      console.error("CSV işleme hatası:", err);
+      console.error("İşleme hatası:", err);
       resultDiv.innerHTML = `❌ Hata: ${err.message}`;
       resultDiv.style.color = "var(--coral)";
     } finally {
@@ -4923,6 +4997,48 @@ document.getElementById("processCsvBtn")?.addEventListener("click", async functi
   
   reader.readAsText(file);
 });
+
+// ============= YARDIMCI FONKSİYON =============
+function formatDate(dateStr) {
+  if (!dateStr) return null;
+  
+  // YYYY-MM-DD formatındaysa
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+  
+  // DD/MM/YYYY
+  if (dateStr.includes('/')) {
+    const parts = dateStr.split('/');
+    if (parts[2] && parts[2].length === 4) {
+      return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+    }
+    if (parts[0] && parts[0].length === 4) {
+      return `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
+    }
+  }
+  
+  // DD.MM.YYYY
+  if (dateStr.includes('.')) {
+    const parts = dateStr.split('.');
+    if (parts[2] && parts[2].length === 4) {
+      return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+    }
+  }
+  
+  // DD-MM-YYYY
+  if (dateStr.includes('-')) {
+    const parts = dateStr.split('-');
+    if (parts[2] && parts[2].length === 4) {
+      return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+    }
+    if (parts[0] && parts[0].length === 4) {
+      return dateStr;
+    }
+  }
+  
+  return null;
+}
+  
+  
     
   </script>
 
