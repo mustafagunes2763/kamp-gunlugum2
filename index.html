@@ -870,6 +870,109 @@ html{ color-scheme: dark; }
 .st-bars .fill{ height:100%; border-radius:4px; transition: width .4s ease; }
 .st-bars .val{ font-family: var(--font-mono); font-size:11px; color: var(--ink-dim); text-align:right; min-width:44px; }
 
+/* --- CLAUDE'A İLET --- */
+.id-types{ display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; margin-bottom:10px; }
+.id-types button{ min-height:40px; border-radius:11px; border:1px solid var(--line); background: var(--panel-2); color: var(--ink-dim); font-family: var(--font-display); font-size:13px; font-weight:600; cursor:pointer; padding:0 4px; }
+.id-types button[aria-pressed="true"]{ color: var(--ink); background: rgba(61,220,151,0.12); border-color: rgba(61,220,151,0.45); }
+.id-types button[data-type="bug"][aria-pressed="true"]{ background: rgba(255,143,163,0.12); border-color: rgba(255,143,163,0.45); }
+.id-types button[data-type="change"][aria-pressed="true"]{ background: rgba(169,156,255,0.14); border-color: rgba(169,156,255,0.45); }
+.id-text-in{ min-height:96px; }
+.id-photo-row{ display:flex; align-items:center; gap:10px; margin-top:10px; }
+.id-photo-row .bc-ghost{ height:42px; font-size:13px; }
+.id-photo-prev{ position:relative; display:flex; }
+.id-photo-prev img{ height:56px; width:auto; max-width:120px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
+.id-photo-prev button{ position:absolute; top:-8px; right:-8px; width:26px; height:26px; border-radius:50%; border:1px solid var(--line); background: var(--bg-2); color: var(--ink); font-size:12px; cursor:pointer; padding:0; }
+.id-form-acts{ display:flex; gap:8px; margin-top:12px; }
+.id-form-acts .btn-save{ flex:1; }
+.id-form-acts [hidden]{ display:none; }
+.id-item{ background: var(--panel); border:1px solid var(--line); border-radius:16px; padding:12px 14px; margin-top:8px; }
+.id-item.sent{ opacity:.85; }
+.id-item.done{ opacity:.55; }
+.id-top{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.id-type{ font-family: var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 8px; border-radius:7px; background: rgba(61,220,151,0.12); color: var(--accent-text); }
+.id-type.bug{ background: rgba(255,143,163,0.14); color:#FF8FA3; }
+.id-type.change{ background: rgba(169,156,255,0.16); color:#B9AEFF; }
+.id-date{ font-family: var(--font-mono); font-size:11px; color: var(--ink-faint); }
+.id-text{ margin:8px 0 0; font-size:14px; line-height:1.5; color: var(--ink); white-space:pre-wrap; word-break:break-word; }
+.id-item.done .id-text{ text-decoration: line-through; text-decoration-color: var(--ink-faint); }
+.id-photo{ display:block; margin-top:10px; }
+.id-photo img{ max-width:100%; max-height:180px; border-radius:10px; border:1px solid var(--line); display:block; }
+.id-acts{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.id-acts button{ min-height:36px; padding:0 12px; border-radius:10px; border:1px solid var(--line); background: var(--panel-2); color: var(--ink-dim); font-family: var(--font-display); font-size:12px; font-weight:600; cursor:pointer; }
+.id-acts .ok{ color: var(--accent-text); border-color: rgba(61,220,151,0.4); }
+.id-acts .del{ margin-left:auto; color:#FF8FA3; }
+.id-hint{ font-size:12px; color: var(--ink-faint); margin:2px 0 0; }
+.id-send{ position:sticky; bottom:0; display:grid; grid-template-columns: 1fr auto; gap:8px; padding:12px 0 calc(var(--safe-bottom, 0px) + 12px); margin-top:14px; background: linear-gradient(to top, var(--bg) 70%, transparent); }
+.id-send[hidden]{ display:none; }
+.id-send .bc-ghost{ height:auto; }
+/* --- KİTAP/FİLM PDF --- */
+.pr-lab{ font-family: var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin:16px 0 8px; }
+.pr-lab:first-child{ margin-top:2px; }
+.pr-seg{ display:flex; gap:6px; }
+.pr-seg button{ flex:1; min-height:42px; padding:0 8px; border-radius:12px; border:1px solid var(--line); background: var(--panel); color: var(--ink-dim); font-family: var(--font-display); font-size:13px; font-weight:600; cursor:pointer; }
+.pr-seg button[aria-pressed="true"]{ background: rgba(61,220,151,0.12); border-color: rgba(61,220,151,0.45); color: var(--ink); }
+.pr-chks{ display:flex; flex-direction:column; gap:6px; }
+.pr-chk{ display:flex; align-items:center; gap:10px; min-height:46px; padding:0 14px; border-radius:12px; border:1px solid var(--line); background: var(--panel); color: var(--ink-dim); font-family: var(--font-display); font-size:14px; font-weight:600; text-align:left; cursor:pointer; }
+.pr-chk::before{ content:""; width:18px; height:18px; border-radius:5px; border:1.5px solid var(--ink-faint); box-sizing:border-box; flex-shrink:0; }
+.pr-chk[aria-pressed="true"]{ color: var(--ink); }
+.pr-chk[aria-pressed="true"]::before{ border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%230A0C14' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat; }
+.pr-go{ width:100%; margin-top:20px !important; }
+.pr-go:disabled{ opacity:.5; }
+.pr-tip{ font-size:12px; color: var(--ink-faint); line-height:1.5; margin:10px 2px 0; text-align:center; }
+.panel-head-acts{ display:flex; align-items:center; gap:8px; }
+#printRoot{ display:none; }
+@media print {
+  @page { size: A4; margin: 12mm 12mm 14mm; }
+  html{ color-scheme: light !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body{ background:#fff !important; overflow: visible !important; height:auto !important; min-height:0 !important; width:auto !important; margin:0 !important; padding:0 !important; }
+  html.signed-in body > *:not(#printRoot), html body > *:not(#printRoot), .signed-in #mainApp, .signed-in #authScreen{ display:none !important; }
+  #printRoot{ display:block !important; width:100%; }
+  #printRoot *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+.pp{ font-family: "Space Grotesk", system-ui, sans-serif; color:#14161E; font-size:10.5pt; line-height:1.4; }
+.pp-head{ border-bottom:2px solid #14161E; padding-bottom:10px; margin-bottom:12px; }
+.pp-brand{ font-family: "JetBrains Mono", monospace; font-size:8pt; letter-spacing:.16em; text-transform:uppercase; color:#0E9A61; font-weight:600; }
+.pp h1{ font-size:26pt; line-height:1.1; margin:4px 0 3px; letter-spacing:-.01em; }
+.pp-date{ font-size:9pt; color:#6B7080; }
+.pp-stats{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:6px; }
+.pp-stats div{ border:1px solid #E3E5EC; border-radius:8px; padding:7px 10px; }
+.pp-stats b{ display:block; font-family: "JetBrains Mono", monospace; font-size:15pt; line-height:1.2; }
+.pp-stats span{ font-size:8pt; color:#6B7080; }
+.pp-sec{ font-size:12.5pt; margin:18px 0 2px; padding-bottom:5px; border-bottom:1px solid #DADDE5; break-after: avoid; }
+.pp-sec span{ font-family: "JetBrains Mono", monospace; font-size:9pt; color:#8A8F9E; font-weight:600; margin-left:4px; }
+.pp-item{ display:grid; grid-template-columns: 24mm minmax(0, 1fr); gap:0 5mm; padding:9px 0; border-bottom:1px solid #EEF0F4; break-inside: avoid; }
+.pp-item.nocover{ grid-template-columns: minmax(0, 1fr); }
+.pp-item.has-photos{ break-inside: auto; }
+.pp-cover{ width:24mm; aspect-ratio: 2 / 3; border-radius:4px; overflow:hidden; background:#EEF0F4; display:flex; align-items:center; justify-content:center; break-inside: avoid; }
+.pp-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+.pp-cover span{ font-size:7pt; text-align:center; padding:4px; color:#6B7080; }
+.pp-main{ min-width:0; }
+.pp-main h3{ font-size:12.5pt; line-height:1.25; margin:0; }
+.pp-titlerow{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+.pp-rate{ font-family: "JetBrains Mono", monospace; font-weight:700; font-size:12pt; color:#B07D00; white-space:nowrap; }
+.pp-rate small{ font-size:8pt; color:#8A8F9E; }
+.pp-sub{ font-size:9.5pt; color:#4A4F5E; margin-top:1px; }
+.pp-meta{ font-size:8.5pt; color:#6B7080; margin-top:4px; }
+.pp-stars{ color:#E0A100; letter-spacing:1px; margin-left:4px; }
+.pp-stars i{ color:#D5D8E0; font-style:normal; }
+.pp-note{ margin-top:7px; font-size:9.5pt; line-height:1.5; color:#2A2E3A; border-left:2px solid #0E9A61; padding-left:9px; }
+.pp-note p{ margin:0 0 4px; }
+.pp-photos{ grid-column: 1 / -1; display:grid; gap:5px; margin-top:8px; }
+.pp-photos.book{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.pp-photos.film{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pp-photos figure{ margin:0; break-inside: avoid; }
+.pp-photos img{ width:100%; aspect-ratio: 3 / 4; object-fit:cover; border-radius:4px; display:block; background:#EEF0F4; }
+.pp-photos.film img{ aspect-ratio: 16 / 9; }
+.pp-photos figcaption{ font-size:7.5pt; color:#4A4F5E; margin-top:3px; line-height:1.35; }
+.pp-foot{ margin-top:18px; font-size:7.5pt; color:#8A8F9E; text-align:center; }
+
+/* --- RAPOR BÖLÜMLERİ --- */
+.pdf-secs{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:22px; }
+.pdf-secs button{ display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:0 12px; border-radius:10px; border:1px solid var(--line-soft); background: var(--panel-2); color: var(--ink-faint); font-family: var(--font-display); font-size:12px; font-weight:600; cursor:pointer; }
+.pdf-secs button::before{ content:""; width:14px; height:14px; border-radius:4px; border:1.5px solid currentColor; box-sizing:border-box; flex-shrink:0; }
+.pdf-secs button[aria-pressed="true"]{ border-color: rgba(61,220,151,0.45); background: rgba(61,220,151,0.10); color: var(--ink); }
+.pdf-secs button[aria-pressed="true"]::before{ border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%230A0C14' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat; }
+.pdf-sec-all{ background:none; border:none; padding:6px 0; color: var(--accent-text); font-family: var(--font-display); font-size:12px; font-weight:700; cursor:pointer; }
 /* --- SINAVLAR --- */
 .ex-row{ display:flex; align-items:center; gap:12px; width:100%; min-height:60px; padding:8px 0; border:none; border-bottom:1px solid var(--line-soft); background:none; color: var(--ink); text-align:left; cursor:pointer; font-family: var(--font-display); }
 .ex-row:last-of-type{ border-bottom:none; }
@@ -1246,6 +1349,10 @@ html{ color-scheme: dark; }
         <span class="link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg></span>
         <span class="link-text"><span class="link-title">CSV yükle</span><span class="link-sub">Mi Home / Huawei raporu</span></span>
       </a>
+      <a href="#" class="drawer-link" id="ideasLink">
+        <span class="link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V16h5v-.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/></svg></span>
+        <span class="link-text"><span class="link-title">Claude'a ilet</span><span class="link-sub" id="ideasLinkSub">uygulama için fikir ve hatalar</span></span>
+      </a>
       <a href="#" class="drawer-link" id="themeToggle">
         <span class="link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.2"/><circle cx="12" cy="7.5" r="1.2"/><circle cx="16" cy="10" r="1.2"/><path d="M13 21a3 3 0 0 1 0-6h3"/></svg></span>
         <span class="link-text"><span class="link-title">Vurgu rengi</span><span class="link-sub" id="themeStatus">Vurgu: Yeşil</span></span>
@@ -1565,7 +1672,7 @@ html{ color-scheme: dark; }
 
       <!-- PDF AYAR MODALI -->
       <div id="pdfOptionsOverlay" style="display:none; position:fixed; inset:0; background:rgba(5,6,12,0.65); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; padding:20px;">
-        <div style="background:var(--bg-2); border:1px solid var(--line); border-radius:20px; padding:24px 20px; width:100%; max-width:340px;">
+        <div style="background:var(--bg-2); border:1px solid var(--line); border-radius:20px; padding:24px 20px; width:100%; max-width:360px; max-height:calc(100vh - 40px); overflow-y:auto; overscroll-behavior:contain;">
           <span style="font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--ink); display:block; margin-bottom:4px;">Rapor ayarları</span>
           <span style="font-size:11px; color:var(--ink-faint); display:block; margin-bottom:18px;">Göndereceğin kişiye göre ayarla.</span>
 
@@ -1580,6 +1687,12 @@ html{ color-scheme: dark; }
             <button type="button" class="pdf-opt-btn is-active" data-group="detail" data-value="summary" style="flex:1; background:var(--panel-2); border:1px solid var(--line-soft); color:var(--ink); padding:10px; border-radius:10px; font-family:var(--font-display); font-weight:600; font-size:12px; cursor:pointer;">Özet</button>
             <button type="button" class="pdf-opt-btn" data-group="detail" data-value="full" style="flex:1; background:var(--panel-2); border:1px solid var(--line-soft); color:var(--ink); padding:10px; border-radius:10px; font-family:var(--font-display); font-weight:600; font-size:12px; cursor:pointer;">Detaylı</button>
           </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint);">Raporda neler olsun</span>
+            <button type="button" id="pdfSecAll" class="pdf-sec-all">Tümünü seç</button>
+          </div>
+          <div class="pdf-secs" id="pdfSecs" role="group" aria-label="Rapor bölümleri"></div>
 
           <div style="display:flex; gap:8px;">
             <button type="button" id="pdfCancelBtn" style="flex:1; background:transparent; border:1px solid var(--line-soft); color:var(--ink-dim); padding:12px; border-radius:12px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer;">Vazgeç</button>
@@ -1891,7 +2004,7 @@ html{ color-scheme: dark; }
     <div id="bkListView">
       <div class="panel-head">
         <div><span class="eyebrow" id="bkEyebrow">Kitaplık</span><span class="panel-title">Kitaplar</span></div>
-        <button class="drawer-close" id="booksCloseBtn" type="button" aria-label="Kapat">✕</button>
+        <div class="panel-head-acts"><button type="button" class="st-pdf-btn" id="bkPdfBtn" aria-label="Kitaplarımı PDF olarak al"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>PDF</button><button class="drawer-close" id="booksCloseBtn" type="button" aria-label="Kapat">✕</button></div>
       </div>
       <div class="stack" style="gap: 14px;">
         <div class="bk-summary" id="bkSummary" hidden></div>
@@ -1963,7 +2076,7 @@ html{ color-scheme: dark; }
     <div id="fmListView">
       <div class="panel-head">
         <div><span class="eyebrow" id="fmEyebrow">Sinema</span><span class="panel-title">Filmler</span></div>
-        <button class="drawer-close" id="filmsCloseBtn" type="button" aria-label="Kapat">✕</button>
+        <div class="panel-head-acts"><button type="button" class="st-pdf-btn" id="fmPdfBtn" aria-label="Filmlerimi PDF olarak al"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>PDF</button><button class="drawer-close" id="filmsCloseBtn" type="button" aria-label="Kapat">✕</button></div>
       </div>
       <div class="stack" style="gap: 14px;">
         <div class="bk-summary" id="fmSummary" hidden></div>
@@ -2023,6 +2136,53 @@ html{ color-scheme: dark; }
       <textarea id="fmvText" placeholder="Not ya da replik" aria-label="Not"></textarea>
       <div class="acts" style="display:flex;"><button type="button" id="fmvCancel">Vazgeç</button><button type="button" id="fmvSave" style="background: var(--accent); color: var(--accent-ink); border-color: var(--accent);">Kaydet</button></div>
     </div>
+  </div>
+</div>
+
+<section class="full-panel" id="ideasPanel" aria-label="Claude'a ilet">
+  <div class="panel-inner">
+    <div class="panel-head">
+      <div><span class="eyebrow" id="idEyebrow">Uygulama için</span><span class="panel-title">Claude'a ilet</span></div>
+      <button class="drawer-close" id="ideasCloseBtn" type="button" aria-label="Kapat">✕</button>
+    </div>
+    <div class="stack" style="gap: 14px;">
+      <section class="card">
+        <div class="card-body" style="padding-top:16px;">
+          <div class="id-types" id="idTypes" role="group" aria-label="Tür">
+            <button type="button" data-type="feature" aria-pressed="true">Yeni özellik</button>
+            <button type="button" data-type="bug" aria-pressed="false">Hata</button>
+            <button type="button" data-type="change" aria-pressed="false">Değişiklik</button>
+          </div>
+          <textarea class="bk-note id-text-in" id="idText" placeholder="Aklına gelen fikri yaz…" aria-label="Fikir"></textarea>
+          <div class="id-photo-row">
+            <button type="button" class="bc-ghost" id="idPhotoBtn">Ekran görüntüsü ekle</button>
+            <div class="id-photo-prev" id="idPhotoPrev"></div>
+          </div>
+          <div class="id-form-acts">
+            <button type="button" class="bc-ghost" id="idCancelEdit" hidden>Vazgeç</button>
+            <button type="button" class="btn-save" id="idAddBtn" style="margin:0;">Listeye ekle</button>
+          </div>
+        </div>
+      </section>
+      <div id="idLists"></div>
+    </div>
+    <div class="id-send" id="idSendBar" hidden>
+      <button type="button" class="btn-save" id="idSendBtn" style="margin:0;">Claude'a gönder</button>
+      <button type="button" class="bc-ghost" id="idCopyBtn">Kopyala</button>
+    </div>
+  </div>
+</section>
+<input type="file" id="idPhotoInput" accept="image/*" hidden>
+
+<div class="bc-modal" id="prModal" role="dialog" aria-modal="true" aria-labelledby="prTitle">
+  <div class="bc-sheet">
+    <div class="bc-head">
+      <div><span class="eyebrow">PDF çıktısı</span><h2 id="prTitle">Kitaplarım PDF</h2></div>
+      <button class="drawer-close" id="prClose" type="button" aria-label="Kapat">✕</button>
+    </div>
+    <div id="prBody"></div>
+    <button type="button" class="btn-save pr-go" id="prGo">PDF oluştur</button>
+    <p class="pr-tip">Açılan ekranda yazıcı olarak <b>"PDF olarak kaydet"</b>i seç.</p>
   </div>
 </div>
 
@@ -2240,7 +2400,7 @@ html{ color-scheme: dark; }
                 <div class="field"><label for="exTime">Saat <span class="unit">BOŞ OLABİLİR</span></label><div class="input-shell"><input type="time" id="exTime"></div></div>
               </div>
               <div class="field" id="exScoreWrap" hidden><label for="exScore">Aldığım not <span class="unit">İSTEĞE BAĞLI</span></label><div class="input-shell"><input type="text" id="exScore" maxlength="12" inputmode="decimal" placeholder="Örn: 85"></div></div>
-              <div class="ex-form-acts"><button type="button" class="k-ghost" id="exCancel">Vazgeç</button><button type="button" class="k-pill" id="exSave">Kaydet</button></div>
+              <div class="ex-form-acts"><button type="button" class="k-ghost" id="exCancel" data-back>Vazgeç</button><button type="button" class="k-pill" id="exSave">Kaydet</button></div>
               <button type="button" class="bk-del" id="exDelete" hidden>Sınavı sil</button>
             </div>
             <button type="button" class="k-ghost ex-add" id="exAddBtn">+ Sınav ekle</button>
@@ -6495,6 +6655,7 @@ async function refreshStudyTile() {
     document.getElementById("sumStudyWeek").textContent = `bu hafta ${fmtMin(week)}`;
     const max = Math.max(60, ...days.map(d => d.total));
     if (window.exRefresh) window.exRefresh();
+    if (window.idRefresh) window.idRefresh();
     document.getElementById("sumStudyBars").innerHTML = days.map((d, i) =>
       `<div class="${i === 6 ? "is-today" : ""}" style="height:${Math.max(8, Math.round(d.total / max * 100))}%"></div>`).join("");
   } catch (e) { console.error("Ders kutusu güncellenemedi:", e); }
@@ -6528,6 +6689,26 @@ document.addEventListener("visibilitychange", () => { if (document.visibilitySta
 
   let pdfTheme = "light";
   let pdfDetail = "summary";
+
+  // Raporda hangi bölümler olsun (telefonda hatırlanır)
+  const PDF_SECS = [["ozet", "Genel özet"], ["kilo", "Kilo ve vücut"], ["beslenme", "Beslenme"], ["takviye", "Takviyeler"],
+    ["antrenman", "Antrenman ve rekorlar"], ["kardiyo", "Kardiyo"], ["namaz", "Namaz"], ["mac", "Halı saha"], ["ders", "Ders çalışma"], ["kitap", "Kitap ve film"]];
+  let pdfSecSel = {};
+  PDF_SECS.forEach(([k]) => { pdfSecSel[k] = true; });
+  try { const saved = JSON.parse(localStorage.getItem("pdfSections") || "null"); if (saved && typeof saved === "object") PDF_SECS.forEach(([k]) => { if (k in saved) pdfSecSel[k] = !!saved[k]; }); } catch (e) {}
+  function renderPdfSecs() {
+    const box = document.getElementById("pdfSecs"); if (!box) return;
+    box.innerHTML = PDF_SECS.map(([k, l]) => `<button type="button" data-sec="${k}" aria-pressed="${!!pdfSecSel[k]}">${l}</button>`).join("");
+    const allOn = PDF_SECS.every(([k]) => pdfSecSel[k]);
+    document.getElementById("pdfSecAll").textContent = allOn ? "Hiçbirini seçme" : "Tümünü seç";
+    box.querySelectorAll("[data-sec]").forEach(b => b.addEventListener("click", () => { pdfSecSel[b.dataset.sec] = !pdfSecSel[b.dataset.sec]; savePdfSecs(); renderPdfSecs(); }));
+  }
+  function savePdfSecs() { try { localStorage.setItem("pdfSections", JSON.stringify(pdfSecSel)); } catch (e) {} }
+  document.getElementById("pdfSecAll").addEventListener("click", () => {
+    const allOn = PDF_SECS.every(([k]) => pdfSecSel[k]);
+    PDF_SECS.forEach(([k]) => { pdfSecSel[k] = !allOn; }); savePdfSecs(); renderPdfSecs();
+  });
+  renderPdfSecs();
 
   // Seçim butonlarının aktiflik durumunu yönet
   document.querySelectorAll(".pdf-opt-btn").forEach(btn => {
@@ -6568,6 +6749,8 @@ document.addEventListener("visibilitychange", () => { if (document.visibilitySta
   if (pdfConfirmBtn) {
     pdfConfirmBtn.addEventListener("click", async () => {
       if(!auth.currentUser) return;
+      const S = { ...pdfSecSel };
+      if (!PDF_SECS.some(([k]) => S[k])) { showAppToast("Raporda en az bir bölüm seç"); return; }
       pdfOptionsOverlay.style.display = "none";
       const originalText = exportPdfBtn.innerHTML;
       exportPdfBtn.innerHTML = "⏳ Hazırlanıyor...";
@@ -6829,30 +7012,36 @@ function pdfText(text, x, y, options) {
         y += 12;
 
         // ÖZET
+        if (S.ozet) {
         sectionTitle("Genel Özet", accent);
         statRow("Kayıtlı Gün Sayısı", rows.length + " gün");
         statRow("Ortalama Uyku Puanı", avgSleepScore || "—");
         statRow("Ortalama Adım", avgSteps.toLocaleString('tr-TR'));
         statRow("Toplam Adım", totalSteps.toLocaleString('tr-TR'));
         y += 4;
+        }
 
         // TARTI
+        if (S.kilo) {
         sectionTitle("Kilo Değişimi", mint);
         statRow("Başlangıç Kilosu", weightStart ? weightStart + " kg" : "—");
         statRow("Güncel Kilo", weightEnd ? weightEnd + " kg" : "—");
         statRow("Toplam Değişim", (weightDelta > 0 ? "+" : "") + weightDelta.toFixed(1) + " kg");
         y += 4;
+        }
 
         // BESLENME
+        if (S.beslenme) {
         sectionTitle("Beslenme", coral);
         statRow("Ortalama Alınan Kalori", avgCalIn ? avgCalIn + " kcal" : "—");
         statRow("Ortalama Protein", avgProtein ? avgProtein + " g" : "—");
         y += 4;
+        }
 
         // DÖNEM VE VÜCUT KOMPOZİSYONU
         let hgRows = null;
-        try { hgRows = window.hgReport ? await window.hgReport(window.rangeStart, window.rangeEnd) : null; } catch (e) { console.error(e); }
-        if (hgRows && hgRows.length) {
+        if (S.kilo) { try { hgRows = window.hgReport ? await window.hgReport(window.rangeStart, window.rangeEnd) : null; } catch (e) { console.error(e); } }
+        if (S.kilo && hgRows && hgRows.length) {
           sectionTitle("Dönem ve Vücut Kompozisyonu", accent);
           const pdfSafe = (x) => String(x).replace(/−/g, "-").replace(/→/g, "->").replace(/≈/g, "~");
           hgRows.forEach(([k, v]) => statRow(pdfSafe(k), pdfSafe(v)));
@@ -6860,7 +7049,7 @@ function pdfText(text, x, y, options) {
         }
 
         // MEZURA
-        if (lastMeasure) {
+        if (S.kilo && lastMeasure) {
           sectionTitle("Mezura & Recomp", accent);
           statRow("Son Omuz Ölçümü", lastMeasure.shoulder ? lastMeasure.shoulder + " cm" : "—");
           statRow("Son Bel Ölçümü", lastMeasure.waist ? lastMeasure.waist + " cm" : "—");
@@ -6872,7 +7061,7 @@ function pdfText(text, x, y, options) {
         }
 
         // TAKVİYELER
-        if (supList.length > 0) {
+        if (S.takviye && supList.length > 0) {
           sectionTitle("Takviye Kullanımı", mint);
           supList.forEach(sup => {
             statRow(sup.name, (supCounts[sup.id] || 0) + " gün");
@@ -6880,7 +7069,7 @@ function pdfText(text, x, y, options) {
           y += 4;
         }
         // --- KARDİYO İSTATİSTİKLERİ ---
-if (totalCardioSessions > 0) {
+if (S.kardiyo && totalCardioSessions > 0) {
   sectionTitle("Kardiyo Istatistikleri", coral);
   statRow("Toplam Kardiyo Seansı", totalCardioSessions + " seans");
   statRow("Toplam Süre", totalCardioDuration + " dk");
@@ -6891,7 +7080,7 @@ if (totalCardioSessions > 0) {
 }
 
         // --- KİŞİSEL REKORLAR (PR) ---
-        if (Object.keys(allTimePRs).length > 0) {
+        if (S.antrenman && Object.keys(allTimePRs).length > 0) {
           sectionTitle("Kişisel Rekorlar (PR)", accent);
           statRow("Bu Dönemde Kırılan PR", prsSetInPeriod.length + " hareket");
           statRow("Takip Edilen Hareket", Object.keys(allTimePRs).length + " hareket");
@@ -6902,7 +7091,7 @@ if (totalCardioSessions > 0) {
         }
 
         // --- HALI SAHA ---
-        if (matchList.length > 0) {
+        if (S.mac && matchList.length > 0) {
           sectionTitle("Halı Saha", coral);
           statRow("Oynanan Maç", matchList.length + " maç");
           statRow("Galibiyet / Beraberlik / Mağlubiyet", `${mWins} G · ${mDraws} B · ${mLosses} M`);
@@ -6915,7 +7104,7 @@ if (totalCardioSessions > 0) {
         }
 
         // --- DERS ÇALIŞMA ---
-        if (studyDays.length > 0) {
+        if (S.ders && studyDays.length > 0) {
           sectionTitle("Ders Çalışma", accent);
           statRow("Toplam Süre", pdfMin(studyTotal));
           statRow("Çalışılan Gün", studyDays.length + " gün");
@@ -6926,8 +7115,61 @@ if (totalCardioSessions > 0) {
 
 
         
+        // --- NAMAZ ÖZETİ ---
+        const nmRows = rows.filter(r => Array.isArray(r.prayerArray) && r.prayerArray.length > 0);
+        if (S.namaz && nmRows.length > 0) {
+          sectionTitle("Namaz", mint);
+          const nmFull = nmRows.filter(r => r.prayerArray.length >= 5).length;
+          const nmTotal = nmRows.reduce((a, r) => a + r.prayerArray.length, 0);
+          statRow("Namaz kaydı olan gün", nmRows.length + " gün");
+          statRow("5 vakit kılınan gün", nmFull + " gün");
+          statRow("Toplam kılınan vakit", nmTotal + " vakit");
+          const nmNames = { sabah: "Sabah", ogle: "Öğle", ikindi: "İkindi", aksam: "Akşam", yatsi: "Yatsı" };
+          Object.keys(nmNames).forEach(k => { const c = nmRows.filter(r => r.prayerArray.includes(k)).length; statRow(nmNames[k], c + " gün"); });
+          y += 4;
+        }
+
+        // --- KİTAP VE FİLM ---
+        if (S.kitap) {
+          let rpBooks = [], rpFilms = [];
+          try {
+            const [bS, fS] = await Promise.all([getDocs(collection(db, "users", auth.currentUser.uid, "books")), getDocs(collection(db, "users", auth.currentUser.uid, "films"))]);
+            bS.forEach(d => rpBooks.push(d.data())); fS.forEach(d => rpFilms.push(d.data()));
+          } catch (e) { console.error(e); }
+          const doneB = rpBooks.filter(b => b.status === "done" && b.endDate && inRange(b.endDate)).sort((a, b) => a.endDate.localeCompare(b.endDate));
+          const readingB = rpBooks.filter(b => b.status === "reading");
+          const watched = rpFilms.filter(f => f.date && inRange(f.date)).sort((a, b) => a.date.localeCompare(b.date));
+          const cut = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
+          if (doneB.length || readingB.length || watched.length) {
+            sectionTitle("Kitap ve Film", coral);
+            if (doneB.length) {
+              const pg = doneB.reduce((a, b) => a + (parseInt(b.pages) || 0), 0);
+              statRow("Bitirilen kitap", doneB.length + " kitap");
+              if (pg) statRow("Okunan sayfa", pg.toLocaleString("tr-TR") + " sayfa");
+            }
+            if (readingB.length) statRow("Şu an okunan", cut(readingB.map(b => b.title).join(", "), 48));
+            if (watched.length) {
+              const rated = watched.filter(f => f.rating > 0);
+              statRow("İzlenen film", watched.length + " film");
+              if (rated.length) {
+                statRow("Ortalama film puanı", (rated.reduce((a, f) => a + f.rating, 0) / rated.length).toFixed(1).replace(".", ",") + " / 10");
+                const best = rated.slice().sort((a, b) => b.rating - a.rating)[0];
+                statRow("En yüksek puanlı", cut(best.title, 34) + "  ·  " + best.rating + "/10");
+              }
+            }
+            if (pdfDetail === "full") {
+              doneB.forEach(b => {
+                const dd = b.startDate ? Math.max(1, Math.round((new Date(b.endDate) - new Date(b.startDate)) / 86400000) + 1) : null;
+                statRow(cut(b.title + (b.author ? " - " + b.author : ""), 52), (dd ? dd + " günde · " : "") + b.endDate);
+              });
+              watched.forEach(f => statRow(cut(f.title + (f.year ? " (" + f.year + ")" : ""), 52), (f.rating ? f.rating + "/10 · " : "") + f.date));
+            }
+            y += 4;
+          }
+        }
+
         // DETAYLI MOD: Günlük döküm
-        if (pdfDetail === "full" && rows.length > 0) {
+        if (S.ozet && pdfDetail === "full" && rows.length > 0) {
           sectionTitle("Günlük Döküm", accent);
           rows.forEach(r => {
             checkPageBreak(6);
@@ -6940,7 +7182,7 @@ if (totalCardioSessions > 0) {
           });
         }
         // DETAYLI MOD: Kardiyo dökümü
-if (pdfDetail === "full" && cardioSessions.length > 0) {
+if (S.kardiyo && pdfDetail === "full" && cardioSessions.length > 0) {
   y += 4;
   sectionTitle(turkceToEnglish("Kardiyo Dokumu"), coral);
   
@@ -6984,7 +7226,7 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
         // DETAYLI MOD: Namaz Dökümü
         const prayerNameMap = { sabah: "Sabah", ogle: "Öğle", ikindi: "İkindi", aksam: "Akşam", yatsi: "Yatsı" };
         const prayerDays = rows.filter(r => r.prayerArray && r.prayerArray.length > 0);
-        if (pdfDetail === "full" && prayerDays.length > 0) {
+        if (S.namaz && pdfDetail === "full" && prayerDays.length > 0) {
           y += 4;
           sectionTitle("Namaz Dökümü", mint);
           prayerDays.forEach(r => {
@@ -6995,7 +7237,7 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
         }
 
         // DETAYLI MOD: Antrenman Dökümü
-        if (pdfDetail === "full" && workoutDays.length > 0) {
+        if (S.antrenman && pdfDetail === "full" && workoutDays.length > 0) {
           y += 4;
           sectionTitle("Antrenman Dökümü", mint);
           workoutDays.forEach(w => {
@@ -7023,7 +7265,7 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
 
         // DETAYLI MOD: Dönem En İyileri (hareket bazında)
         const periodKeys = Object.keys(periodBest).sort((a, b) => a.localeCompare(b, 'tr'));
-        if (pdfDetail === "full" && periodKeys.length > 0) {
+        if (S.antrenman && pdfDetail === "full" && periodKeys.length > 0) {
           y += 4;
           sectionTitle("Dönem En İyileri", accent);
           periodKeys.forEach(k => {
@@ -7035,7 +7277,7 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
         }
 
         // DETAYLI MOD: Ders Dökümü
-        if (pdfDetail === "full" && studyDays.length > 0) {
+        if (S.ders && pdfDetail === "full" && studyDays.length > 0) {
           y += 4;
           sectionTitle("Ders Dökümü", accent);
           studyDays.forEach(d => {
@@ -7046,7 +7288,7 @@ if (pdfDetail === "full" && cardioSessions.length > 0) {
         }
 
         // DETAYLI MOD: Maç Dökümü
-        if (pdfDetail === "full" && matchList.length > 0) {
+        if (S.mac && pdfDetail === "full" && matchList.length > 0) {
           y += 4;
           sectionTitle("Maç Dökümü", coral);
           matchList.forEach(m => {
@@ -10408,6 +10650,473 @@ if (themeToggle) {
     fmOpen(id);
   });
 
+  // ====== CLAUDE'A İLET (uygulama için fikirler, hatalar, değişiklikler) ======
+  // users/{uid}/records/ideas -> { list: [{ id, type: feature|bug|change, text, photo, status: open|sent|done, createdAt, sentAt, doneAt }] }
+  var ID = { list: [], loaded: false, type: "feature", photoFile: null, editId: null, showDone: false };
+  const ID_TYPES = { feature: "Yeni özellik", bug: "Hata", change: "Değişiklik" };
+  const idRef = () => doc(db, "users", auth.currentUser.uid, "records", "ideas");
+  const idFmtDate = (ms) => new Date(ms).toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
+
+  async function idLoad() {
+    if (!auth.currentUser) return;
+    const apply = (s) => { ID.list = (s && s.exists() && Array.isArray(s.data().list)) ? s.data().list : []; ID.loaded = true; };
+    try { apply(await getDocFast(idRef(), (fresh) => { apply(fresh); idRender(); idLinkSub(); })); }
+    catch (e) { console.error("Fikirler yüklenemedi", e); }
+    idRender(); idLinkSub();
+  }
+  async function idSave() {
+    try { await setDoc(idRef(), { list: ID.list }, { merge: true }); }
+    catch (e) { console.error(e); showAppToast("Kaydedilemedi"); }
+    idRender(); idLinkSub();
+  }
+  function idLinkSub() {
+    const n = ID.list.filter(x => x.status === "open").length;
+    const el = document.getElementById("ideasLinkSub");
+    if (el) el.textContent = n ? `${n} fikir gönderilmeyi bekliyor` : "uygulama için fikir ve hatalar";
+  }
+  window.idRefresh = () => { if (!ID.loaded) idLoad(); };
+
+  function openIdeas(e) {
+    if (e) e.preventDefault();
+    if (!auth.currentUser) return;
+    closeAllPanels();
+    document.getElementById("ideasPanel").classList.add("is-active");
+    document.body.style.overflow = "hidden";
+    idResetForm();
+    idRender();
+    idLoad();
+  }
+  document.getElementById("ideasLink").addEventListener("click", openIdeas);
+  document.getElementById("ideasCloseBtn").addEventListener("click", () => {
+    document.getElementById("ideasPanel").classList.remove("is-active");
+    document.body.style.overflow = "";
+  });
+
+  function idItem(x) {
+    const stTxt = x.status === "sent" ? `${idFmtDate(x.sentAt || x.createdAt)} iletildi` : x.status === "done" ? `${idFmtDate(x.doneAt || x.createdAt)} yapıldı` : idFmtDate(x.createdAt);
+    return `<article class="id-item ${x.status}" data-id="${x.id}">
+      <div class="id-top"><span class="id-type ${x.type}">${ID_TYPES[x.type] || "Fikir"}</span><span class="id-date">${stTxt}</span></div>
+      <p class="id-text">${escHTML(x.text)}</p>
+      ${x.photo ? `<a class="id-photo" href="${escHTML(x.photo)}" target="_blank" rel="noopener"><img src="${escHTML(x.photo)}" alt="Ekran görüntüsü" loading="lazy"></a>` : ""}
+      <div class="id-acts">
+        ${x.status === "open" ? `<button type="button" data-act="edit">Düzenle</button>` : ""}
+        ${x.status === "sent" ? `<button type="button" data-act="done" class="ok">Yapıldı ✓</button><button type="button" data-act="reopen">Tekrar gönder</button>` : ""}
+        ${x.status === "done" ? `<button type="button" data-act="reopen">Geri al</button>` : ""}
+        <button type="button" data-act="del" class="del">Sil</button>
+      </div>
+    </article>`;
+  }
+
+  function idRender() {
+    const box = document.getElementById("idLists"); if (!box) return;
+    const open = ID.list.filter(x => x.status === "open").sort((a, b) => a.createdAt - b.createdAt);
+    const sent = ID.list.filter(x => x.status === "sent").sort((a, b) => (b.sentAt || 0) - (a.sentAt || 0));
+    const done = ID.list.filter(x => x.status === "done").sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0));
+    document.getElementById("idEyebrow").textContent = open.length ? `${open.length} bekleyen` : "Uygulama için";
+    let html = "";
+    if (open.length) html += `<div class="bk-sec">Gönderilecekler · ${open.length}</div>${open.map(idItem).join("")}`;
+    else html += `<div class="bk-empty" style="padding:22px 12px;">${ID.list.length ? "Gönderilecek yeni fikir yok." : "Uygulamayı kullanırken aklına gelen fikirleri, gördüğün hataları buraya yaz.<br>Biriktirince hepsini tek mesajla Claude'a gönderirsin."}</div>`;
+    if (sent.length) html += `<div class="bk-sec" style="margin-top:20px;">İletildi · ${sent.length}</div><p class="id-hint">Eklendiyse "Yapıldı"ya bas.</p>${sent.map(idItem).join("")}`;
+    if (done.length) {
+      html += `<button type="button" class="ex-past-toggle" id="idDoneToggle" aria-expanded="${ID.showDone}" style="margin-top:14px;">Yapılanlar · ${done.length}<span>${ID.showDone ? "▴" : "▾"}</span></button>`;
+      if (ID.showDone) html += done.map(idItem).join("");
+    }
+    box.innerHTML = html;
+    const bar = document.getElementById("idSendBar");
+    bar.hidden = !open.length;
+    document.getElementById("idSendBtn").textContent = `Claude'a gönder (${open.length})`;
+    const t = document.getElementById("idDoneToggle");
+    if (t) t.addEventListener("click", () => { ID.showDone = !ID.showDone; idRender(); });
+    box.querySelectorAll(".id-item [data-act]").forEach(b => b.addEventListener("click", async () => {
+      const id = b.closest(".id-item").dataset.id, x = ID.list.find(i => i.id === id); if (!x) return;
+      const act = b.dataset.act;
+      if (act === "del") { if (!confirm("Bu not silinsin mi?")) return; ID.list = ID.list.filter(i => i.id !== id); }
+      else if (act === "done") { x.status = "done"; x.doneAt = Date.now(); }
+      else if (act === "reopen") { x.status = "open"; delete x.sentAt; delete x.doneAt; }
+      else if (act === "edit") { idEdit(x); return; }
+      await idSave();
+    }));
+  }
+
+  // --- Yazma alanı ---
+  function idSetType(t) {
+    ID.type = t;
+    document.querySelectorAll("#idTypes [data-type]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.type === t)));
+    document.getElementById("idText").placeholder = t === "bug" ? "Ne oldu? Hangi ekranda, ne yapınca?" : t === "change" ? "Neyi, nasıl değiştirelim?" : "Aklına gelen fikri yaz…";
+  }
+  function idResetForm() {
+    ID.editId = null; ID.photoFile = null;
+    document.getElementById("idText").value = "";
+    document.getElementById("idPhotoPrev").innerHTML = "";
+    document.getElementById("idPhotoBtn").textContent = "Ekran görüntüsü ekle";
+    document.getElementById("idAddBtn").textContent = "Listeye ekle";
+    document.getElementById("idCancelEdit").hidden = true;
+    idSetType("feature");
+  }
+  function idEdit(x) {
+    ID.editId = x.id; ID.photoFile = null;
+    idSetType(x.type || "feature");
+    document.getElementById("idText").value = x.text;
+    document.getElementById("idPhotoPrev").innerHTML = x.photo ? `<img src="${escHTML(x.photo)}" alt=""><button type="button" id="idPhotoDel" aria-label="Fotoğrafı kaldır">✕</button>` : "";
+    const del = document.getElementById("idPhotoDel");
+    if (del) del.addEventListener("click", () => { x._dropPhoto = true; document.getElementById("idPhotoPrev").innerHTML = ""; });
+    document.getElementById("idAddBtn").textContent = "Kaydet";
+    document.getElementById("idCancelEdit").hidden = false;
+    document.getElementById("ideasPanel").scrollTo({ top: 0, behavior: "smooth" });
+    document.getElementById("idText").focus();
+  }
+  document.querySelectorAll("#idTypes [data-type]").forEach(b => b.addEventListener("click", () => idSetType(b.dataset.type)));
+  document.getElementById("idCancelEdit").addEventListener("click", idResetForm);
+  document.getElementById("idPhotoBtn").addEventListener("click", () => document.getElementById("idPhotoInput").click());
+  document.getElementById("idPhotoInput").addEventListener("change", function () {
+    const f = this.files[0]; this.value = ""; if (!f) return;
+    ID.photoFile = f;
+    document.getElementById("idPhotoPrev").innerHTML = `<img src="${URL.createObjectURL(f)}" alt=""><button type="button" id="idPhotoDel" aria-label="Fotoğrafı kaldır">✕</button>`;
+    document.getElementById("idPhotoDel").addEventListener("click", () => { ID.photoFile = null; document.getElementById("idPhotoPrev").innerHTML = ""; });
+    document.getElementById("idPhotoBtn").textContent = "Başka görüntü seç";
+  });
+  document.getElementById("idAddBtn").addEventListener("click", async function () {
+    const text = document.getElementById("idText").value.trim();
+    if (!text) { showAppToast("Önce bir şey yaz"); document.getElementById("idText").focus(); return; }
+    this.disabled = true;
+    let photo = null;
+    if (ID.photoFile) {
+      this.textContent = "Görüntü yükleniyor…";
+      try { photo = await bkUpload(ID.photoFile, 1600); }
+      catch (e) { console.error(e); showAppToast(e.message === "offline" ? "İnternet yok, görüntü eklenemedi" : "Görüntü yüklenemedi"); }
+    }
+    if (ID.editId) {
+      const x = ID.list.find(i => i.id === ID.editId);
+      if (x) { x.text = text; x.type = ID.type; if (photo) x.photo = photo; else if (x._dropPhoto) x.photo = ""; delete x._dropPhoto; }
+    } else {
+      ID.list = [...ID.list, { id: "i" + Date.now().toString(36), type: ID.type, text, photo: photo || "", status: "open", createdAt: Date.now() }];
+    }
+    this.disabled = false;
+    const wasEdit = !!ID.editId;
+    idResetForm();
+    await idSave();
+    showAppToast(wasEdit ? "Güncellendi" : "Listeye eklendi");
+  });
+
+  // --- Claude'a gönder ---
+  function idMessage(items) {
+    const today = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+    const lines = items.map((x, i) => `${i + 1}. [${ID_TYPES[x.type] || "Fikir"}] ${x.text}${x.photo ? `\n   Ekran görüntüsü: ${x.photo}` : ""}`);
+    return `Kamp Defteri uygulaması için isteklerim var:\n\n${lines.join("\n\n")}\n\n(Kamp Defteri'nden gönderildi · ${today})`;
+  }
+  async function idPhotoFiles(items) {
+    const withPhoto = items.filter(x => x.photo);
+    if (!withPhoto.length) return [];
+    try {
+      const files = [];
+      for (let i = 0; i < withPhoto.length; i++) {
+        const r = await fetch(withPhoto[i].photo, { mode: "cors" });
+        if (!r.ok) throw new Error("foto");
+        const b = await r.blob();
+        files.push(new File([b], `ekran-${i + 1}.${(b.type.split("/")[1] || "jpg").replace("jpeg", "jpg")}`, { type: b.type || "image/jpeg" }));
+      }
+      return files;
+    } catch (e) { return null; } // görüntüler alınamazsa sadece metin + bağlantı gider
+  }
+  async function idMarkSent(items) {
+    const now = Date.now(); const ids = new Set(items.map(x => x.id));
+    ID.list.forEach(x => { if (ids.has(x.id)) { x.status = "sent"; x.sentAt = now; } });
+    await idSave();
+  }
+  document.getElementById("idSendBtn").addEventListener("click", async function () {
+    const items = ID.list.filter(x => x.status === "open").sort((a, b) => a.createdAt - b.createdAt);
+    if (!items.length) return;
+    const text = idMessage(items);
+    if (navigator.share) {
+      this.disabled = true;
+      const files = await idPhotoFiles(items);
+      this.disabled = false;
+      const data = { text };
+      if (files && files.length && navigator.canShare && navigator.canShare({ files })) data.files = files;
+      try {
+        await navigator.share(data);
+        await idMarkSent(items);
+        showAppToast("Gönderildi olarak işaretlendi");
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return; // vazgeçti
+      }
+    }
+    // Paylaşım yoksa: panoya kopyala
+    try { await navigator.clipboard.writeText(text); } catch (e) { showAppToast("Kopyalanamadı"); return; }
+    if (confirm("Mesaj kopyalandı. Claude'a yapıştırıp gönder.\n\nBu fikirler 'iletildi' olarak işaretlensin mi?")) await idMarkSent(items);
+  });
+  document.getElementById("idCopyBtn").addEventListener("click", async () => {
+    const items = ID.list.filter(x => x.status === "open").sort((a, b) => a.createdAt - b.createdAt);
+    if (!items.length) return;
+    try { await navigator.clipboard.writeText(idMessage(items)); } catch (e) { showAppToast("Kopyalanamadı"); return; }
+    if (confirm("Mesaj kopyalandı. Claude'a yapıştırıp gönder.\n\nBu fikirler 'iletildi' olarak işaretlensin mi?")) await idMarkSent(items);
+  });
+
+  // ====== KİTAP / FİLM PDF (yazdır → "PDF olarak kaydet") ======
+  // Türkçe harfler ve fotoğraflar eksiksiz çıksın diye sayfa tarayıcının yazdırma ekranıyla PDF'e dönüştürülür.
+  const PR = { kind: null, opt: {} };
+  const PR_DEF = {
+    books: { which: "all", cover: true, note: true, photos: false },
+    films: { which: "all", sort: "date", cover: true, note: true, photos: false }
+  };
+  const prLoadOpt = (k) => { let o = { ...PR_DEF[k] }; try { Object.assign(o, JSON.parse(localStorage.getItem("prOpt_" + k) || "{}")); } catch (e) {} return o; };
+  const prSaveOpt = () => { try { localStorage.setItem("prOpt_" + PR.kind, JSON.stringify(PR.opt)); } catch (e) {} };
+  const prSeg = (key, items) => `<div class="pr-seg" data-key="${key}">${items.map(([v, l]) => `<button type="button" data-v="${v}" aria-pressed="${PR.opt[key] === v}">${l}</button>`).join("")}</div>`;
+  const prChk = (key, label) => `<button type="button" class="pr-chk" data-chk="${key}" aria-pressed="${!!PR.opt[key]}">${label}</button>`;
+
+  function prOpen(kind) {
+    PR.kind = kind; PR.opt = prLoadOpt(kind);
+    const isB = kind === "books";
+    document.getElementById("prTitle").textContent = isB ? "Kitaplarım PDF" : "Filmlerim PDF";
+    document.getElementById("prBody").innerHTML = isB ? `
+      <div class="pr-lab">Hangi kitaplar</div>
+      ${prSeg("which", [["all", "Hepsi"], ["done", "Bitirdiklerim"], ["year", "Bu yıl"]])}
+      <div class="pr-lab">Neler olsun</div>
+      <div class="pr-chks">${prChk("cover", "Kapak fotoğrafları")}${prChk("note", "Notlarım")}${prChk("photos", "Sayfa fotoğrafları")}</div>` : `
+      <div class="pr-lab">Hangi filmler</div>
+      ${prSeg("which", [["all", "Hepsi"], ["year", "Bu yıl"], ["top", "8 puan ve üstü"]])}
+      <div class="pr-lab">Sıralama</div>
+      ${prSeg("sort", [["date", "İzlediğim tarih"], ["rating", "Puan"]])}
+      <div class="pr-lab">Neler olsun</div>
+      <div class="pr-chks">${prChk("cover", "Afişler")}${prChk("note", "Notlarım")}${prChk("photos", "Filmden kareler")}</div>`;
+    const body = document.getElementById("prBody");
+    body.querySelectorAll(".pr-seg button").forEach(b => b.addEventListener("click", () => {
+      const key = b.parentElement.dataset.key; PR.opt[key] = b.dataset.v; prSaveOpt();
+      b.parentElement.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      prCount();
+    }));
+    body.querySelectorAll(".pr-chk").forEach(b => b.addEventListener("click", () => {
+      PR.opt[b.dataset.chk] = !PR.opt[b.dataset.chk]; prSaveOpt(); b.setAttribute("aria-pressed", String(PR.opt[b.dataset.chk]));
+    }));
+    prCount();
+    document.getElementById("prModal").classList.add("is-active");
+  }
+  function prClose() { document.getElementById("prModal").classList.remove("is-active"); }
+  document.getElementById("prClose").addEventListener("click", prClose);
+  document.getElementById("prModal").addEventListener("click", (e) => { if (e.target.id === "prModal") prClose(); });
+  document.getElementById("bkPdfBtn").addEventListener("click", () => prOpen("books"));
+  document.getElementById("fmPdfBtn").addEventListener("click", () => prOpen("films"));
+
+  function prItems() {
+    const yr = String(new Date().getFullYear());
+    if (PR.kind === "books") {
+      let all = Object.values(BK.books);
+      if (PR.opt.which === "done") all = all.filter(b => b.status === "done");
+      if (PR.opt.which === "year") all = all.filter(b => (b.endDate || b.startDate || "").startsWith(yr) || b.status === "reading");
+      return all;
+    }
+    let all = Object.values(FM.films);
+    if (PR.opt.which === "year") all = all.filter(f => (f.date || "").startsWith(yr));
+    if (PR.opt.which === "top") all = all.filter(f => (f.rating || 0) >= 8);
+    return all;
+  }
+  function prCount() {
+    const n = prItems().length;
+    const btn = document.getElementById("prGo");
+    btn.disabled = !n;
+    btn.textContent = n ? `PDF oluştur · ${n} ${PR.kind === "books" ? "kitap" : "film"}` : (PR.kind === "books" ? "Bu seçimde kitap yok" : "Bu seçimde film yok");
+  }
+
+  const prE = (t) => escHTML(String(t == null ? "" : t));
+  const prDate = (ds) => ds ? bkD(ds).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" }) : "";
+  const prStars = (r) => r ? `<span class="pp-stars" aria-label="${r} yıldız">${"★".repeat(r)}<i>${"★".repeat(5 - r)}</i></span>` : "";
+  const prNote = (t) => prE(t).replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>");
+
+  function prBooksHTML() {
+    const o = PR.opt, list = prItems();
+    const today = todayLocalStr();
+    const done = list.filter(b => b.status === "done").sort((a, b) => (b.endDate || "").localeCompare(a.endDate || ""));
+    const reading = list.filter(b => b.status === "reading").sort((a, b) => (b.startDate || "").localeCompare(a.startDate || ""));
+    const dropped = list.filter(b => b.status === "dropped");
+    const pages = sum(done.map(b => parseInt(b.pages) || 0));
+    const dur = done.filter(b => b.startDate && b.endDate).map(b => bkDays(b.startDate, b.endDate));
+    const avgDur = dur.length ? Math.round(sum(dur) / dur.length) : 0;
+    const card = (b) => {
+      const days = b.startDate ? bkDays(b.startDate, b.status === "reading" ? today : (b.endDate || today)) : null;
+      const meta = [];
+      if (b.status === "done") meta.push(b.startDate ? `${prDate(b.startDate)} – ${prDate(b.endDate)}` : `Bitirdim: ${prDate(b.endDate)}`);
+      else if (b.status === "reading") meta.push(b.startDate ? `${prDate(b.startDate)} tarihinde başladım` : "Okuyorum");
+      else meta.push("Yarım bıraktım");
+      if (days) meta.push(b.status === "reading" ? `${days}. gün` : `${days} günde`);
+      if (parseInt(b.pages)) meta.push(`${parseInt(b.pages).toLocaleString("tr-TR")} sayfa`);
+      const photos = o.photos ? (b.photos || []) : [];
+      return `<article class="pp-item${o.cover ? "" : " nocover"}${photos.length ? " has-photos" : ""}">
+        ${o.cover ? `<div class="pp-cover book">${b.cover ? `<img src="${prE(b.cover)}" alt="">` : `<span>${prE(b.title)}</span>`}</div>` : ""}
+        <div class="pp-main">
+          <h3>${prE(b.title)}</h3>
+          ${b.author ? `<div class="pp-sub">${prE(b.author)}</div>` : ""}
+          <div class="pp-meta">${meta.map(prE).join(" · ")}${b.status === "done" && b.rating ? ` ${prStars(b.rating)}` : ""}</div>
+          ${o.note && b.note ? `<div class="pp-note"><p>${prNote(b.note)}</p></div>` : ""}
+        </div>
+        ${photos.length ? `<div class="pp-photos book">${photos.map(p => `<figure><img src="${prE(p.url)}" alt="">${p.page || p.caption ? `<figcaption>${p.page ? `<b>s. ${prE(p.page)}</b> ` : ""}${prE(p.caption || "")}</figcaption>` : ""}</figure>`).join("")}</div>` : ""}
+      </article>`;
+    };
+    const sec = (title, arr) => arr.length ? `<h2 class="pp-sec">${title} <span>${arr.length}</span></h2>${arr.map(card).join("")}` : "";
+    return {
+      title: "Kitaplarım", count: `${list.length} kitap`,
+      stats: [[done.length, "bitirdim"], [reading.length, "okuyorum"], [pages ? pages.toLocaleString("tr-TR") : "—", "okunan sayfa"], [avgDur ? avgDur + " gün" : "—", "ortalama süre"]],
+      body: sec("Okuyorum", reading) + sec("Bitirdiklerim", done) + sec("Yarım bıraktıklarım", dropped)
+    };
+  }
+
+  function prFilmsHTML() {
+    const o = PR.opt, list = prItems();
+    const yr = String(new Date().getFullYear());
+    const rated = list.filter(f => f.rating > 0);
+    const avg = rated.length ? (sum(rated.map(f => f.rating)) / rated.length).toLocaleString("tr-TR", { maximumFractionDigits: 1 }) : "—";
+    const frames = sum(list.map(f => (f.frames || []).length));
+    const card = (f) => {
+      const poster = fmPosterSrc(f);
+      const fr = o.photos ? (f.frames || []) : [];
+      return `<article class="pp-item${o.cover ? "" : " nocover"}${fr.length ? " has-photos" : ""}">
+        ${o.cover ? `<div class="pp-cover film">${poster ? `<img src="${prE(poster)}" alt="">` : `<span>${prE(f.title)}</span>`}</div>` : ""}
+        <div class="pp-main">
+          <div class="pp-titlerow"><h3>${prE(f.title)}</h3>${f.rating ? `<span class="pp-rate">★ ${f.rating}<small>/10</small></span>` : ""}</div>
+          ${f.year ? `<div class="pp-sub">${prE(f.year)}</div>` : ""}
+          <div class="pp-meta">İzledim: ${prE(prDate(f.date) || "—")}${(f.frames || []).length ? ` · ${(f.frames || []).length} kare` : ""}</div>
+          ${o.note && f.note ? `<div class="pp-note"><p>${prNote(f.note)}</p></div>` : ""}
+        </div>
+        ${fr.length ? `<div class="pp-photos film">${fr.map(p => `<figure><img src="${prE(p.url)}" alt="">${p.time || p.caption ? `<figcaption>${p.time ? `<b>${prE(p.time)}</b> ` : ""}${prE(p.caption || "")}</figcaption>` : ""}</figure>`).join("")}</div>` : ""}
+      </article>`;
+    };
+    let body = "";
+    if (o.sort === "rating") {
+      const arr = list.slice().sort((a, b) => (b.rating || 0) - (a.rating || 0) || (b.date || "").localeCompare(a.date || ""));
+      body = `<h2 class="pp-sec">Puana göre <span>${arr.length}</span></h2>${arr.map(card).join("")}`;
+    } else {
+      const arr = list.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      const g = {}; arr.forEach(f => { const y = (f.date || "").slice(0, 4) || "Tarihsiz"; (g[y] = g[y] || []).push(f); });
+      body = Object.keys(g).sort((a, b) => b.localeCompare(a)).map(y => `<h2 class="pp-sec">${y} <span>${g[y].length}</span></h2>${g[y].map(card).join("")}`).join("");
+    }
+    return {
+      title: "Filmlerim", count: `${list.length} film`,
+      stats: [[list.length, "film"], [list.filter(f => (f.date || "").startsWith(yr)).length, "bu yıl"], [avg, "ortalama puan"], [frames || "—", "kare"]],
+      body
+    };
+  }
+
+  async function prBuild() {
+    const d = PR.kind === "books" ? prBooksHTML() : prFilmsHTML();
+    const today = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+    const root = document.getElementById("printRoot");
+    root.innerHTML = `<div class="pp">
+      <header class="pp-head">
+        <div class="pp-brand">Kamp Defteri</div>
+        <h1>${d.title}</h1>
+        <div class="pp-date">${today} · ${d.count}</div>
+      </header>
+      <div class="pp-stats">${d.stats.map(([v, k]) => `<div><b>${prE(v)}</b><span>${k}</span></div>`).join("")}</div>
+      ${d.body}
+    </div>`;
+    // Fotoğraflar yüklenmeden yazdırma açılmasın (en fazla 12 sn bekle)
+    const imgs = [...root.querySelectorAll("img")];
+    await Promise.race([
+      Promise.all(imgs.map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; }))),
+      new Promise(r => setTimeout(r, 12000))
+    ]);
+    return imgs.filter(im => !im.naturalWidth).length;
+  }
+  document.getElementById("prGo").addEventListener("click", async function () {
+    const old = this.textContent;
+    this.disabled = true; this.textContent = "Hazırlanıyor…";
+    try {
+      const missing = await prBuild();
+      if (missing) showAppToast(`${missing} fotoğraf yüklenemedi (internet?)`);
+      prClose();
+      const prevTitle = document.title;
+      document.title = PR.kind === "books" ? "Kitaplarim" : "Filmlerim"; // kaydedilen PDF'in adı
+      const done = () => { window.removeEventListener("afterprint", done); setTimeout(() => { document.title = prevTitle; }, 1500); };
+      window.addEventListener("afterprint", done);
+      setTimeout(() => { window.print(); }, 80);
+    } catch (e) { console.error(e); showAppToast("PDF hazırlanamadı"); }
+    this.disabled = false; this.textContent = old;
+  });
+
+  // ====== TELEFONUN GERİ TUŞU ======
+  // Açık olan her katman (menü, panel, alt sayfa, pencere) için tarayıcı geçmişine bir adım eklenir.
+  // Geri tuşu en üstteki katmanı kapatır; hiçbir şey açık değilse "çıkmak için tekrar bas" der.
+  (function () {
+    const vis = (el) => !!el && el.offsetParent !== null && !el.closest("[hidden]");
+    const backIn = (el) => [...el.querySelectorAll('.bk-back[id$="Back"], [data-back]')].find(vis) || null;
+    const closeIn = (el) => [...el.querySelectorAll(".drawer-close, .stats-close")].find(vis) || el.querySelector(".drawer-close, .stats-close");
+    const LAYERS = [
+      { sel: ".bd-cel.is-active", close: () => document.getElementById("bdCelOk").click() },
+      { sel: ".bk-viewer.is-active", sub: (el) => el.classList.contains("editing") ? 1 : 0,
+        close: (el) => { if (el.classList.contains("editing")) el.classList.remove("editing"); else el.querySelector(".top button").click(); } },
+      { sel: "#pdfOptionsOverlay", open: (el) => el.style.display === "flex", close: (el) => { el.style.display = "none"; } },
+      { sel: ".bc-modal.is-active", close: (el) => { const c = closeIn(el); if (c) c.click(); else el.classList.remove("is-active"); } },
+      { sel: ".recipe-modal.is-active", close: (el) => { const c = document.getElementById("btnCloseRecipes"); if (c) c.click(); else el.classList.remove("is-active"); } },
+      { sel: ".full-panel.is-active, .stats-panel.is-active", sub: (el) => backIn(el) ? 1 : 0,
+        close: (el) => {
+          const b = backIn(el); if (b) { b.click(); return; }
+          const c = closeIn(el);
+          if (c) c.click(); else { el.classList.remove("is-active"); document.body.style.overflow = ""; }
+        } },
+      { sel: "#drawer.is-active", close: () => document.getElementById("drawerCloseBtn").click() }
+    ];
+    function openLayers() {
+      const out = [];
+      LAYERS.forEach((L, li) => document.querySelectorAll(L.sel).forEach(el => {
+        if (L.open ? L.open(el) : true) out.push({ L, el, li });
+      }));
+      return out;
+    }
+    const depthNow = () => openLayers().reduce((a, x) => a + 1 + (x.L.sub ? x.L.sub(x.el) : 0), 0);
+    function topLayer() {
+      const all = openLayers(); if (!all.length) return null;
+      const z = (el) => { let n = 0, e = el; while (e && e !== document.body) { const v = parseInt(getComputedStyle(e).zIndex); if (!isNaN(v)) n = Math.max(n, v); e = e.parentElement; } return n; };
+      // Önce en üstte duran (z-index), eşitse listede önce gelen
+      all.sort((a, b) => (z(b.el) - z(a.el)) || (a.li - b.li));
+      return all[0];
+    }
+
+    const H = { depth: 0, guard: false, ignore: 0, timer: null, armed: false };
+    try { history.replaceState({ kd: "base" }, ""); } catch (e) {}
+
+    function sync() {
+      H.timer = null;
+      if (H.ignore > 0) return; // geri gitme sürerken bekle; popstate sonrası tekrar bakılır
+      const want = depthNow() + (H.guard ? 1 : 0);
+      if (want > H.depth) {
+        for (let i = H.depth; i < want; i++) history.pushState({ kd: i + 1 }, "");
+        H.depth = want;
+      } else if (want < H.depth) {
+        H.ignore++;
+        setTimeout(() => { if (H.ignore > 0) { H.ignore = 0; schedule(); } }, 1000); // geri gitme olmadıysa takılı kalma
+        const go = want - H.depth;
+        H.depth = want;
+        history.go(go);
+      }
+    }
+    const schedule = () => { if (!H.timer) H.timer = setTimeout(sync, 60); };
+    window.kdNavSync = schedule;
+
+    // Kullanıcı bir yere dokununca "koruma" adımını ekle (tarayıcı, dokunmadan eklenen adımları atlayabiliyor)
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest && e.target.closest('a[href="#"]');
+      if (a) e.preventDefault(); // "#" bağlantıları geçmişe adım eklemesin
+      if (!H.guard) { H.guard = true; H.armed = false; }
+      schedule();
+    }, true);
+
+    new MutationObserver(schedule).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["class", "hidden"] });
+    const pdfOv = document.getElementById("pdfOptionsOverlay");
+    if (pdfOv) new MutationObserver(schedule).observe(pdfOv, { attributes: true, attributeFilter: ["style"] });
+
+    window.addEventListener("popstate", () => {
+      if (H.ignore > 0) { H.ignore--; schedule(); return; }
+      // Geri tuşu
+      H.depth = Math.max(0, H.depth - 1);
+      const top = topLayer();
+      if (top) { top.L.close(top.el); schedule(); return; }
+      // Hiçbir şey açık değil: bir daha basarsa uygulamadan çıkar. Ekrana dokunursa koruma geri gelir.
+      H.guard = false; H.armed = true;
+      showAppToast("Çıkmak için tekrar geri bas");
+      schedule();
+    });
+  })();
+
 window.addEventListener('load', loadTheme);
 
 </script>
@@ -10813,5 +11522,6 @@ async function csvCommit() {
 }
 
   </script>
+<div id="printRoot" aria-hidden="true"></div>
 </body>
 </html>
