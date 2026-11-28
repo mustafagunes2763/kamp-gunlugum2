@@ -870,6 +870,94 @@ html{ color-scheme: dark; }
 .st-bars .fill{ height:100%; border-radius:4px; transition: width .4s ease; }
 .st-bars .val{ font-family: var(--font-mono); font-size:11px; color: var(--ink-dim); text-align:right; min-width:44px; }
 
+/* --- KİTAP PUANI (10 üzerinden, buçuklu) --- */
+.bk-score{ display:flex; align-items:baseline; gap:4px; margin-top:12px; font-family: var(--font-mono); font-size:28px; font-weight:700; color: var(--ink); line-height:1; }
+.bk-score .star{ color:#FFD66B; font-size:22px; }
+.bk-score small{ font-size:13px; color: var(--ink-faint); font-weight:600; }
+.bk-score.none{ font-size:13px; color: var(--ink-faint); font-family: var(--font-display); font-weight:600; }
+.bs-row{ display:grid; grid-template-columns: repeat(10, minmax(0,1fr)); gap:2px; }
+.bs{ position:relative; aspect-ratio:1; max-width:34px; width:100%; justify-self:center; color:#3A3F52; }
+.bs svg{ position:absolute; inset:0; width:100%; height:100%; }
+.bs .fill{ position:absolute; inset:0; overflow:hidden; color:#FFD66B; }
+.bs .fill svg{ width:100%; height:100%; }
+.bs .fill.half{ right:50%; }
+.bs .fill.half svg{ width:200%; }
+.bs button{ position:absolute; top:-6px; bottom:-6px; width:50%; border:none; background:none; padding:0; cursor:pointer; z-index:1; }
+.bs button.l{ left:0; } .bs button.r{ right:0; }
+.bs-hint{ font-size:11px; color: var(--ink-faint); margin:10px 0 0; }
+.bk-tile .badge.sc{ left:auto; right:6px; bottom:auto; top:6px; color:#FFD66B; }
+/* --- KELİMELER --- */
+.wd-add{ display:flex; gap:8px; }
+.wd-add input{ flex:1; min-width:0; height:46px; border-radius:12px; border:1px solid var(--line); background: var(--panel-2); color: var(--ink); font-family: var(--font-display); font-size:15px; padding:0 12px; outline:none; }
+.wd-add input:focus{ border-color: rgba(61,220,151,0.5); }
+.wd-add .k-pill{ height:46px; padding:0 18px; }
+.wd-list{ margin-top:10px; max-height:360px; overflow-y:auto; overscroll-behavior:contain; border-top:1px solid var(--line-soft); }
+.wd-row{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:100%; padding:10px 2px; border:none; border-bottom:1px solid var(--line-soft); background:none; color: var(--ink); text-align:left; cursor:pointer; font-family: var(--font-display); }
+.wd-row .w{ font-size:15px; font-weight:700; }
+.wd-row .w small{ font-family: var(--font-mono); font-size:10px; color: var(--ink-faint); font-weight:500; margin-left:8px; }
+.wd-row .m{ font-size:13px; color: var(--ink-dim); line-height:1.4; }
+.wd-row .m.empty{ color: var(--ink-faint); font-style:italic; }
+.wd-row.known .w::after{ content:"✓"; color: var(--accent-text); margin-left:6px; font-size:12px; }
+.wd-acts{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:12px; }
+.wd-acts .bc-ghost{ height:44px; font-size:13px; }
+.wd-study{ margin-top:8px !important; width:100%; }
+.wd-empty{ margin:10px 0 0; font-size:12px; line-height:1.5; color: var(--ink-faint); }
+.wd-paste{ width:100%; min-height:180px; box-sizing:border-box; border-radius:12px; border:1px solid var(--line); background: var(--panel); color: var(--ink); font-family: var(--font-mono); font-size:13px; padding:12px; outline:none; resize:vertical; }
+.wd-msg{ font-size:12px; color: var(--accent-text); min-height:16px; margin:6px 2px 0; }
+.wd-form{ display:flex; flex-direction:column; gap:10px; }
+.wd-form label{ font-size:12px; color: var(--ink-faint); display:block; margin-bottom:4px; }
+.wd-form input, .wd-form textarea{ width:100%; box-sizing:border-box; border-radius:12px; border:1px solid var(--line); background: var(--panel); color: var(--ink); font-family: var(--font-display); font-size:15px; padding:11px 12px; outline:none; }
+.wd-form textarea{ min-height:64px; resize:vertical; }
+.wd-known{ display:flex; align-items:center; gap:10px; min-height:44px; padding:0 12px; border-radius:12px; border:1px solid var(--line); background: var(--panel); color: var(--ink-dim); font-family: var(--font-display); font-size:14px; font-weight:600; cursor:pointer; text-align:left; }
+.wd-known::before{ content:""; width:18px; height:18px; border-radius:5px; border:1.5px solid var(--ink-faint); box-sizing:border-box; }
+.wd-known[aria-pressed="true"]{ color: var(--ink); }
+.wd-known[aria-pressed="true"]::before{ border-color: var(--accent); background: var(--accent); }
+.bk-words-all{ width:100%; }
+/* kelime kartları */
+.wc .stage{ padding:16px; flex-direction:column; }
+.wc-card{ width:100%; max-width:420px; min-height:300px; border-radius:24px; border:1px solid var(--line); background: linear-gradient(160deg, var(--panel-2), var(--panel)); color: var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:28px 22px; cursor:pointer; text-align:center; font-family: var(--font-display); }
+.wc-card .src{ font-family: var(--font-mono); font-size:11px; color: var(--ink-faint); letter-spacing:.04em; }
+.wc-card .word{ font-size:34px; font-weight:700; line-height:1.15; word-break:break-word; }
+.wc-card .mean{ font-size:18px; line-height:1.45; color: var(--accent-text); }
+.wc-card .ex{ font-size:14px; line-height:1.5; color: var(--ink-dim); font-style:italic; }
+.wc-card .tap{ font-size:12px; color: var(--ink-faint); }
+.wc-card.flipped{ border-color: rgba(61,220,151,0.35); }
+.wc-acts{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+.wc-acts[hidden]{ display:none; }
+.wc-acts button{ height:52px; border-radius:14px; border:1px solid var(--line); background: var(--panel); color: var(--ink); font-family: var(--font-display); font-size:15px; font-weight:700; cursor:pointer; }
+.wc-acts .yes{ background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.wc-acts .no{ color:#FF9DB7; }
+.wc-end{ display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; max-width:360px; text-align:center; }
+.wc-end .big{ font-family: var(--font-mono); font-size:56px; font-weight:700; color: var(--ink); }
+.wc-end .big small{ font-size:22px; color: var(--ink-faint); }
+.wc-end p{ color: var(--ink-dim); margin:0 0 6px; }
+.wc-end button{ width:100%; margin:0 !important; height:50px; }
+/* --- IMDb --- */
+.fm-imdb label span{ color: var(--ink-faint); }
+.fm-imdb-row{ display:flex; gap:8px; }
+.fm-imdb-row input{ flex:1; min-width:0; }
+.fm-imdb-row .k-pill{ padding:0 16px; flex-shrink:0; }
+.fm-imdb-msg{ font-size:12px; line-height:1.45; color: var(--ink-faint); margin-top:6px; min-height:0; }
+.fm-imdb-msg:empty{ display:none; }
+.fm-imdb-msg.ok{ color: var(--accent-text); } .fm-imdb-msg.err{ color:#FF8FA3; }
+.fm-keybox{ margin-top:10px; padding:12px; border-radius:12px; border:1px dashed var(--line); background: var(--panel); font-size:13px; line-height:1.55; color: var(--ink-dim); }
+.fm-keybox[hidden]{ display:none; }
+.fm-keybox ol{ margin:6px 0 10px; padding-left:18px; }
+.fm-keybox a{ color: var(--accent-text); }
+.fm-info-row{ display:flex; gap:10px; font-size:13px; padding:4px 0; }
+.fm-info-row span{ flex:0 0 76px; color: var(--ink-faint); }
+.fm-info-row b{ font-weight:600; color: var(--ink); }
+.fm-plot{ font-size:13px; line-height:1.55; color: var(--ink-dim); margin:10px 0 0; }
+.fm-imdb-link{ display:inline-block; margin-top:12px; font-size:13px; color: var(--accent-text); text-decoration:none; }
+.fm-imdb-link b{ color:#F5C518; }
+/* PDF ek alanları */
+.pp-words{ grid-column: 1 / -1; margin-top:8px; display:grid; grid-template-columns: 1fr 1fr; gap:3px 16px; font-size:8.8pt; }
+.pp-words div{ break-inside: avoid; border-bottom:1px dotted #E3E5EC; padding:2px 0; }
+.pp-words b{ color:#14161E; }
+.pp-words span{ color:#4A4F5E; }
+.pp-words-h{ grid-column: 1 / -1; font-family: "JetBrains Mono", monospace; font-size:7.5pt; letter-spacing:.1em; text-transform:uppercase; color:#8A8F9E; margin-top:8px; }
+.pp-score{ font-family: "JetBrains Mono", monospace; font-weight:700; color:#B07D00; margin-left:4px; }
+.pp-plot{ font-size:9pt; line-height:1.45; color:#4A4F5E; margin-top:5px; }
 /* --- CLAUDE'A İLET --- */
 .id-types{ display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; margin-bottom:10px; }
 .id-types button{ min-height:40px; border-radius:11px; border:1px solid var(--line); background: var(--panel-2); color: var(--ink-dim); font-family: var(--font-display); font-size:13px; font-weight:600; cursor:pointer; padding:0 4px; }
@@ -2108,6 +2196,20 @@ html{ color-scheme: dark; }
           <button type="button" id="fmFormPosterBtn" style="border:none; background:none; padding:0; cursor:pointer;" aria-label="Afiş seç"><span class="bk-cover" id="fmFormPoster"></span></button>
           <div style="font-size:13px; color: var(--ink-dim); line-height:1.5;">Afişe dokunup bir fotoğraf seç.<br><span style="color: var(--ink-faint); font-size:12px;">Seçmezsen eklediğin ilk kare afiş olur.</span></div>
         </div>
+        <div class="fm-imdb">
+          <label for="fmfImdb">IMDb bağlantısı <span>· isteğe bağlı</span></label>
+          <div class="fm-imdb-row"><input type="text" id="fmfImdb" inputmode="url" autocapitalize="none" autocomplete="off" placeholder="imdb.com/title/tt…"><button type="button" class="k-pill" id="fmImdbGo">Getir</button></div>
+          <div class="fm-imdb-msg" id="fmImdbMsg" role="status"></div>
+          <div class="fm-keybox" id="fmKeyBox" hidden>
+            Bilgileri getirmek için bir kereye mahsus ücretsiz bir <b>OMDb anahtarı</b> gerekiyor:
+            <ol>
+              <li><a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">omdbapi.com/apikey.aspx</a> sayfasında <b>FREE</b>'yi seç, adını ve e-postanı yaz.</li>
+              <li>Gelen e-postadaki onay bağlantısına bas.</li>
+              <li>E-postadaki anahtarı buraya yapıştır.</li>
+            </ol>
+            <div class="fm-imdb-row"><input type="text" id="fmKeyInput" autocomplete="off" autocapitalize="none" placeholder="örn. a1b2c3d4" aria-label="OMDb anahtarı"><button type="button" class="k-pill" id="fmKeySave">Kaydet</button></div>
+          </div>
+        </div>
         <div><label for="fmfTitle">Filmin adı</label><input type="text" id="fmfTitle" autocomplete="off"></div>
         <div class="row">
           <div><label for="fmfYear">Çıkış yılı <span style="color: var(--ink-faint);">· isteğe bağlı</span></label><input type="number" id="fmfYear" inputmode="numeric" min="1880" max="2100" placeholder="2014"></div>
@@ -2183,6 +2285,40 @@ html{ color-scheme: dark; }
     <div id="prBody"></div>
     <button type="button" class="btn-save pr-go" id="prGo">PDF oluştur</button>
     <p class="pr-tip">Açılan ekranda yazıcı olarak <b>"PDF olarak kaydet"</b>i seç.</p>
+  </div>
+</div>
+
+<div class="bc-modal" id="wdPasteModal" role="dialog" aria-modal="true" aria-labelledby="wdPasteTitle">
+  <div class="bc-sheet">
+    <div class="bc-head"><div><span class="eyebrow">Kelime kartları</span><h2 id="wdPasteTitle">Anlamları yapıştır</h2></div><button class="drawer-close" id="wdPasteClose" type="button" aria-label="Kapat">✕</button></div>
+    <p style="font-size:13px; line-height:1.5; color: var(--ink-dim); margin:0 0 10px;">Claude'un cevabını olduğu gibi yapıştır. Her satır: <b style="color: var(--ink);">kelime | anlamı | örnek</b></p>
+    <textarea class="wd-paste" id="wdPasteText" placeholder="mütereddit | kararsız, tereddüt eden | Ne yapacağı konusunda mütereddit görünüyordu." aria-label="Claude'un cevabı"></textarea>
+    <div class="wd-msg" id="wdPasteMsg" role="status"></div>
+    <div style="display:grid; grid-template-columns: 1fr 1.4fr; gap:8px; margin-top:10px;">
+      <button type="button" class="bc-ghost" id="wdPasteFromClip">Panodan al</button>
+      <button type="button" class="btn-save" id="wdPasteSave" style="margin:0;">Kartlara dönüştür</button>
+    </div>
+  </div>
+</div>
+<div class="bc-modal" id="wdEditModal" role="dialog" aria-modal="true" aria-labelledby="wdEditTitle">
+  <div class="bc-sheet">
+    <div class="bc-head"><div><span class="eyebrow">Kelime</span><h2 id="wdEditTitle">Kelimeyi düzenle</h2></div><button class="drawer-close" id="wdEditClose" type="button" aria-label="Kapat">✕</button></div>
+    <div class="wd-form">
+      <div><label for="wdeW">Kelime</label><input type="text" id="wdeW" autocomplete="off"></div>
+      <div><label for="wdeM">Anlamı</label><textarea id="wdeM"></textarea></div>
+      <div><label for="wdeEx">Örnek cümle</label><textarea id="wdeEx"></textarea></div>
+      <div><label for="wdePage">Sayfa</label><input type="text" id="wdePage" inputmode="numeric" autocomplete="off"></div>
+      <button type="button" class="wd-known" id="wdeKnown" aria-pressed="false">Bu kelimeyi artık biliyorum</button>
+      <button type="button" class="btn-save" id="wdeSave" style="margin:4px 0 0;">Kaydet</button>
+      <button type="button" class="bk-del" id="wdeDelete">Kelimeyi sil</button>
+    </div>
+  </div>
+</div>
+<div class="bk-viewer wc" id="wcViewer" role="dialog" aria-modal="true" aria-label="Kelime kartları">
+  <div class="top"><button type="button" id="wcClose" aria-label="Kapat">✕</button><span class="cnt" id="wcCount"></span><span style="width:44px;"></span></div>
+  <div class="stage" id="wcStage"></div>
+  <div class="bottom">
+    <div class="wc-acts" id="wcActs" hidden><button type="button" class="no" id="wcDont">Bilmiyorum</button><button type="button" class="yes" id="wcKnow">Biliyorum</button></div>
   </div>
 </div>
 
@@ -6692,10 +6828,10 @@ document.addEventListener("visibilitychange", () => { if (document.visibilitySta
 
   // Raporda hangi bölümler olsun (telefonda hatırlanır)
   const PDF_SECS = [["ozet", "Genel özet"], ["kilo", "Kilo ve vücut"], ["beslenme", "Beslenme"], ["takviye", "Takviyeler"],
-    ["antrenman", "Antrenman ve rekorlar"], ["kardiyo", "Kardiyo"], ["namaz", "Namaz"], ["mac", "Halı saha"], ["ders", "Ders çalışma"], ["kitap", "Kitap ve film"]];
+    ["antrenman", "Antrenman ve rekorlar"], ["kardiyo", "Kardiyo"], ["namaz", "Namaz"], ["mac", "Halı saha"], ["ders", "Ders çalışma"], ["kitap", "Kitaplar"], ["film", "Filmler"]];
   let pdfSecSel = {};
   PDF_SECS.forEach(([k]) => { pdfSecSel[k] = true; });
-  try { const saved = JSON.parse(localStorage.getItem("pdfSections") || "null"); if (saved && typeof saved === "object") PDF_SECS.forEach(([k]) => { if (k in saved) pdfSecSel[k] = !!saved[k]; }); } catch (e) {}
+  try { const saved = JSON.parse(localStorage.getItem("pdfSections") || "null"); if (saved && typeof saved === "object") { PDF_SECS.forEach(([k]) => { if (k in saved) pdfSecSel[k] = !!saved[k]; }); if ("kitap" in saved && !("film" in saved)) pdfSecSel.film = !!saved.kitap; } } catch (e) {}
   function renderPdfSecs() {
     const box = document.getElementById("pdfSecs"); if (!box) return;
     box.innerHTML = PDF_SECS.map(([k, l]) => `<button type="button" data-sec="${k}" aria-pressed="${!!pdfSecSel[k]}">${l}</button>`).join("");
@@ -7129,41 +7265,53 @@ if (S.kardiyo && totalCardioSessions > 0) {
           y += 4;
         }
 
-        // --- KİTAP VE FİLM ---
-        if (S.kitap) {
+        // --- KİTAPLAR ve FİLMLER (ayrı bölümler) ---
+        if (S.kitap || S.film) {
           let rpBooks = [], rpFilms = [];
           try {
-            const [bS, fS] = await Promise.all([getDocs(collection(db, "users", auth.currentUser.uid, "books")), getDocs(collection(db, "users", auth.currentUser.uid, "films"))]);
-            bS.forEach(d => rpBooks.push(d.data())); fS.forEach(d => rpFilms.push(d.data()));
+            const [bS, fS] = await Promise.all([S.kitap ? getDocs(collection(db, "users", auth.currentUser.uid, "books")) : null, S.film ? getDocs(collection(db, "users", auth.currentUser.uid, "films")) : null]);
+            if (bS) bS.forEach(d => rpBooks.push(d.data())); if (fS) fS.forEach(d => rpFilms.push(d.data()));
           } catch (e) { console.error(e); }
+          const cut = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
+          const sc = (v) => (Number.isInteger(v) ? String(v) : v.toFixed(1).replace(".", ","));
+          // KİTAPLAR
           const doneB = rpBooks.filter(b => b.status === "done" && b.endDate && inRange(b.endDate)).sort((a, b) => a.endDate.localeCompare(b.endDate));
           const readingB = rpBooks.filter(b => b.status === "reading");
-          const watched = rpFilms.filter(f => f.date && inRange(f.date)).sort((a, b) => a.date.localeCompare(b.date));
-          const cut = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
-          if (doneB.length || readingB.length || watched.length) {
-            sectionTitle("Kitap ve Film", coral);
+          if (S.kitap && (doneB.length || readingB.length)) {
+            sectionTitle("Kitaplar", coral);
             if (doneB.length) {
               const pg = doneB.reduce((a, b) => a + (parseInt(b.pages) || 0), 0);
+              const durs = doneB.filter(b => b.startDate).map(b => Math.max(1, Math.round((new Date(b.endDate) - new Date(b.startDate)) / 86400000) + 1));
+              const scored = doneB.map(b => window.bkScore(b)).filter(v => v > 0);
               statRow("Bitirilen kitap", doneB.length + " kitap");
               if (pg) statRow("Okunan sayfa", pg.toLocaleString("tr-TR") + " sayfa");
+              if (durs.length) statRow("Kitap başına ortalama", Math.round(durs.reduce((a, v) => a + v, 0) / durs.length) + " gün");
+              if (scored.length) statRow("Ortalama kitap puanı", sc(scored.reduce((a, v) => a + v, 0) / scored.length) + " / 10");
+              const nw = doneB.reduce((a, b) => a + (b.words || []).length, 0);
+              if (nw) statRow("Öğrenilen kelime", nw + " kelime");
             }
             if (readingB.length) statRow("Şu an okunan", cut(readingB.map(b => b.title).join(", "), 48));
-            if (watched.length) {
-              const rated = watched.filter(f => f.rating > 0);
-              statRow("İzlenen film", watched.length + " film");
-              if (rated.length) {
-                statRow("Ortalama film puanı", (rated.reduce((a, f) => a + f.rating, 0) / rated.length).toFixed(1).replace(".", ",") + " / 10");
-                const best = rated.slice().sort((a, b) => b.rating - a.rating)[0];
-                statRow("En yüksek puanlı", cut(best.title, 34) + "  ·  " + best.rating + "/10");
-              }
+            if (pdfDetail === "full") doneB.forEach(b => {
+              const dd = b.startDate ? Math.max(1, Math.round((new Date(b.endDate) - new Date(b.startDate)) / 86400000) + 1) : null;
+              const v = window.bkScore(b);
+              statRow(cut(b.title + (b.author ? " - " + b.author : ""), 50), (v ? sc(v) + "/10 · " : "") + (dd ? dd + " gün · " : "") + b.endDate);
+            });
+            y += 4;
+          }
+          // FİLMLER
+          const watched = rpFilms.filter(f => f.date && inRange(f.date)).sort((a, b) => a.date.localeCompare(b.date));
+          if (S.film && watched.length) {
+            sectionTitle("Filmler", accent);
+            const rated = watched.filter(f => f.rating > 0);
+            statRow("İzlenen film", watched.length + " film");
+            if (rated.length) {
+              statRow("Ortalama film puanı", sc(rated.reduce((a, f) => a + f.rating, 0) / rated.length) + " / 10");
+              const best = rated.slice().sort((a, b) => b.rating - a.rating)[0];
+              statRow("En yüksek puanlı", cut(best.title, 34) + "  ·  " + best.rating + "/10");
             }
-            if (pdfDetail === "full") {
-              doneB.forEach(b => {
-                const dd = b.startDate ? Math.max(1, Math.round((new Date(b.endDate) - new Date(b.startDate)) / 86400000) + 1) : null;
-                statRow(cut(b.title + (b.author ? " - " + b.author : ""), 52), (dd ? dd + " günde · " : "") + b.endDate);
-              });
-              watched.forEach(f => statRow(cut(f.title + (f.year ? " (" + f.year + ")" : ""), 52), (f.rating ? f.rating + "/10 · " : "") + f.date));
-            }
+            const frames = watched.reduce((a, f) => a + (f.frames || []).length, 0);
+            if (frames) statRow("Kaydedilen kare", frames + " kare");
+            if (pdfDetail === "full") watched.forEach(f => statRow(cut(f.title + (f.year ? " (" + f.year + ")" : ""), 50), (f.rating ? f.rating + "/10 · " : "") + f.date));
             y += 4;
           }
         }
@@ -8756,6 +8904,16 @@ if (themeToggle) {
   //                             photos: [{ id, url, page, caption, at }], createdAt, updatedAt }
   const BK = { books: {}, cur: null, editId: null, coverFile: null, coverFor: null, status: "reading", vi: 0, noteTimer: null };
   const BK_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 7h6"/></svg>';
+  const bkScore = (b) => (b && b.score != null && b.score !== "") ? Number(b.score) : ((b && b.rating) ? b.rating * 2 : 0);
+  const bkScoreFmt = (v) => v ? (Number.isInteger(v) ? String(v) : v.toFixed(1).replace(".", ",")) : "";
+  window.bkScore = bkScore; window.bkScoreFmt = bkScoreFmt;
+  function bkStarRow(v) {
+    // 10 yıldız; her yıldızın sol yarısı buçuk, sağ yarısı tam puan
+    return `<div class="bs-row" role="group" aria-label="Puan, 10 üzerinden">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => {
+      const fill = v >= n ? "full" : (v >= n - 0.5 ? "half" : "");
+      return `<span class="bs">${STAR}${fill ? `<span class="fill ${fill === "half" ? "half" : ""}">${STAR}</span>` : ""}<button type="button" class="l" data-sc="${n - 0.5}" aria-label="${bkScoreFmt(n - 0.5)} puan"></button><button type="button" class="r" data-sc="${n}" aria-label="${n} puan"></button></span>`;
+    }).join("")}</div>`;
+  }
   const STAR = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z"/></svg>';
   const bkRef = (id) => doc(db, "users", auth.currentUser.uid, "books", id);
   const bkD = (ds) => { const [y, m, d] = ds.split("-").map(Number); return new Date(y, m - 1, d); };
@@ -8845,14 +9003,17 @@ if (themeToggle) {
     const grid = (list, cls) => `<div class="bk-grid" style="margin-top:8px;">${list.map(b => `
         <button type="button" class="bk-tile ${cls}" data-book="${b.id}">
           <span class="bk-cover">${b.cover ? `<img src="${escHTML(b.cover)}" alt="" loading="lazy">` : `<span class="bk-ph">${escHTML(b.title)}</span>`}
-            ${b.startDate && b.endDate ? `<span class="badge">${bkDays(b.startDate, b.endDate)} gün</span>` : ""}</span>
+            ${b.startDate && b.endDate ? `<span class="badge">${bkDays(b.startDate, b.endDate)} gün</span>` : ""}${bkScore(b) ? `<span class="badge sc">★ ${bkScoreFmt(bkScore(b))}</span>` : ""}</span>
           <div class="t">${escHTML(b.title)}</div>
         </button>`).join("")}</div>`;
     if (done.length) html += `<div class="bk-sec" style="margin-top:18px;">Bitirdiklerim · ${done.length}</div>${grid(done, "")}`;
     if (dropped.length) html += `<div class="bk-sec" style="margin-top:18px;">Yarım kalanlar · ${dropped.length}</div>${grid(dropped, "dropped")}`;
+    const nCards = sum(all.map(b => (b.words || []).filter(x => x.m).length));
+    if (nCards) html = `<button type="button" class="bc-ghost bk-words-all" id="bkWordsAll">Kelime kartları · ${nCards} kelime</button><div style="height:14px;"></div>` + html;
     const box = document.getElementById("bkLists");
     box.innerHTML = html;
     box.querySelectorAll("[data-book]").forEach(b => b.addEventListener("click", () => bkOpen(b.dataset.book)));
+    const wa = document.getElementById("bkWordsAll"); if (wa) wa.addEventListener("click", () => window.wdStudyAll());
   }
   document.getElementById("bkAddBtn").addEventListener("click", () => bkOpenForm(null));
 
@@ -8882,7 +9043,7 @@ if (themeToggle) {
           <h2>${escHTML(b.title)}</h2>
           ${b.author ? `<div class="au">${escHTML(b.author)}</div>` : ""}
           <span class="bk-status ${b.status || "reading"}">${statusTxt}</span>
-          ${b.status === "done" ? `<div class="bk-stars" role="group" aria-label="Puan">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" class="${(b.rating || 0) >= n ? "on" : ""}" aria-label="${n} yıldız">${STAR}</button>`).join("")}</div>` : ""}
+          ${b.status !== "reading" ? `<div class="bk-score${bkScore(b) ? "" : " none"}">${bkScore(b) ? `<span class="star">★</span>${bkScoreFmt(bkScore(b))}<small>/10</small>` : "Puan yok"}</div>` : ""}
         </div>
       </div>
       <div class="bk-stats">
@@ -8893,6 +9054,10 @@ if (themeToggle) {
       ${pageLine ? `<div style="font-family: var(--font-mono); font-size:12px; color: var(--ink-dim); margin-top:-4px;">${pageLine}</div>` : ""}
       ${b.status === "reading" ? `<div class="bk-actions"><button type="button" class="btn-save" id="bkFinish">Bitirdim</button><button type="button" class="bc-ghost" id="bkDrop">Yarım bıraktım</button></div>` : ""}
       ${b.status === "dropped" ? `<button type="button" class="bc-ghost" id="bkResume">Okumaya devam ediyorum</button>` : ""}
+      ${b.status !== "reading" ? `<section class="card">
+        <div class="card-head"><div class="tag"><span class="dot" style="background:#FFD66B;"></span><h2>Puanım</h2></div><span class="hint">${bkScore(b) ? bkScoreFmt(bkScore(b)) + "/10" : "puan yok"}</span></div>
+        <div class="card-body">${bkStarRow(bkScore(b))}<p class="bs-hint">Yıldızın sol yarısına dokunursan buçuk puan verirsin.</p></div>
+      </section>` : ""}
       <section class="card">
         <div class="card-head"><div class="tag"><span class="dot" style="background: var(--violet-2);"></span><h2>Okurken çektiklerim</h2></div><span class="hint">${photos.length}</span></div>
         <div class="card-body">
@@ -8903,6 +9068,7 @@ if (themeToggle) {
           ${photos.length ? "" : `<p style="margin:10px 0 0; font-size:12px; color: var(--ink-faint);">Altını çizdiğin, sevdiğin sayfaların fotoğrafını ekle. Fotoğrafa dokunup sayfa numarası ve not yazabilirsin.</p>`}
         </div>
       </section>
+      ${wdCardHTML(b)}
       <section class="card">
         <div class="card-head"><div class="tag"><span class="dot" style="background: var(--accent);"></span><h2>Notlarım</h2></div><span class="hint" id="bkNoteState"></span></div>
         <div class="card-body"><textarea class="bk-note" id="bkNote" placeholder="Kitap hakkında düşüncelerin, sevdiğin alıntılar…">${escHTML(b.note || "")}</textarea></div>
@@ -8910,10 +9076,11 @@ if (themeToggle) {
       <button type="button" class="bk-del" id="bkDelete">Kitabı sil</button>`;
 
     document.getElementById("bkHeroCover").addEventListener("click", () => { BK.coverFor = "detail"; document.getElementById("bkCoverInput").click(); });
-    document.querySelectorAll("[data-star]").forEach(s => s.addEventListener("click", async () => {
-      const n = parseInt(s.dataset.star); const r = (b.rating === n) ? 0 : n;
-      await bkSave(b.id, { rating: r }); bkRenderDetail();
+    document.querySelectorAll("#bkDetail [data-sc]").forEach(s => s.addEventListener("click", async () => {
+      const n = parseFloat(s.dataset.sc); const v = (bkScore(b) === n) ? 0 : n;
+      await bkSave(b.id, { score: v }); bkRenderDetail();
     }));
+    wdBind(b);
     const fin = document.getElementById("bkFinish");
     if (fin) fin.addEventListener("click", async () => { await bkSave(b.id, { status: "done", endDate: today }); bkRenderDetail(); showAppToast(`Tebrikler! ${b.startDate ? bkDays(b.startDate, today) + " günde bitirdin." : ""} Puan verebilirsin.`); });
     const drop = document.getElementById("bkDrop");
@@ -10465,6 +10632,7 @@ if (themeToggle) {
           <div class="fm-watched">İzledim: ${f.date ? bkLong(f.date) : "—"}</div>
         </div>
       </div>
+      ${window.fmInfoHTML ? window.fmInfoHTML(f) : ""}
       <section class="card">
         <div class="card-head"><div class="tag"><span class="dot" style="background:#FFD66B;"></span><h2>Puanım</h2></div><span class="hint">${fmRateFmt(f.rating)}</span></div>
         <div class="card-body">${fmRateBar("fmDetailRate", f.rating || 0)}</div>
@@ -10622,6 +10790,7 @@ if (themeToggle) {
     document.getElementById("fmfYear").value = f.year || "";
     document.getElementById("fmfDate").value = f.date || todayLocalStr();
     fmSetFormRate(f.rating || 0);
+    if (window.imPrepForm) window.imPrepForm(f);
     fmView("fmFormView");
     document.getElementById("filmsPanel").scrollTop = 0;
   }
@@ -10637,6 +10806,11 @@ if (themeToggle) {
       date: document.getElementById("fmfDate").value || todayLocalStr(), rating: FM.rating
     };
     if (!FM.editId) { data.createdAt = Date.now(); data.frames = []; data.poster = ""; data.note = ""; }
+    const im = window.imFormData ? window.imFormData() : null;
+    if (im) {
+      Object.assign(data, { imdbId: im.imdbId, director: im.director, genre: im.genre, runtime: im.runtime, plot: im.plot, actors: im.actors, imdbRating: im.imdbRating });
+      if (im.posterUrl && !FM.posterFile && !(FM.editId && FM.films[FM.editId].poster)) data.poster = im.posterUrl;
+    }
     this.disabled = true;
     if (FM.posterFile) {
       this.textContent = "Afiş yükleniyor…";
@@ -10857,8 +11031,8 @@ if (themeToggle) {
   // Türkçe harfler ve fotoğraflar eksiksiz çıksın diye sayfa tarayıcının yazdırma ekranıyla PDF'e dönüştürülür.
   const PR = { kind: null, opt: {} };
   const PR_DEF = {
-    books: { which: "all", cover: true, note: true, photos: false },
-    films: { which: "all", sort: "date", cover: true, note: true, photos: false }
+    books: { which: "all", cover: true, note: true, photos: false, words: true },
+    films: { which: "all", sort: "date", cover: true, info: true, note: true, photos: false }
   };
   const prLoadOpt = (k) => { let o = { ...PR_DEF[k] }; try { Object.assign(o, JSON.parse(localStorage.getItem("prOpt_" + k) || "{}")); } catch (e) {} return o; };
   const prSaveOpt = () => { try { localStorage.setItem("prOpt_" + PR.kind, JSON.stringify(PR.opt)); } catch (e) {} };
@@ -10873,13 +11047,13 @@ if (themeToggle) {
       <div class="pr-lab">Hangi kitaplar</div>
       ${prSeg("which", [["all", "Hepsi"], ["done", "Bitirdiklerim"], ["year", "Bu yıl"]])}
       <div class="pr-lab">Neler olsun</div>
-      <div class="pr-chks">${prChk("cover", "Kapak fotoğrafları")}${prChk("note", "Notlarım")}${prChk("photos", "Sayfa fotoğrafları")}</div>` : `
+      <div class="pr-chks">${prChk("cover", "Kapak fotoğrafları")}${prChk("note", "Notlarım")}${prChk("words", "Kelimeler ve anlamları")}${prChk("photos", "Sayfa fotoğrafları")}</div>` : `
       <div class="pr-lab">Hangi filmler</div>
       ${prSeg("which", [["all", "Hepsi"], ["year", "Bu yıl"], ["top", "8 puan ve üstü"]])}
       <div class="pr-lab">Sıralama</div>
       ${prSeg("sort", [["date", "İzlediğim tarih"], ["rating", "Puan"]])}
       <div class="pr-lab">Neler olsun</div>
-      <div class="pr-chks">${prChk("cover", "Afişler")}${prChk("note", "Notlarım")}${prChk("photos", "Filmden kareler")}</div>`;
+      <div class="pr-chks">${prChk("cover", "Afişler")}${prChk("info", "Film bilgileri (yönetmen, tür, konu)")}${prChk("note", "Notlarım")}${prChk("photos", "Filmden kareler")}</div>`;
     const body = document.getElementById("prBody");
     body.querySelectorAll(".pr-seg button").forEach(b => b.addEventListener("click", () => {
       const key = b.parentElement.dataset.key; PR.opt[key] = b.dataset.v; prSaveOpt();
@@ -10946,16 +11120,17 @@ if (themeToggle) {
         <div class="pp-main">
           <h3>${prE(b.title)}</h3>
           ${b.author ? `<div class="pp-sub">${prE(b.author)}</div>` : ""}
-          <div class="pp-meta">${meta.map(prE).join(" · ")}${b.status === "done" && b.rating ? ` ${prStars(b.rating)}` : ""}</div>
+          <div class="pp-meta">${meta.map(prE).join(" · ")}${window.bkScore(b) ? ` <span class="pp-score">★ ${window.bkScoreFmt(window.bkScore(b))}/10</span>` : ""}</div>
           ${o.note && b.note ? `<div class="pp-note"><p>${prNote(b.note)}</p></div>` : ""}
         </div>
+        ${o.words && (b.words || []).length ? `<div class="pp-words"><div class="pp-words-h">Kelimeler · ${(b.words || []).length}</div>${(b.words || []).map(x => `<div><b>${prE(x.w)}</b>${x.m ? ` <span>— ${prE(x.m)}</span>` : ""}</div>`).join("")}</div>` : ""}
         ${photos.length ? `<div class="pp-photos book">${photos.map(p => `<figure><img src="${prE(p.url)}" alt="">${p.page || p.caption ? `<figcaption>${p.page ? `<b>s. ${prE(p.page)}</b> ` : ""}${prE(p.caption || "")}</figcaption>` : ""}</figure>`).join("")}</div>` : ""}
       </article>`;
     };
     const sec = (title, arr) => arr.length ? `<h2 class="pp-sec">${title} <span>${arr.length}</span></h2>${arr.map(card).join("")}` : "";
     return {
       title: "Kitaplarım", count: `${list.length} kitap`,
-      stats: [[done.length, "bitirdim"], [reading.length, "okuyorum"], [pages ? pages.toLocaleString("tr-TR") : "—", "okunan sayfa"], [avgDur ? avgDur + " gün" : "—", "ortalama süre"]],
+      stats: [[done.length, "bitirdim"], [pages ? pages.toLocaleString("tr-TR") : "—", "okunan sayfa"], [avgDur ? avgDur + " gün" : "—", "ortalama süre"], [(() => { const v = done.map(b => window.bkScore(b)).filter(Boolean); return v.length ? window.bkScoreFmt(Math.round(sum(v) / v.length * 10) / 10) : "—"; })(), "ortalama puan"]],
       body: sec("Okuyorum", reading) + sec("Bitirdiklerim", done) + sec("Yarım bıraktıklarım", dropped)
     };
   }
@@ -10975,6 +11150,8 @@ if (themeToggle) {
           <div class="pp-titlerow"><h3>${prE(f.title)}</h3>${f.rating ? `<span class="pp-rate">★ ${f.rating}<small>/10</small></span>` : ""}</div>
           ${f.year ? `<div class="pp-sub">${prE(f.year)}</div>` : ""}
           <div class="pp-meta">İzledim: ${prE(prDate(f.date) || "—")}${(f.frames || []).length ? ` · ${(f.frames || []).length} kare` : ""}</div>
+          ${o.info && (f.director || f.genre) ? `<div class="pp-meta">${[f.director ? "Yönetmen: " + f.director : "", f.genre, f.runtime, f.imdbRating ? "IMDb " + f.imdbRating : ""].filter(Boolean).map(prE).join(" · ")}</div>` : ""}
+          ${o.info && f.plot ? `<div class="pp-plot">${prE(f.plot)}</div>` : ""}
           ${o.note && f.note ? `<div class="pp-note"><p>${prNote(f.note)}</p></div>` : ""}
         </div>
         ${fr.length ? `<div class="pp-photos film">${fr.map(p => `<figure><img src="${prE(p.url)}" alt="">${p.time || p.caption ? `<figcaption>${p.time ? `<b>${prE(p.time)}</b> ` : ""}${prE(p.caption || "")}</figcaption>` : ""}</figure>`).join("")}</div>` : ""}
@@ -11116,6 +11293,275 @@ if (themeToggle) {
       schedule();
     });
   })();
+
+  // ====== KİTAP KELİMELERİ + KELİME KARTLARI ======
+  // books/{id}.words -> [{ id, w, m (anlam), ex (örnek), page, known, at }]
+  const WD = { editBook: null, editId: null, deck: [], i: 0, flipped: false, known: 0, unknown: 0 };
+  const wdKey = (s) => String(s || "").trim().toLocaleLowerCase("tr-TR");
+  const wdId = () => "w" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+
+  function wdCardHTML(b) {
+    const words = b.words || [];
+    const withM = words.filter(x => x.m).length;
+    return `<section class="card" id="bkWordsCard">
+      <div class="card-head"><div class="tag"><span class="dot" style="background:#6FC3FF;"></span><h2>Kelimeler</h2></div><span class="hint">${words.length ? `${words.length}${withM < words.length ? ` · ${words.length - withM} anlamsız` : ""}` : ""}</span></div>
+      <div class="card-body">
+        <div class="wd-add">
+          <input type="text" id="wdInput" placeholder="Bilmediğin kelimeyi yaz" autocomplete="off" autocapitalize="none" enterkeyhint="done" aria-label="Yeni kelime">
+          <button type="button" class="k-pill" id="wdAddBtn">Ekle</button>
+        </div>
+        ${words.length ? `<div class="wd-list">${words.slice().reverse().map(x => `
+          <button type="button" class="wd-row${x.known ? " known" : ""}" data-wd="${x.id}">
+            <span class="w">${escHTML(x.w)}${x.page ? `<small>s. ${escHTML(x.page)}</small>` : ""}</span>
+            <span class="m${x.m ? "" : " empty"}">${x.m ? escHTML(x.m) : "anlamı yok"}</span>
+          </button>`).join("")}</div>
+        <div class="wd-acts">
+          <button type="button" class="bc-ghost" id="wdCopy">Claude için kopyala</button>
+          <button type="button" class="bc-ghost" id="wdPaste">Anlamları yapıştır</button>
+        </div>
+        ${withM ? `<button type="button" class="btn-save wd-study" id="wdStudy">Kartlarla çalış · ${withM} kart</button>` : ""}`
+        : `<p class="wd-empty">Okurken bilmediğin kelimeleri ekle. Sonra hepsini kopyalayıp Claude'a at, gelen cevabı "Anlamları yapıştır"a koy; kelimeler karta dönüşür.</p>`}
+      </div>
+    </section>`;
+  }
+
+  function wdBind(b) {
+    const inp = document.getElementById("wdInput");
+    const add = async () => {
+      const parts = inp.value.split(/[,\n]/).map(s => s.trim()).filter(Boolean); // virgülle birden çok kelime
+      if (!parts.length) { inp.focus(); return; }
+      const words = [...(BK.books[b.id].words || [])];
+      let added = 0;
+      parts.forEach(w => { if (!words.some(x => wdKey(x.w) === wdKey(w))) { words.push({ id: wdId(), w, m: "", ex: "", page: "", known: false, at: Date.now() }); added++; } });
+      if (!added) { showAppToast("Bu kelime zaten listede"); inp.select(); return; }
+      await bkSave(b.id, { words });
+      bkRenderDetail();
+      const again = document.getElementById("wdInput"); if (again) again.focus();
+    };
+    document.getElementById("wdAddBtn").addEventListener("click", add);
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); add(); } });
+    document.querySelectorAll("[data-wd]").forEach(r => r.addEventListener("click", () => wdOpenEdit(b.id, r.dataset.wd)));
+    const cp = document.getElementById("wdCopy"); if (cp) cp.addEventListener("click", () => wdCopy(b));
+    const ps = document.getElementById("wdPaste"); if (ps) ps.addEventListener("click", () => wdOpenPaste(b.id));
+    const st = document.getElementById("wdStudy"); if (st) st.addEventListener("click", () => wdStudy([b.id]));
+  }
+
+  // --- Claude için kopyala ---
+  async function wdCopy(b) {
+    const words = (b.words || []).filter(x => !x.m);
+    const list = words.length ? words : (b.words || []);
+    const text = `"${b.title}"${b.author ? ` (${b.author})` : ""} kitabında bilmediğim kelimeler:\n\n${list.map(x => x.w).join("\n")}\n\nBunları Kamp Defteri uygulamama yapıştıracağım. Her kelime için bir satır, tam olarak şu biçimde yaz:\nkelime | anlamı | kısa örnek cümle\nAnlamı kitaptaki kullanımına uygun, kısa ve Türkçe olsun. Bu satırların dışında hiçbir şey yazma.`;
+    try { await navigator.clipboard.writeText(text); showAppToast(`${list.length} kelime kopyalandı, Claude'a yapıştır`); }
+    catch (e) {
+      if (navigator.share) { try { await navigator.share({ text }); } catch (er) {} }
+      else showAppToast("Kopyalanamadı");
+    }
+  }
+
+  // --- Claude'un cevabını yapıştır ---
+  function wdParse(text) {
+    const out = [];
+    String(text || "").split(/\r?\n/).forEach(line => {
+      let l = line.trim();
+      if (!l || /^```/.test(l)) return;
+      l = l.replace(/^(\d+[.)]\s*|[-*•]\s+)/, "").replace(/\*\*/g, "").trim();
+      let parts;
+      if (l.includes("|")) parts = l.split("|");
+      else { const m = l.match(/^(.+?)\s+[—–-]\s+(.+)$/) || l.match(/^([^:]{1,40}):\s*(.+)$/); if (!m) return; parts = [m[1], m[2]]; }
+      parts = parts.map(s => s.trim()).filter((s, i) => i === 0 ? s : true);
+      if (parts.length < 2 || !parts[0] || !parts[1]) return;
+      if (wdKey(parts[0]) === "kelime" && /anlam/i.test(parts[1])) return; // başlık satırı
+      out.push({ w: parts[0], m: parts[1], ex: (parts[2] || "").trim() });
+    });
+    return out;
+  }
+  function wdOpenPaste(bookId) {
+    WD.editBook = bookId;
+    document.getElementById("wdPasteText").value = "";
+    document.getElementById("wdPasteMsg").textContent = "";
+    document.getElementById("wdPasteModal").classList.add("is-active");
+    setTimeout(() => document.getElementById("wdPasteText").focus(), 80);
+  }
+  document.getElementById("wdPasteClose").addEventListener("click", () => document.getElementById("wdPasteModal").classList.remove("is-active"));
+  document.getElementById("wdPasteFromClip").addEventListener("click", async () => {
+    try { document.getElementById("wdPasteText").value = await navigator.clipboard.readText(); document.getElementById("wdPasteText").dispatchEvent(new Event("input")); }
+    catch (e) { showAppToast("Panoya erişilemedi; kutuya basılı tutup yapıştır"); }
+  });
+  document.getElementById("wdPasteText").addEventListener("input", function () {
+    const n = wdParse(this.value).length;
+    document.getElementById("wdPasteMsg").textContent = this.value.trim() ? (n ? `${n} kelime bulundu` : "Uygun satır bulunamadı. Biçim: kelime | anlamı | örnek") : "";
+  });
+  document.getElementById("wdPasteSave").addEventListener("click", async () => {
+    const rows = wdParse(document.getElementById("wdPasteText").value);
+    if (!rows.length) { showAppToast("Uygun satır bulunamadı"); return; }
+    const b = BK.books[WD.editBook]; if (!b) return;
+    const words = (b.words || []).map(x => ({ ...x }));
+    let upd = 0, add = 0;
+    rows.forEach(r => {
+      const x = words.find(y => wdKey(y.w) === wdKey(r.w));
+      if (x) { x.m = r.m; if (r.ex) x.ex = r.ex; upd++; }
+      else { words.push({ id: wdId(), w: r.w, m: r.m, ex: r.ex, page: "", known: false, at: Date.now() }); add++; }
+    });
+    await bkSave(b.id, { words });
+    document.getElementById("wdPasteModal").classList.remove("is-active");
+    bkRenderDetail();
+    showAppToast(`${upd} kelimenin anlamı eklendi${add ? `, ${add} yeni kelime` : ""}`);
+  });
+
+  // --- Tek kelimeyi düzenle ---
+  function wdOpenEdit(bookId, id) {
+    const x = ((BK.books[bookId] || {}).words || []).find(y => y.id === id); if (!x) return;
+    WD.editBook = bookId; WD.editId = id;
+    document.getElementById("wdeW").value = x.w;
+    document.getElementById("wdeM").value = x.m || "";
+    document.getElementById("wdeEx").value = x.ex || "";
+    document.getElementById("wdePage").value = x.page || "";
+    document.getElementById("wdeKnown").setAttribute("aria-pressed", String(!!x.known));
+    document.getElementById("wdEditModal").classList.add("is-active");
+  }
+  const wdCloseEdit = () => document.getElementById("wdEditModal").classList.remove("is-active");
+  document.getElementById("wdEditClose").addEventListener("click", wdCloseEdit);
+  document.getElementById("wdeKnown").addEventListener("click", function () { this.setAttribute("aria-pressed", String(this.getAttribute("aria-pressed") !== "true")); });
+  document.getElementById("wdeSave").addEventListener("click", async () => {
+    const b = BK.books[WD.editBook]; if (!b) return;
+    const w = document.getElementById("wdeW").value.trim();
+    if (!w) { showAppToast("Kelime boş olamaz"); return; }
+    const words = (b.words || []).map(x => x.id === WD.editId ? { ...x, w, m: document.getElementById("wdeM").value.trim(), ex: document.getElementById("wdeEx").value.trim(), page: document.getElementById("wdePage").value.trim(), known: document.getElementById("wdeKnown").getAttribute("aria-pressed") === "true" } : x);
+    await bkSave(b.id, { words }); wdCloseEdit(); bkRenderDetail();
+  });
+  document.getElementById("wdeDelete").addEventListener("click", async () => {
+    const b = BK.books[WD.editBook]; if (!b) return;
+    if (!confirm("Bu kelime silinsin mi?")) return;
+    await bkSave(b.id, { words: (b.words || []).filter(x => x.id !== WD.editId) }); wdCloseEdit(); bkRenderDetail();
+  });
+
+  // --- Kelime kartları ---
+  function wdStudy(bookIds, onlyUnknown) {
+    let deck = [];
+    bookIds.forEach(id => { const b = BK.books[id]; (b && b.words || []).forEach(x => { if (x.m) deck.push({ bookId: id, id: x.id }); }); });
+    const unknown = deck.filter(c => !wdGet(c).known);
+    if (onlyUnknown !== false && unknown.length) deck = unknown;
+    if (!deck.length) { showAppToast("Anlamı olan kelime yok"); return; }
+    for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+    WD.deck = deck; WD.books = bookIds; WD.i = 0; WD.known = 0; WD.unknown = 0; WD.flipped = false;
+    document.getElementById("wcViewer").classList.add("is-active");
+    wdRenderCard();
+  }
+  const wdGet = (c) => ((BK.books[c.bookId] || {}).words || []).find(x => x.id === c.id) || {};
+  function wdRenderCard() {
+    const box = document.getElementById("wcStage");
+    document.getElementById("wcCount").textContent = WD.i < WD.deck.length ? `${WD.i + 1} / ${WD.deck.length}` : "Bitti";
+    if (WD.i >= WD.deck.length) {
+      const total = WD.known + WD.unknown;
+      box.innerHTML = `<div class="wc-end">
+        <div class="big">${WD.known}<small>/${total}</small></div>
+        <p>${WD.unknown ? `${WD.unknown} kelimeyi tekrar etmen iyi olur.` : "Hepsini biliyorsun, harika!"}</p>
+        ${WD.unknown ? `<button type="button" class="btn-save" id="wcAgain">Bilmediklerimi tekrar et</button>` : ""}
+        <button type="button" class="bc-ghost" id="wcAll">Bütün kartlarla baştan</button>
+      </div>`;
+      document.getElementById("wcActs").hidden = true;
+      const ag = document.getElementById("wcAgain"); if (ag) ag.addEventListener("click", () => wdStudy(WD.books, true));
+      document.getElementById("wcAll").addEventListener("click", () => wdStudy(WD.books, false));
+      return;
+    }
+    const c = WD.deck[WD.i], x = wdGet(c), b = BK.books[c.bookId] || {};
+    box.innerHTML = `<button type="button" class="wc-card${WD.flipped ? " flipped" : ""}" id="wcCard" aria-label="Kartı çevir">
+      <span class="src">${escHTML(b.title || "")}${x.page ? ` · s. ${escHTML(x.page)}` : ""}</span>
+      <span class="word">${escHTML(x.w)}</span>
+      ${WD.flipped ? `<span class="mean">${escHTML(x.m)}</span>${x.ex ? `<span class="ex">“${escHTML(x.ex)}”</span>` : ""}` : `<span class="tap">Anlamı için dokun</span>`}
+    </button>`;
+    document.getElementById("wcActs").hidden = !WD.flipped;
+    document.getElementById("wcCard").addEventListener("click", () => { WD.flipped = !WD.flipped; wdRenderCard(); });
+  }
+  async function wdAnswer(known) {
+    const c = WD.deck[WD.i]; if (!c) return;
+    if (known) WD.known++; else WD.unknown++;
+    const b = BK.books[c.bookId];
+    const words = (b.words || []).map(x => x.id === c.id ? { ...x, known } : x);
+    WD.i++; WD.flipped = false; wdRenderCard();
+    try { await bkSave(b.id, { words }); } catch (e) { console.error(e); }
+  }
+  document.getElementById("wcKnow").addEventListener("click", () => wdAnswer(true));
+  document.getElementById("wcDont").addEventListener("click", () => wdAnswer(false));
+  document.getElementById("wcClose").addEventListener("click", () => {
+    document.getElementById("wcViewer").classList.remove("is-active");
+    if (BK.cur && !document.getElementById("bkDetailView").hidden) bkRenderDetail(); else bkRenderList();
+  });
+  window.wdStudyAll = () => wdStudy(Object.keys(BK.books));
+
+  // ====== IMDb BAĞLANTISINDAN FİLM BİLGİLERİ (OMDb üzerinden, isteğe bağlı) ======
+  const IM = { key: null, keyLoaded: false, data: null };
+  const imRef = () => doc(db, "users", auth.currentUser.uid, "records", "filmSettings");
+  const imId = (s) => { const m = String(s || "").match(/tt\d{6,10}/); return m ? m[0] : null; };
+  async function imLoadKey() {
+    if (IM.keyLoaded || !auth.currentUser) return IM.key;
+    try { const s = await getDocFast(imRef()); IM.key = s.exists() ? (s.data().omdbKey || null) : null; } catch (e) {}
+    IM.keyLoaded = true; return IM.key;
+  }
+  const imMsg = (t, cls) => { const el = document.getElementById("fmImdbMsg"); el.className = "fm-imdb-msg" + (cls ? " " + cls : ""); el.textContent = t || ""; };
+
+  async function imFetch() {
+    const id = imId(document.getElementById("fmfImdb").value);
+    if (!id) { imMsg("Bağlantıda film kodu bulunamadı (tt ile başlayan kısım).", "err"); return; }
+    const key = await imLoadKey();
+    if (!key) { document.getElementById("fmKeyBox").hidden = false; imMsg(""); document.getElementById("fmKeyInput").focus(); return; }
+    if (!navigator.onLine) { imMsg("İnternet yok.", "err"); return; }
+    const btn = document.getElementById("fmImdbGo"); btn.disabled = true; btn.textContent = "…";
+    imMsg("Bilgiler getiriliyor…");
+    try {
+      const r = await fetch(`https://www.omdbapi.com/?i=${id}&plot=short&apikey=${encodeURIComponent(key)}`);
+      const j = await r.json();
+      if (j.Response !== "True") {
+        if (/api key/i.test(j.Error || "")) { document.getElementById("fmKeyBox").hidden = false; imMsg("Anahtar çalışmadı. E-postadaki onay bağlantısına bastın mı?", "err"); }
+        else imMsg("Film bulunamadı.", "err");
+        return;
+      }
+      const v = (x) => (x && x !== "N/A") ? x : "";
+      IM.data = {
+        imdbId: id, director: v(j.Director), genre: v(j.Genre), runtime: v(j.Runtime), plot: v(j.Plot),
+        actors: v(j.Actors), imdbRating: v(j.imdbRating), posterUrl: v(j.Poster)
+      };
+      document.getElementById("fmfTitle").value = v(j.Title) || document.getElementById("fmfTitle").value;
+      const yr = (v(j.Year).match(/\d{4}/) || [""])[0]; if (yr) document.getElementById("fmfYear").value = yr;
+      if (IM.data.posterUrl && !FM.posterFile) document.getElementById("fmFormPoster").innerHTML = `<img src="${escHTML(IM.data.posterUrl)}" alt="">`;
+      imMsg(`${v(j.Title)} (${yr}) bulundu${IM.data.imdbRating ? ` · IMDb ${IM.data.imdbRating}` : ""}. Kaydet'e bas.`, "ok");
+    } catch (e) { console.error(e); imMsg("Bilgiler alınamadı. İnterneti kontrol edip tekrar dene.", "err"); }
+    finally { btn.disabled = false; btn.textContent = "Getir"; }
+  }
+  document.getElementById("fmImdbGo").addEventListener("click", imFetch);
+  document.getElementById("fmfImdb").addEventListener("paste", () => setTimeout(() => { if (imId(document.getElementById("fmfImdb").value)) imFetch(); }, 50));
+  document.getElementById("fmKeySave").addEventListener("click", async () => {
+    const k = document.getElementById("fmKeyInput").value.trim();
+    if (!/^[a-z0-9]{6,12}$/i.test(k)) { showAppToast("Anahtar 8 karakter gibi olmalı (örn. a1b2c3d4)"); return; }
+    IM.key = k; IM.keyLoaded = true;
+    try { await setDoc(imRef(), { omdbKey: k }, { merge: true }); } catch (e) { console.error(e); }
+    document.getElementById("fmKeyBox").hidden = true;
+    if (imId(document.getElementById("fmfImdb").value)) imFetch(); else imMsg("Anahtar kaydedildi.", "ok");
+  });
+  // Form açılınca IMDb alanını hazırla (fmOpenForm çağırır)
+  window.imPrepForm = (f) => {
+    IM.data = null;
+    document.getElementById("fmfImdb").value = f && f.imdbId ? `https://www.imdb.com/title/${f.imdbId}/` : "";
+    document.getElementById("fmKeyBox").hidden = true;
+    imMsg("");
+    imLoadKey();
+  };
+  window.imFormData = () => IM.data;
+
+  // Film sayfasındaki bilgi kutusu
+  window.fmInfoHTML = (f) => {
+    if (!f.director && !f.genre && !f.plot && !f.imdbId) return "";
+    const line = [f.genre, f.runtime].filter(Boolean).join(" · ");
+    return `<section class="card fm-info">
+      <div class="card-body" style="padding-top:14px;">
+        ${f.director ? `<div class="fm-info-row"><span>Yönetmen</span><b>${escHTML(f.director)}</b></div>` : ""}
+        ${f.actors ? `<div class="fm-info-row"><span>Oyuncular</span><b>${escHTML(f.actors)}</b></div>` : ""}
+        ${line ? `<div class="fm-info-row"><span>Tür</span><b>${escHTML(line)}</b></div>` : ""}
+        ${f.plot ? `<p class="fm-plot">${escHTML(f.plot)}</p>` : ""}
+        ${f.imdbId ? `<a class="fm-imdb-link" href="https://www.imdb.com/title/${escHTML(f.imdbId)}/" target="_blank" rel="noopener">${f.imdbRating ? `<b>IMDb ${escHTML(f.imdbRating)}</b> · ` : ""}IMDb'de aç ↗</a>` : ""}
+      </div>
+    </section>`;
+  };
 
 window.addEventListener('load', loadTheme);
 
